@@ -2,153 +2,303 @@
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lehrer-Übersicht Robotik</title>
 <style>
-:root{--bg:#f6f8f9;--card:#fff;--ink:#1c2430;--muted:#5b6672;--line:#d9e1e6;--pri:#1f6f78;--pri-soft:#e3f0f1;--amber:#b87700;--amber-soft:#fdf3e0;--red:#c0392b;--red-soft:#fbe9e7;--green:#2f6e2e;--green-soft:#dff0dd;--none:#eef1f3}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11161c;--card:#19212a;--ink:#e6ecf1;--muted:#9aa7b3;--line:#2b3641;--pri:#4fb3bd;--pri-soft:#173238;--amber:#f0b03c;--amber-soft:#3a2f17;--red:#ef7a6c;--red-soft:#3a1f1c;--green:#86d184;--green-soft:#1f3a1f;--none:#222b34}}
-:root[data-theme="dark"]{--bg:#11161c;--card:#19212a;--ink:#e6ecf1;--muted:#9aa7b3;--line:#2b3641;--pri:#4fb3bd;--pri-soft:#173238;--amber:#f0b03c;--amber-soft:#3a2f17;--red:#ef7a6c;--red-soft:#3a1f1c;--green:#86d184;--green-soft:#1f3a1f;--none:#222b34}
+:root{--bg:#f6f8f9;--card:#fff;--ink:#1c2430;--muted:#5b6672;--faint:#8a97a3;--line:#d9e1e6;--grid:#e8edf0;--pri:#1f6f78;--pri-soft:#e3f0f1;
+--s1:#008c9e;--s2:#c26a0a;--s1-wash:rgba(0,140,158,.10);
+--amber:#9a5a00;--amber-soft:#fdf0d9;--red:#c0392b;--green:#2f6e2e;--green-soft:#dff0dd;--none:#eef1f3}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11161c;--card:#19212a;--ink:#e6ecf1;--muted:#9aa7b3;--faint:#738190;--line:#2b3641;--grid:#243039;--pri:#4fb3bd;--pri-soft:#173238;
+--s1:#2fa6b5;--s2:#c97d0c;--s1-wash:rgba(47,166,181,.12);--amber:#f0b03c;--amber-soft:#3a2f17;--red:#ef7a6c;--green:#86d184;--green-soft:#1f3a1f;--none:#222b34}}
+:root[data-theme="dark"]{--bg:#11161c;--card:#19212a;--ink:#e6ecf1;--muted:#9aa7b3;--faint:#738190;--line:#2b3641;--grid:#243039;--pri:#4fb3bd;--pri-soft:#173238;
+--s1:#2fa6b5;--s2:#c97d0c;--s1-wash:rgba(47,166,181,.12);--amber:#f0b03c;--amber-soft:#3a2f17;--red:#ef7a6c;--green:#86d184;--green-soft:#1f3a1f;--none:#222b34}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
 header{background:var(--card);border-bottom:1px solid var(--line)}
 header .in,main{max-width:1280px;margin:0 auto;padding:12px 16px}
-h1{font-size:22px;margin:0}
-.sub{color:var(--muted);font-size:14px;margin:2px 0 0}
+h1{font-size:22px;margin:0}.sub{color:var(--muted);font-size:14px;margin:2px 0 0}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:14px 0}
-h2{font-size:17px;margin:0 0 8px}
-textarea{width:100%;height:90px;font:12px/1.4 ui-monospace,Consolas,monospace;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+h2{font-size:17px;margin:0 0 4px}.hint{color:var(--muted);font-size:13px;margin:0 0 10px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
 button,.btn,select{font:inherit;font-size:14px;border-radius:8px;padding:7px 13px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
 button.pri{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+button:disabled{opacity:.5;cursor:default}
 button.danger{color:var(--red)}
-.drop{border:2px dashed var(--line);border-radius:10px;padding:14px;text-align:center;color:var(--muted);margin-top:10px}
+.status{font-size:14px;color:var(--muted)}.status b{color:var(--ink)}
+textarea{width:100%;height:80px;font:12px/1.4 ui-monospace,Consolas,monospace;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:12px;text-align:center;color:var(--muted);margin-top:10px;font-size:14px}
 .drop.on{border-color:var(--pri);background:var(--pri-soft)}
 .msg{font-size:14px;margin-top:8px;min-height:20px}
-.tabs{display:flex;gap:6px;flex-wrap:wrap}
-.tabs button[aria-selected="true"]{background:var(--pri);color:#fff;border-color:var(--pri)}
+details summary{cursor:pointer;color:var(--muted);font-size:14px;margin-top:10px}
+.bar-top{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}.tabs button[aria-selected="true"]{background:var(--pri);color:#fff;border-color:var(--pri)}
+.filters{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;font-size:14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.tile .l{font-size:13px;color:var(--muted)}.tile .v{font-size:28px;font-weight:650;line-height:1.2;margin-top:2px}.tile .d{font-size:13px;color:var(--muted)}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:14px}
+.charts .card{margin:0}
+.chart{position:relative}.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font:11px system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;fill:var(--muted)}
+.chart .hit{fill:transparent;cursor:pointer}.chart .hit:focus{outline:none}
+.chart .bar{fill:var(--s1)}.chart .bar.hov{fill-opacity:.75}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted);margin:4px 0 6px;flex-wrap:wrap}.legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px}
+.tip{position:absolute;pointer-events:none;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.15);white-space:nowrap;z-index:5;display:none}
+.tip .tv{font-weight:700;color:var(--ink)}.tip .tl{color:var(--muted)}.tip .k{display:inline-block;width:12px;height:2px;margin-right:6px;vertical-align:middle}
 .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{padding:6px 7px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
 th{background:var(--pri-soft);position:sticky;top:0;font-weight:600}
 th.l,td.l{text-align:left}
 th small{display:block;font-weight:400;color:var(--muted);max-width:92px;white-space:normal;line-height:1.2;font-size:11px}
+tbody tr{cursor:pointer}tbody tr:hover td.l{text-decoration:underline}tbody tr.sel td{box-shadow:inset 0 2px 0 var(--s2),inset 0 -2px 0 var(--s2)}
 td.c0{background:var(--none);color:var(--muted)}td.cp{background:var(--amber-soft);color:var(--amber);font-weight:600}td.cf{background:var(--green-soft);color:var(--green);font-weight:700}
-.bar{display:inline-block;width:70px;height:8px;border-radius:4px;background:var(--none);vertical-align:middle;margin-right:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pri)}
+.pbar{display:inline-block;width:70px;height:8px;border-radius:4px;background:var(--none);vertical-align:middle;margin-right:6px;overflow:hidden}.pbar i{display:block;height:100%;background:var(--s1)}
 .warn{color:var(--red);font-weight:700;cursor:help}
-.legend{font-size:13px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;margin:8px 0}
-.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+.leg2{font-size:13px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;margin:8px 0}.leg2 span{display:inline-flex;align-items:center;gap:5px}.leg2 i{width:14px;height:14px;border-radius:3px;display:inline-block}
 .empty{padding:24px;text-align:center;color:var(--muted)}
 td button{padding:2px 8px;font-size:12px}
-details summary{cursor:pointer;color:var(--muted);font-size:14px}
+#detail{display:none}#detail.show{display:block}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px;font-size:13px;margin-top:8px}
+.dl div{border:1px solid var(--line);border-radius:8px;padding:6px 9px}.dl b{display:inline-block;min-width:34px}
+.ok{color:var(--green)}.no{color:var(--faint)}
 </style></head>
 <body>
-<header><div class="in"><h1>Lehrer-Übersicht Robotik</h1><p class="sub">Fortschrittscodes der Schülerinnen und Schüler einlesen – die Daten bleiben nur in diesem Browser.</p></div></header>
+<header><div class="in"><h1>Lehrer-Übersicht Robotik</h1><p class="sub">Basiskurs (LEGO SPIKE) und Vertiefungskurs (Python & TXT 4.0) – Fortschritt der Schülerinnen und Schüler</p></div></header>
 <main>
 <section class="card" aria-labelledby="h-in">
-  <h2 id="h-in">1 · Codes einlesen</h2>
-  <textarea id="codes" placeholder="Fortschrittscodes hier einfügen (beliebig viele, z. B. aus mebis kopiert). Jeder Code beginnt mit ROBO1-"></textarea>
-  <div class="drop" id="drop">Abgegebene Dateien (Fortschritt_….txt) hier hineinziehen – oder <label class="btn" style="display:inline-block">Dateien wählen<input id="files" type="file" multiple accept=".txt,text/plain" hidden></label></div>
-  <div class="row"><button class="pri" id="read">Einlesen</button></div>
+  <h2 id="h-in">Abgaben einlesen</h2>
+  <p class="hint">Verbinde einmal deinen OneDrive-Abgabeordner. Danach genügt „Aktualisieren“ – alle Dateien im Ordner werden gelesen.</p>
+  <div class="row" style="margin-top:0">
+    <button class="pri" id="connect">📂 Abgabeordner verbinden</button>
+    <button id="refresh" disabled>🔄 Aktualisieren</button>
+    <label class="status"><input type="checkbox" id="auto"> alle 2 Minuten automatisch</label>
+    <label class="btn" id="pickwrap" hidden>📂 Ordner auswählen<input id="pick" type="file" webkitdirectory multiple hidden></label>
+  </div>
+  <div class="msg status" id="fsstatus">Noch kein Ordner verbunden.</div>
+  <details><summary>Einzelne Codes oder Dateien von Hand einlesen</summary>
+    <textarea id="codes" placeholder="Fortschrittscodes hier einfügen (ROBO1-…)"></textarea>
+    <div class="drop" id="drop">Dateien hier hineinziehen – oder <label class="btn" style="display:inline-block">Dateien wählen<input id="files" type="file" multiple accept=".txt,text/plain" hidden></label></div>
+    <div class="row"><button id="read">Einlesen</button></div>
+  </details>
   <div class="msg" id="msg" aria-live="polite"></div>
 </section>
 
-<section class="card" aria-labelledby="h-out">
-  <h2 id="h-out">2 · Übersicht</h2>
-  <div class="row" style="margin-top:0"><div class="tabs" id="tabs" role="tablist"></div>
-    <label style="margin-left:auto;font-size:14px">Klasse <select id="klasse"></select></label>
-    <label style="font-size:14px">Sortieren <select id="sort"><option value="name">Name</option><option value="pct">Fortschritt</option><option value="t">letzte Abgabe</option></select></label></div>
-  <div class="legend"><span><i style="background:var(--none)"></i>nichts gelöst</span><span><i style="background:var(--amber-soft);border:1px solid var(--amber)"></i>teilweise</span><span><i style="background:var(--green-soft);border:1px solid var(--green)"></i>alle Aufgaben der Lektion</span><span><b class="warn">⚠</b> Codes mit verschiedenen Passwörtern oder veränderter Code</span></div>
+<div class="card" style="padding:12px 16px"><div class="bar-top"><div class="tabs" id="tabs" role="tablist" aria-label="Kurs"></div>
+  <div class="filters"><label>Klasse <select id="klasse"></select></label>
+  <label>Sortieren <select id="sort"><option value="name">Name</option><option value="pct">Fortschritt</option><option value="t">letzte Abgabe</option></select></label></div></div></div>
+
+<div class="tiles" id="tiles"></div>
+
+<div class="charts">
+  <section class="card"><h2>Stand je Lektion</h2><p class="hint">Durchschnittlich gelöste Aufgaben je Lektion in Prozent (nur Lektionen mit Simulator-Aufgaben) – Säule antippen für Details</p><div class="chart" id="ch1"></div></section>
+  <section class="card"><h2>Entwicklung über die Zeit</h2><p class="hint" id="ch2hint">Durchschnittlich gelöste Aufgaben (alle Lektionen) – Zeile in der Tabelle anklicken, um eine Person einzublenden</p><div class="legend" id="ch2leg"></div><div class="chart" id="ch2"></div></section>
+</div>
+
+<section class="card" id="detail" aria-live="polite"></section>
+
+<section class="card" aria-labelledby="h-t">
+  <h2 id="h-t">Übersicht nach Personen</h2>
+  <div class="leg2"><span><i style="background:var(--none)"></i>nichts gelöst</span><span><i style="background:var(--amber-soft);border:1px solid var(--amber)"></i>teilweise</span><span><i style="background:var(--green-soft);border:1px solid var(--green)"></i>alles gelöst</span><span><b class="warn">⚠</b> verschiedene Passwörter oder veränderter Code</span></div>
   <div class="scroll" id="tablewrap"></div>
   <div class="row"><button id="csv">⬇ Tabelle als CSV (Excel)</button><button id="backup">💾 Sicherung speichern</button><label class="btn">📂 Sicherung laden<input id="restore" type="file" accept=".json,application/json" hidden></label><button class="danger" id="clear">Alle Daten löschen</button></div>
 </section>
-
-<section class="card"><details><summary>So funktioniert es</summary>
-<ul style="font-size:14px">
-<li>Die Schüler melden sich auf der Lernplattform mit <b>Name, Klasse und Passwort</b> an. Ihr Fortschritt wird nur in ihrem Browser gespeichert – getrennt pro Person, auch am gemeinsamen Schul-PC.</li>
-<li>Am Ende der Stunde klicken sie <b>„📤 Fortschritt abgeben“</b> und geben den Code oder die Datei ab (z. B. als mebis-Aufgabe, per Teams oder E-Mail).</li>
-<li>Hier einfügen oder Dateien hineinziehen → die Tabelle zeigt pro Lektion „gelöst / vorhanden“. Mehrere Abgaben derselben Person werden zusammengeführt (alle je gelösten Aufgaben zählen).</li>
-<li><b>⚠</b> erscheint, wenn dieselbe Person Codes mit unterschiedlichen Passwörtern abgegeben hat (z. B. jemand gibt sich als andere Person aus) oder ein Code verändert wurde.</li>
-<li>Die Daten liegen nur in diesem Browser auf diesem Gerät. Mit „Sicherung speichern“ nimmst du sie auf ein anderes Gerät mit.</li>
-</ul></details></section>
+<p class="status" style="margin:0 0 20px">Die Daten werden nur in diesem Browser gespeichert. Für ein anderes Gerät: „Sicherung speichern“ oder dort den Abgabeordner verbinden.</p>
 </main>
 <script>
 var CAT = {"SPIKE": {"title": "Basiskurs Robotik (LEGO SPIKE Prime)", "lessons": [{"k": "L01", "t": "Bauteile, Verbindungen, Materialien", "ex": []}, {"k": "L02", "t": "Statik: Kräfte, Hebel und Stabilität", "ex": []}, {"k": "L03", "t": "Mechanismen: Getriebe, Räder, Greifer", "ex": []}, {"k": "L04", "t": "Energie, Hub und Verkabelung", "ex": ["e1"]}, {"k": "L05", "t": "Sensoren und Aktoren", "ex": ["e1", "e2"]}, {"k": "L06", "t": "Grundbefehle: der Roboter lernt fahren", "ex": ["e1", "e2", "e3"]}, {"k": "L07", "t": "Wiederholungen und Meine Blöcke", "ex": ["e1", "e2", "e3"]}, {"k": "L08", "t": "Sensoren auswerten: Abstand und Kraft", "ex": ["e1", "e2", "e3"]}, {"k": "L09", "t": "Sensoren auswerten: Farben und Linien", "ex": ["e1", "e2", "e3"]}, {"k": "L10", "t": "Gyrosensor und präzises Fahren", "ex": ["e1", "e2", "e3"]}, {"k": "L11", "t": "Mit Gegenständen spielen", "ex": ["e1", "e2"]}, {"k": "L12", "t": "Den Roboter warten", "ex": ["e1"]}, {"k": "L13", "t": "Fehler im Programm finden", "ex": ["e1", "e2", "e3"]}, {"k": "L14", "t": "Geführte Mission", "ex": ["e1", "e2"]}, {"k": "L15", "t": "Missionsbereit: der Robot-Game-Lauf", "ex": ["e1"]}, {"k": "L16", "t": "Berufliche Möglichkeiten entdecken", "ex": []}]}, "PY": {"title": "Vertiefungskurs Robotik (Python & TXT 4.0)", "lessons": [{"k": "L01", "t": "Von Blockly zu Python", "ex": ["e2", "e3", "e4"]}, {"k": "L02", "t": "Rechnen mit Sensorwerten", "ex": ["e2", "e3", "e4"]}, {"k": "L03", "t": "Entscheidungen: if / elif / else", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L04", "t": "Schleifen, Zähler und Zustände", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L05", "t": "Funktionen und Zeitsteuerung", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L06", "t": "Binärcode und Listen", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L07", "t": "Texte und Wörterbücher", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L08", "t": "Fahren mit Encodern und Kalibrieren", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L09", "t": "Hindernisse erkennen – Zustandsautomaten", "ex": ["e1", "e2", "e3"]}, {"k": "L10", "t": "Kartesische Koordinaten: der Malroboter", "ex": ["e1", "e2", "e3", "e4", "e5"]}, {"k": "L11", "t": "3D-Koordinaten: der Portalroboter", "ex": ["e1", "e2", "e3", "e4", "e5"]}, {"k": "L12", "t": "Spurfolger und Regler", "ex": ["e1", "e2"]}, {"k": "L13", "t": "KI 1: Maschinelles Lernen – Farben erkennen", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L14", "t": "KI 2: Neuronen und Bilderkennung", "ex": ["e1", "e2", "e3", "e4"]}]}};
-var SALT = "robotik-wst-2026", KEY = "rprog:teacher";
+var SALT = "robotik-wst-2026", KEY = "rprog:teacher2";
 function hash(str, seed){var h1=0xdeadbeef^(seed||0),h2=0x41c6ce57^(seed||0);for(var i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);}
 function unb64u(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";return decodeURIComponent(escape(atob(s)));}
 function norm(s){return String(s||"").trim().replace(/\s+/g," ");}
-var DB = {}; try { DB = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { DB = {}; }
-function save(){ try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch(e) { say("Achtung: Dieser Browser speichert nicht dauerhaft – bitte Sicherung speichern.", true); } }
-var course = Object.keys(CAT)[0];
 function $(id){return document.getElementById(id);}
-function say(t, bad){ var m=$("msg"); m.textContent=t; m.style.color = bad ? "var(--red)" : "var(--green)"; }
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+function say(t,bad){var m=$("msg");m.textContent=t;m.style.color=bad?"var(--red)":"var(--green)";}
+
+/* ---------- Datenhaltung: jede Abgabe einzeln (Schlüssel = Prüfsumme) ---------- */
+var SUBS={}; try{SUBS=JSON.parse(localStorage.getItem(KEY)||"{}");}catch(e){SUBS={};}
+(function migrate(){ try{ var old=JSON.parse(localStorage.getItem("rprog:teacher")||"null"); if(!old) return; Object.keys(old).forEach(function(id){ var r=old[id]; (r.subs||[]).forEach(function(s,i){ if(!SUBS[s]) SUBS[s]={c:r.c,n:r.n,k:r.k,p:r.fps[0]||"",t:r.t,d:i===0?r.done:{},x:r.tampered}; }); }); localStorage.removeItem("rprog:teacher"); }catch(e){} })();
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(SUBS));}catch(e){ say("Achtung: Dieser Browser speichert nicht dauerhaft – bitte „Sicherung speichern“.",true);} }
+function sid(s){ return s.c+"|"+(norm(s.k)+"|"+norm(s.n)).toLowerCase(); }
 
 function ingest(text){
-  var re=/ROBO1-([A-Za-z0-9_-]+)\.([a-z0-9]+)/g, m, ok=0, bad=0, dup=0;
+  var re=/ROBO1-([A-Za-z0-9_-]+)\.([a-z0-9]+)/g,m,ok=0,bad=0,dup=0,last=null;
   while((m=re.exec(text))){
-    var body=m[1], sum=m[2], d;
-    try { d = JSON.parse(unb64u(body)); } catch(e) { bad++; continue; }
-    if(!d || !d.c || !d.n || !CAT[d.c]) { bad++; continue; }
-    var tampered = hash(SALT+body,7) !== sum;
-    var id = d.c + "|" + (norm(d.k)+"|"+norm(d.n)).toLowerCase();
-    var r = DB[id] || (DB[id] = {c:d.c, n:norm(d.n), k:norm(d.k), t:0, fps:[], done:{}, subs:[], tampered:false});
-    if (r.subs.indexOf(sum) >= 0) { dup++; continue; }
-    r.subs.push(sum);
-    if (d.t > r.t) { r.t = d.t; r.n = norm(d.n); r.k = norm(d.k); }
-    if (d.p && r.fps.indexOf(d.p) < 0) r.fps.push(d.p);
-    if (tampered) r.tampered = true;
-    Object.keys(d.d || {}).forEach(function(L){ (r.done[L] = r.done[L] || []); d.d[L].forEach(function(x){ if(r.done[L].indexOf(x)<0) r.done[L].push(x); }); });
-    ok++; course = d.c;
+    var body=m[1],sum=m[2],d;
+    if(SUBS[sum]){dup++;continue;}
+    try{d=JSON.parse(unb64u(body));}catch(e){bad++;continue;}
+    if(!d||!d.c||!d.n||!CAT[d.c]){bad++;continue;}
+    SUBS[sum]={c:d.c,n:norm(d.n),k:norm(d.k),p:d.p||"",t:+d.t||0,d:d.d||{},x:hash(SALT+body,7)!==sum};
+    ok++; last=d.c;
   }
-  save(); render();
-  if(!ok && !bad && !dup) say("Keine Codes gefunden. Ein Code beginnt mit ROBO1-", true);
-  else say(ok+" Code(s) eingelesen" + (dup? ", "+dup+" schon vorhanden":"") + (bad? ", "+bad+" unlesbar":""), !!bad && !ok);
+  if(ok){ save(); if(last && !students().length) course=last; render(); }
+  return {ok:ok,bad:bad,dup:dup};
+}
+function report(r,src){ if(!r.ok&&!r.bad&&!r.dup) say((src||"")+"Keine Abgaben gefunden.",true); else say((src||"")+r.ok+" neue Abgabe(n)"+(r.dup?", "+r.dup+" schon bekannt":"")+(r.bad?", "+r.bad+" unlesbar":""),!!r.bad&&!r.ok); }
+
+/* ---------- Auswertung ---------- */
+var course=Object.keys(CAT)[0], selected=null;
+function lessonsWithEx(){ return CAT[course].lessons.filter(function(l){return l.ex.length;}); }
+function students(){
+  var kl=$("klasse").value, map={};
+  Object.keys(SUBS).forEach(function(k){ var s=SUBS[k]; if(s.c!==course) return; if(kl && s.k!==kl) return;
+    var id=sid(s), r=map[id]||(map[id]={id:id,n:s.n,k:s.k,t:0,fps:[],x:false,subs:[]});
+    r.subs.push(s); if(s.t>r.t){r.t=s.t;r.n=s.n;r.k=s.k;} if(s.p&&r.fps.indexOf(s.p)<0) r.fps.push(s.p); if(s.x) r.x=true; });
+  return Object.keys(map).map(function(id){ var r=map[id]; r.done=doneUntil(r.subs,Infinity); r.st=stats(r.done); return r; });
+}
+function doneUntil(subs,t){ var d={}; subs.forEach(function(s){ if(s.t>t) return; Object.keys(s.d).forEach(function(L){ (d[L]=d[L]||[]); s.d[L].forEach(function(x){ if(d[L].indexOf(x)<0) d[L].push(x); }); }); }); return d; }
+function stats(done){ var tot=0,sol=0,per=CAT[course].lessons.map(function(l){ var have=(done[l.k]||[]).filter(function(x){return l.ex.indexOf(x)>=0;}); tot+=l.ex.length; sol+=have.length; return {have:have,n:l.ex.length}; }); return {per:per,tot:tot,sol:sol,pct:tot?sol/tot:0}; }
+function sorted(list){ var s=$("sort").value; return list.sort(function(a,b){ if(s==="pct") return b.st.pct-a.st.pct; if(s==="t") return b.t-a.t; return (a.k+" "+a.n).localeCompare(b.k+" "+b.n,"de"); }); }
+function fmtD(t){ return new Date(t).toLocaleDateString("de-DE",{day:"2-digit",month:"2-digit"}); }
+function pct(x){ return Math.round(x*100)+" %"; }
+
+/* ---------- Tooltip ---------- */
+function tipShow(host,x,y,rows){ var t=host.querySelector(".tip"); if(!t){t=document.createElement("div");t.className="tip";host.appendChild(t);} t.innerHTML="";
+  rows.forEach(function(r,i){ var d=document.createElement("div"); if(r.key){var k=document.createElement("span");k.className="k";k.style.background=r.key;d.appendChild(k);} var v=document.createElement("span"); v.className=i===0&&!r.key?"tl":"tv"; v.textContent=r.v; d.appendChild(v); if(r.l){var l=document.createElement("span");l.className="tl";l.textContent="  "+r.l;d.appendChild(l);} t.appendChild(d); });
+  t.style.display="block"; var w=host.clientWidth, tw=t.offsetWidth; t.style.left=Math.max(0,Math.min(w-tw,x-tw/2))+"px"; t.style.top=Math.max(0,y-t.offsetHeight-10)+"px"; }
+function tipHide(host){ var t=host.querySelector(".tip"); if(t) t.style.display="none"; }
+var NS="http://www.w3.org/2000/svg";
+function S(tag,attrs,parent){ var e=document.createElementNS(NS,tag); for(var k in attrs) e.setAttribute(k,attrs[k]); if(parent) parent.appendChild(e); return e; }
+function cssv(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+/* Diagramm 1: Säulen je Lektion */
+function chartLessons(list){
+  var host=$("ch1"); host.innerHTML=""; var L=lessonsWithEx();
+  if(!list.length){ host.innerHTML='<div class="empty">Noch keine Daten.</div>'; return; }
+  var vals=L.map(function(l){ var i=CAT[course].lessons.indexOf(l); var s=0; list.forEach(function(r){ s+=r.st.per[i].have.length/l.ex.length; }); return s/list.length; });
+  var W=560,H=250,ml=36,mr=8,mt=16,mb=28,iw=W-ml-mr,ih=H-mt-mb, band=iw/L.length, bw=Math.min(24,band*0.62);
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img","aria-label":"Säulendiagramm: durchschnittlich gelöste Aufgaben je Lektion"},host);
+  [0,25,50,75,100].forEach(function(v){ var y=mt+ih-ih*v/100; S("line",{x1:ml,x2:W-mr,y1:y,y2:y,stroke:cssv("--grid"),"stroke-width":1},svg); var t=S("text",{x:ml-6,y:y+4,"text-anchor":"end"},svg); t.textContent=v+"%"; });
+  var low=vals.indexOf(Math.min.apply(null,vals)), high=vals.indexOf(Math.max.apply(null,vals));
+  L.forEach(function(l,i){
+    var v=vals[i], h=Math.max(v*ih, v>0?2:0), x=ml+band*i+(band-bw)/2, y=mt+ih-h, r=Math.min(4,h);
+    if(h>0) S("path",{"class":"bar",d:"M"+x+","+(mt+ih)+"V"+(y+r)+"Q"+x+","+y+" "+(x+r)+","+y+"H"+(x+bw-r)+"Q"+(x+bw)+","+y+" "+(x+bw)+","+(y+r)+"V"+(mt+ih)+"Z"},svg);
+    var lab=S("text",{x:x+bw/2,y:H-10,"text-anchor":"middle"},svg); lab.textContent=l.k.replace("L0","").replace("L","");
+    if(i===low||i===high){ var vt=S("text",{x:x+bw/2,y:y-5,"text-anchor":"middle",style:"fill:"+cssv("--ink")+";font-weight:600"},svg); vt.textContent=Math.round(v*100)+"%"; }
+    var hit=S("rect",{"class":"hit",x:ml+band*i,y:mt,width:band,height:ih,tabindex:0,"aria-label":l.k+" "+l.t+": "+Math.round(v*100)+" Prozent"},svg);
+    var done=list.filter(function(r){ var p=r.st.per[CAT[course].lessons.indexOf(l)]; return p.have.length>=p.n; }).length;
+    function show(){ var bar=svg.querySelectorAll(".bar"); var rect=hit.getBoundingClientRect(), hr=host.getBoundingClientRect(); tipShow(host,rect.left-hr.left+rect.width/2,(y/H)*hr.height,[{v:pct(v)+" gelöst",l:""},{v:l.k,l:l.t},{v:done+" von "+list.length,l:"haben alles gelöst"}]); }
+    hit.addEventListener("pointermove",show); hit.addEventListener("focus",show); hit.addEventListener("pointerleave",function(){tipHide(host);}); hit.addEventListener("blur",function(){tipHide(host);});
+  });
 }
 
-function stats(r){
-  var tot=0, sol=0, per=CAT[r.c].lessons.map(function(l){ var have=(r.done[l.k]||[]).filter(function(x){return l.ex.indexOf(x)>=0;}).length; tot+=l.ex.length; sol+=have; return [have,l.ex.length,(r.done[l.k]||[])]; });
-  return {per:per, tot:tot, sol:sol, pct: tot? sol/tot : 0};
+/* Diagramm 2: Verlauf (Tageswerte) */
+function chartTime(list){
+  var host=$("ch2"), leg=$("ch2leg"); host.innerHTML=""; leg.innerHTML="";
+  var all=[]; list.forEach(function(r){ r.subs.forEach(function(s){ all.push(s.t); }); });
+  if(!all.length){ host.innerHTML='<div class="empty">Noch keine Daten.</div>'; return; }
+  var days={}; all.forEach(function(t){ var d=new Date(t); d.setHours(23,59,59,999); days[d.getTime()]=1; });
+  var D=Object.keys(days).map(Number).sort(function(a,b){return a-b;});
+  var avg=D.map(function(t){ var s=0; list.forEach(function(r){ s+=stats(doneUntil(r.subs,t)).pct; }); return s/list.length; });
+  var sel=selected && list.filter(function(r){return r.id===selected;})[0];
+  var mine=sel? D.map(function(t){ return stats(doneUntil(sel.subs,t)).pct; }) : null;
+  var series=[{name:"Klassendurchschnitt",vals:avg,col:cssv("--s1")}]; if(mine) series.push({name:sel.n,vals:mine,col:cssv("--s2")});
+  if(series.length>1) series.forEach(function(s){ var sp=document.createElement("span"); var i=document.createElement("i"); i.style.background=s.col; sp.appendChild(i); sp.appendChild(document.createTextNode(s.name)); leg.appendChild(sp); });
+  var W=560,H=250,ml=36,mr=14,mt=16,mb=28,iw=W-ml-mr,ih=H-mt-mb;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img","aria-label":"Liniendiagramm: Entwicklung des Fortschritts über die Zeit"},host);
+  [0,25,50,75,100].forEach(function(v){ var y=mt+ih-ih*v/100; S("line",{x1:ml,x2:W-mr,y1:y,y2:y,stroke:cssv("--grid"),"stroke-width":1},svg); var t=S("text",{x:ml-6,y:y+4,"text-anchor":"end"},svg); t.textContent=v+"%"; });
+  var X=function(i){ return D.length===1? ml+iw/2 : ml+iw*i/(D.length-1); }, Y=function(v){ return mt+ih-ih*v; };
+  var step=Math.max(1,Math.ceil(D.length/7)); D.forEach(function(t,i){ if(i%step && i!==D.length-1) return; var tx=S("text",{x:X(i),y:H-10,"text-anchor":"middle"},svg); tx.textContent=fmtD(t); });
+  series.forEach(function(s,si){
+    if(si===0 && D.length>1) S("path",{d:"M"+X(0)+","+Y(0)+s.vals.map(function(v,i){return "L"+X(i)+","+Y(v);}).join("")+"L"+X(D.length-1)+","+Y(0)+"Z",fill:cssv("--s1-wash")},svg);
+    if(D.length>1) S("path",{d:s.vals.map(function(v,i){return (i?"L":"M")+X(i)+","+Y(v);}).join(""),fill:"none",stroke:s.col,"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"},svg);
+    var li=D.length-1; S("circle",{cx:X(li),cy:Y(s.vals[li]),r:4.5,fill:s.col,stroke:cssv("--card"),"stroke-width":2},svg);
+    var lt=S("text",{x:X(li)-8,y:Y(s.vals[li])+(si===0?-9:15),"text-anchor":"end",style:"fill:"+cssv("--ink")+";font-weight:600"},svg); lt.textContent=pct(s.vals[li]);
+  });
+  var cross=S("line",{x1:0,x2:0,y1:mt,y2:mt+ih,stroke:cssv("--faint"),"stroke-width":1,visibility:"hidden"},svg);
+  var ov=S("rect",{"class":"hit",x:ml-10,y:mt,width:iw+20,height:ih,tabindex:0,"aria-label":"Verlauf: Pfeiltasten zeigen die Tageswerte"},svg), cur=D.length-1;
+  function at(i){ cur=i; var x=X(i); cross.setAttribute("x1",x); cross.setAttribute("x2",x); cross.setAttribute("visibility","visible");
+    var hr=host.getBoundingClientRect(), sc=hr.width/W; tipShow(host,x*sc,Y(Math.max.apply(null,series.map(function(s){return s.vals[i];})))*sc,[{v:new Date(D[i]).toLocaleDateString("de-DE",{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"})}].concat(series.map(function(s){return {key:s.col,v:pct(s.vals[i]),l:s.name};}))); }
+  ov.addEventListener("pointermove",function(e){ var r=svg.getBoundingClientRect(), x=(e.clientX-r.left)*W/r.width; var best=0; D.forEach(function(t,i){ if(Math.abs(X(i)-x)<Math.abs(X(best)-x)) best=i; }); at(best); });
+  ov.addEventListener("focus",function(){at(cur);}); ov.addEventListener("keydown",function(e){ if(e.key==="ArrowLeft"&&cur>0){at(cur-1);e.preventDefault();} if(e.key==="ArrowRight"&&cur<D.length-1){at(cur+1);e.preventDefault();} });
+  function off(){ tipHide(host); cross.setAttribute("visibility","hidden"); } ov.addEventListener("pointerleave",off); ov.addEventListener("blur",off);
 }
-function rows(){
-  var kl=$("klasse").value, list=Object.keys(DB).map(function(id){return Object.assign({id:id},DB[id]);}).filter(function(r){return r.c===course && (!kl || r.k===kl);});
-  var s=$("sort").value;
-  list.sort(function(a,b){ if(s==="pct") return stats(b).pct-stats(a).pct; if(s==="t") return b.t-a.t; return (a.k+a.n).localeCompare(b.k+b.n,"de"); });
-  return list;
+
+/* ---------- Kacheln, Tabelle, Detail ---------- */
+function tiles(list){
+  var L=lessonsWithEx(), n=list.length, avg=0; list.forEach(function(r){avg+=r.st.pct;}); avg=n?avg/n:0;
+  var week=Date.now()-7*864e5, recent=list.filter(function(r){return r.t>=week;}).length;
+  var worst="–", wv=2; if(n) L.forEach(function(l){ var i=CAT[course].lessons.indexOf(l), s=0; list.forEach(function(r){ s+=r.st.per[i].have.length/l.ex.length; }); s/=n; if(s<wv){wv=s;worst=l.k+" · "+l.t;} });
+  var T=[["Schülerinnen und Schüler",n,"mit mindestens einer Abgabe"],["Ø gelöste Aufgaben",pct(avg),"über alle Lektionen"],["Abgaben in den letzten 7 Tagen",recent+" / "+n,"Personen"],["Größte Lücke",n?pct(wv):"–",n?worst:""]];
+  var h=$("tiles"); h.innerHTML=""; T.forEach(function(t){ var d=document.createElement("div"); d.className="tile"; ["l","v","d"].forEach(function(c,i){ var e=document.createElement("div"); e.className=c; e.textContent=t[i]; d.appendChild(e); }); h.appendChild(d); });
 }
-function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
-function render(){
-  var tabs=$("tabs"); tabs.innerHTML="";
-  Object.keys(CAT).forEach(function(c){ var n=Object.keys(DB).filter(function(id){return DB[id].c===c;}).length;
-    var b=document.createElement("button"); b.setAttribute("role","tab"); b.setAttribute("aria-selected", c===course); b.textContent=CAT[c].title+" ("+n+")";
-    b.onclick=function(){course=c; $("klasse").value=""; render();}; tabs.appendChild(b); });
-  var sel=$("klasse"), cur=sel.value, ks={}; Object.keys(DB).forEach(function(id){ if(DB[id].c===course) ks[DB[id].k||""]=1; });
-  sel.innerHTML='<option value="">alle</option>'+Object.keys(ks).sort().map(function(k){return '<option value="'+esc(k)+'">'+esc(k||"(ohne)")+'</option>';}).join("");
-  sel.value = ks.hasOwnProperty(cur) ? cur : "";
-  var L=CAT[course].lessons, list=rows();
-  if(!list.length){ $("tablewrap").innerHTML='<div class="empty">Noch keine Codes für diesen Kurs eingelesen.</div>'; return; }
+function table(list){
+  var L=CAT[course].lessons;
+  if(!list.length){ $("tablewrap").innerHTML='<div class="empty">Noch keine Abgaben für diesen Kurs – Abgabeordner verbinden oder Codes einlesen.</div>'; return; }
   var h='<table><thead><tr><th class="l">Name</th><th>Klasse</th><th>letzte Abgabe</th>'+L.map(function(l){return '<th title="'+esc(l.t)+'">'+l.k+'<small>'+esc(l.t)+'</small></th>';}).join("")+'<th>gesamt</th><th></th><th></th></tr></thead><tbody>';
   list.forEach(function(r){
-    var st=stats(r), warn=(r.fps.length>1? "Codes mit "+r.fps.length+" verschiedenen Passwörtern. ":"")+(r.tampered?"Mindestens ein Code wurde verändert.":"");
-    h+='<tr><td class="l">'+esc(r.n)+'</td><td>'+esc(r.k)+'</td><td>'+new Date(r.t).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"})+'</td>';
-    st.per.forEach(function(p,i){ if(!p[1]){ h+='<td title="'+esc(L[i].t)+': keine Simulator-Aufgaben">–</td>'; return; } var cls=p[0]===0?"c0":(p[0]>=p[1]?"cf":"cp"); h+='<td class="'+cls+'" title="'+esc(L[i].t)+': '+(p[2].join(", ")||"–")+'">'+p[0]+'/'+p[1]+'</td>'; });
-    h+='<td><span class="bar"><i style="width:'+Math.round(st.pct*100)+'%"></i></span>'+st.sol+'/'+st.tot+'</td><td>'+(warn?'<span class="warn" title="'+esc(warn)+'">⚠</span>':'')+'</td><td><button data-del="'+esc(r.id)+'" aria-label="'+esc(r.n)+' entfernen">✕</button></td></tr>';
+    var warn=(r.fps.length>1?"Abgaben mit "+r.fps.length+" verschiedenen Passwörtern. ":"")+(r.x?"Mindestens ein Code wurde verändert.":"");
+    h+='<tr data-id="'+esc(r.id)+'"'+(r.id===selected?' class="sel"':'')+'><td class="l">'+esc(r.n)+'</td><td>'+esc(r.k)+'</td><td>'+new Date(r.t).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"})+'</td>';
+    r.st.per.forEach(function(p,i){ if(!p.n){h+='<td title="keine Simulator-Aufgaben">–</td>';return;} var cls=!p.have.length?"c0":(p.have.length>=p.n?"cf":"cp"); h+='<td class="'+cls+'" title="'+esc(L[i].t)+'">'+p.have.length+'/'+p.n+'</td>'; });
+    h+='<td><span class="pbar"><i style="width:'+Math.round(r.st.pct*100)+'%"></i></span>'+r.st.sol+'/'+r.st.tot+'</td><td>'+(warn?'<span class="warn" title="'+esc(warn)+'">⚠</span>':'')+'</td><td><button data-del="'+esc(r.id)+'" aria-label="'+esc(r.n)+' entfernen">✕</button></td></tr>';
   });
   $("tablewrap").innerHTML=h+'</tbody></table>';
 }
-$("read").onclick=function(){ ingest($("codes").value); $("codes").value=""; };
-function readFiles(fl){ var arr=[].slice.call(fl), all="", n=arr.length; if(!n) return; arr.forEach(function(f){ var fr=new FileReader(); fr.onload=function(){ all+="\n"+fr.result; if(--n===0) ingest(all); }; fr.readAsText(f); }); }
+function detail(list){
+  var box=$("detail"), r=selected && list.filter(function(x){return x.id===selected;})[0];
+  if(!r){ box.className="card"; box.innerHTML=""; return; }
+  box.className="card show"; box.innerHTML="";
+  var h=document.createElement("h2"); h.textContent=r.n+(r.k?" · "+r.k:"")+" – "+r.st.sol+" von "+r.st.tot+" Aufgaben ("+pct(r.st.pct)+")"; box.appendChild(h);
+  var p=document.createElement("p"); p.className="hint"; p.textContent=r.subs.length+" Abgabe(n), zuletzt "+new Date(r.t).toLocaleString("de-DE")+". Die orange Linie im Verlaufsdiagramm zeigt diese Person."; box.appendChild(p);
+  var g=document.createElement("div"); g.className="dl";
+  CAT[course].lessons.forEach(function(l,i){ if(!l.ex.length) return; var d=document.createElement("div"); var b=document.createElement("b"); b.textContent=l.k; d.appendChild(b); d.appendChild(document.createTextNode(" "+l.t+" ")); var s=document.createElement("div");
+    l.ex.forEach(function(x,j){ var sp=document.createElement("span"); var ok=r.st.per[i].have.indexOf(x)>=0; sp.className=ok?"ok":"no"; sp.textContent=(ok?"✓ ":"○ ")+"Aufg. "+(j+1)+"  "; s.appendChild(sp); }); d.appendChild(s); g.appendChild(d); });
+  box.appendChild(g);
+  var c=document.createElement("button"); c.textContent="Auswahl aufheben"; c.style.marginTop="10px"; c.onclick=function(){selected=null;render();}; box.appendChild(c);
+}
+function render(){
+  var tabs=$("tabs"); tabs.innerHTML="";
+  Object.keys(CAT).forEach(function(c){ var ids={}; Object.keys(SUBS).forEach(function(k){ if(SUBS[k].c===c) ids[sid(SUBS[k])]=1; });
+    var b=document.createElement("button"); b.setAttribute("role","tab"); b.setAttribute("aria-selected",c===course); b.textContent=CAT[c].title+" ("+Object.keys(ids).length+")";
+    b.onclick=function(){course=c;selected=null;$("klasse").value="";render();}; tabs.appendChild(b); });
+  var sel=$("klasse"), cur=sel.value, ks={}; Object.keys(SUBS).forEach(function(k){ if(SUBS[k].c===course) ks[SUBS[k].k||""]=1; });
+  sel.innerHTML='<option value="">alle</option>'+Object.keys(ks).sort().map(function(k){return '<option value="'+esc(k)+'">'+esc(k||"(ohne)")+'</option>';}).join("");
+  sel.value=ks.hasOwnProperty(cur)?cur:"";
+  var list=sorted(students());
+  tiles(list); chartLessons(list); chartTime(list); table(list); detail(list);
+}
+
+/* ---------- Abgabeordner (File System Access API, sonst Ordnerauswahl) ---------- */
+var DIR=null, HAS_FS=!!window.showDirectoryPicker;
+function idb(mode,val){ return new Promise(function(res){ try{ var rq=indexedDB.open("rprog",1); rq.onupgradeneeded=function(){rq.result.createObjectStore("kv");}; rq.onerror=function(){res(null);};
+  rq.onsuccess=function(){ var db=rq.result, tx=db.transaction("kv",mode==="get"?"readonly":"readwrite"), st=tx.objectStore("kv"); var r=mode==="get"?st.get("dir"):st.put(val,"dir"); r.onsuccess=function(){res(r.result||null);}; r.onerror=function(){res(null);}; }; }catch(e){res(null);} }); }
+async function readDir(dir,depth,out){ for await (const [name,h] of dir.entries()){ if(h.kind==="file" && /\.txt$/i.test(name)){ const f=await h.getFile(); if(f.size<50000) out.push(await f.text()); } else if(h.kind==="directory" && depth<2) await readDir(h,depth+1,out); } return out; }
+async function refresh(ask){
+  if(!DIR) return;
+  var perm=await DIR.queryPermission({mode:"read"});
+  if(perm!=="granted"){ if(!ask){ $("fsstatus").innerHTML="Ordner <b></b> verbunden – zum Lesen einmal auf „Aktualisieren“ klicken."; $("fsstatus").querySelector("b").textContent=DIR.name; return; } perm=await DIR.requestPermission({mode:"read"}); if(perm!=="granted"){ say("Zugriff auf den Ordner wurde nicht erlaubt.",true); return; } }
+  try{ var texts=await readDir(DIR,0,[]); var r=ingest(texts.join("\n")); report(r,"Ordner gelesen: ");
+    $("fsstatus").innerHTML="Ordner <b></b> · "+texts.length+" Datei(en) · zuletzt gelesen "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}); $("fsstatus").querySelector("b").textContent=DIR.name; render();
+  }catch(e){ say("Der Ordner konnte nicht gelesen werden. Bitte neu verbinden.",true); }
+}
+if(HAS_FS){
+  $("connect").onclick=async function(){ try{ DIR=await window.showDirectoryPicker({id:"robotik-abgaben",mode:"read"}); await idb("put",DIR); $("refresh").disabled=false; refresh(true); }catch(e){} };
+  $("refresh").onclick=function(){ refresh(true); };
+  idb("get").then(function(h){ if(h){ DIR=h; $("refresh").disabled=false; refresh(false); } });
+} else {
+  $("connect").hidden=true; $("refresh").hidden=true; $("auto").parentNode.hidden=true; $("pickwrap").hidden=false;
+  $("fsstatus").textContent="Dieser Browser kann Ordner nicht dauerhaft verbinden (am besten Chrome oder Edge verwenden). Wähle den Abgabeordner jeweils neu aus.";
+}
+var timer=null; $("auto").onchange=function(){ clearInterval(timer); if(this.checked) timer=setInterval(function(){ refresh(false); },120000); };
+function readFiles(fl,src){ var arr=[].slice.call(fl).filter(function(f){return /\.txt$/i.test(f.name)&&f.size<50000;}), all="", n=arr.length; if(!n){ say("Keine .txt-Dateien gefunden.",true); return; } arr.forEach(function(f){ var fr=new FileReader(); fr.onload=function(){ all+="\n"+fr.result; if(--n===0) report(ingest(all),src); }; fr.readAsText(f); }); }
+$("pick").onchange=function(e){ readFiles(e.target.files,"Ordner gelesen: "); e.target.value=""; };
 $("files").onchange=function(e){ readFiles(e.target.files); e.target.value=""; };
-var dr=$("drop");
-dr.addEventListener("dragover",function(e){e.preventDefault(); dr.classList.add("on");});
-dr.addEventListener("dragleave",function(){dr.classList.remove("on");});
-dr.addEventListener("drop",function(e){e.preventDefault(); dr.classList.remove("on"); readFiles(e.dataTransfer.files);});
-$("klasse").onchange=render; $("sort").onchange=render;
-$("tablewrap").addEventListener("click",function(e){ var id=e.target.getAttribute("data-del"); if(id && confirm("„"+DB[id].n+"“ aus der Übersicht entfernen?")){ delete DB[id]; save(); render(); } });
-function download(name, text, type){ var b=new Blob([text],{type:type}), u=URL.createObjectURL(b), a=document.createElement("a"); a.href=u; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(u);},2000); }
+$("read").onclick=function(){ report(ingest($("codes").value)); $("codes").value=""; };
+var dr=$("drop"); dr.addEventListener("dragover",function(e){e.preventDefault();dr.classList.add("on");}); dr.addEventListener("dragleave",function(){dr.classList.remove("on");}); dr.addEventListener("drop",function(e){e.preventDefault();dr.classList.remove("on");readFiles(e.dataTransfer.files);});
+
+/* ---------- Bedienung ---------- */
+$("klasse").onchange=function(){selected=null;render();}; $("sort").onchange=render;
+$("tablewrap").addEventListener("click",function(e){
+  var id=e.target.getAttribute&&e.target.getAttribute("data-del");
+  if(id){ var r=students().filter(function(x){return x.id===id;})[0]; if(r && confirm("„"+r.n+"“ mit allen Abgaben aus der Übersicht entfernen? (Dateien im Ordner werden beim nächsten Aktualisieren wieder eingelesen.)")){ Object.keys(SUBS).forEach(function(k){ if(sid(SUBS[k])===id) delete SUBS[k]; }); if(selected===id) selected=null; save(); render(); } return; }
+  var tr=e.target.closest&&e.target.closest("tr[data-id]"); if(tr){ var tid=tr.getAttribute("data-id"); selected= selected===tid? null : tid; render(); if(selected) $("detail").scrollIntoView({behavior:"smooth",block:"nearest"}); }
+});
+function download(name,text,type){ var b=new Blob([text],{type:type}),u=URL.createObjectURL(b),a=document.createElement("a"); a.href=u; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(u);},2000); }
 $("csv").onclick=function(){ var L=CAT[course].lessons, q=function(s){return '"'+String(s).replace(/"/g,'""')+'"';};
-  var lines=[["Name","Klasse","letzte Abgabe"].concat(L.map(function(l){return l.k+" "+l.t;})).concat(["gelöst","gesamt","Prozent","Hinweis"]).map(q).join(";")];
-  rows().forEach(function(r){ var st=stats(r); lines.push([r.n,r.k,new Date(r.t).toLocaleString("de-DE")].concat(st.per.map(function(p){return p[1]? p[0]+"/"+p[1] : "–";})).concat([st.sol,st.tot,Math.round(st.pct*100)+" %",(r.fps.length>1||r.tampered)?"prüfen":""]).map(q).join(";")); });
+  var lines=[["Name","Klasse","letzte Abgabe","Abgaben"].concat(L.map(function(l){return l.k+" "+l.t;})).concat(["gelöst","gesamt","Prozent","Hinweis"]).map(q).join(";")];
+  sorted(students()).forEach(function(r){ lines.push([r.n,r.k,new Date(r.t).toLocaleString("de-DE"),r.subs.length].concat(r.st.per.map(function(p){return p.n? p.have.length+"/"+p.n : "–";})).concat([r.st.sol,r.st.tot,Math.round(r.st.pct*100)+" %",(r.fps.length>1||r.x)?"prüfen":""]).map(q).join(";")); });
   download("Fortschritt_"+course+"_"+new Date().toISOString().slice(0,10)+".csv","﻿"+lines.join("\r\n"),"text/csv"); };
-$("backup").onclick=function(){ download("Robotik_Fortschritt_Sicherung_"+new Date().toISOString().slice(0,10)+".json", JSON.stringify(DB), "application/json"); };
-$("restore").onchange=function(e){ var f=e.target.files[0]; if(!f) return; var fr=new FileReader(); fr.onload=function(){ try{ var d=JSON.parse(fr.result); Object.keys(d).forEach(function(k){ DB[k]=d[k]; }); save(); render(); say("Sicherung geladen ("+Object.keys(d).length+" Einträge)."); }catch(x){ say("Die Datei ist keine gültige Sicherung.", true);} }; fr.readAsText(f); e.target.value=""; };
-$("clear").onclick=function(){ if(confirm("Wirklich alle eingelesenen Daten in diesem Browser löschen?")){ DB={}; save(); render(); say("Alle Daten gelöscht."); } };
+$("backup").onclick=function(){ download("Robotik_Fortschritt_Sicherung_"+new Date().toISOString().slice(0,10)+".json",JSON.stringify(SUBS),"application/json"); };
+$("restore").onchange=function(e){ var f=e.target.files[0]; if(!f) return; var fr=new FileReader(); fr.onload=function(){ try{ var d=JSON.parse(fr.result), n=0; Object.keys(d).forEach(function(k){ if(d[k]&&d[k].c&&!SUBS[k]){SUBS[k]=d[k];n++;} }); save(); render(); say("Sicherung geladen ("+n+" neue Abgaben)."); }catch(x){ say("Die Datei ist keine gültige Sicherung.",true); } }; fr.readAsText(f); e.target.value=""; };
+$("clear").onclick=function(){ if(confirm("Wirklich alle eingelesenen Daten in diesem Browser löschen? (Die Dateien im Abgabeordner bleiben erhalten.)")){ SUBS={}; selected=null; save(); render(); say("Alle Daten gelöscht."); } };
+window.matchMedia && matchMedia("(prefers-color-scheme: dark)").addEventListener("change",render);
 render();
 </script>
 </body></html>
