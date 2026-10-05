@@ -73,7 +73,7 @@ function newBlock(t) {
 }
 function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
-function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
+function store(k, v) { if (window.RProg) k = window.RProg.k(k); try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
 
 /* =====================================================================
    2) Editor
@@ -748,7 +748,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll("[data-widget]").forEach(function (w) { var f = window.WIDGETS && window.WIDGETS[w.getAttribute("data-widget")]; if (f) f(w); });
   document.querySelectorAll("[data-lesson]").forEach(function (card) {
     var f = card.getAttribute("data-lesson"), n = parseInt(card.getAttribute("data-count") || "0", 10), done = 0;
-    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf("spike:" + f + ":") === 0 && /:done$/.test(k)) done++; } } catch (e) {}
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf((window.RProg ? window.RProg.k("spike:") : "spike:") + f + ":") === 0 && /:done$/.test(k)) done++; } } catch (e) {}
     var c = card.querySelector(".prog"); if (c && n) { c.textContent = done + "/" + n + " gelöst"; if (done >= n) c.classList.add("done"); }
   });
 });
