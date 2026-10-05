@@ -102,14 +102,43 @@
     });
   }
 
+  // Abgabe-Link (OneDrive „Dateien anfordern“) steht in assets/abgabe.js und kann ohne die anderen Dateien geändert werden
+  (function () { try { var sc = document.createElement("script"); sc.src = (me && me.src ? me.src.replace(/progress\.js(\?.*)?$/, "abgabe.js") : "assets/abgabe.js") + "?v=" + Math.floor(Date.now() / 3600000); sc.async = true; document.head.appendChild(sc); } catch (e) {} })();
+  function uploadUrl() { var u = window.RPROG_UPLOAD && window.RPROG_UPLOAD[COURSE]; return /^https:\/\//.test(u || "") ? u : ""; }
+  function stamp() { var d = new Date(), p = function (n) { return (n < 10 ? "0" : "") + n; }; return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + "_" + p(d.getHours()) + p(d.getMinutes()); }
+  // kleine PDF-Datei (Microsoft Forms erlaubt kein .txt). Der Code steht im Feld /Subject und lesbar auf der Seite.
+  function pdfBlob(lines, code) {
+    var latin = function (t) { return String(t).replace(/[^\x20-\x7e\xa0-\xff]/g, function (c) { return ({ "–": "-", "„": '"', "“": '"', "✓": "x" })[c] || "?"; }); };
+    var pe = function (t) { return latin(t).replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)"); };
+    var y = 790, ops = ["BT /F1 18 Tf 50 " + y + " Td (" + pe(lines[0]) + ") Tj ET"]; y -= 34;
+    lines.slice(1).forEach(function (l) { ops.push("BT /F1 12 Tf 50 " + y + " Td (" + pe(l) + ") Tj ET"); y -= 20; });
+    y -= 14; ops.push("BT /F1 10 Tf 50 " + y + " Td (Fortschrittscode:) Tj ET"); y -= 16;
+    for (var i = 0; i < code.length; i += 80) { ops.push("BT /F2 9 Tf 50 " + y + " Td (" + code.slice(i, i + 80) + ") Tj ET"); y -= 12; }
+    var stream = ops.join("\n");
+    var objs = ["<< /Type /Catalog /Pages 2 0 R >>", "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+      "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>",
+      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>", "<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>",
+      "<< /Length " + stream.length + " >>\nstream\n" + stream + "\nendstream", "<< /Title (Fortschritt Robotik) /Subject (" + code + ") /Producer (Robotik-Lernplattform) >>"];
+    var out = "%PDF-1.4\n", offs = [];
+    objs.forEach(function (o, i) { offs.push(out.length); out += (i + 1) + " 0 obj\n" + o + "\nendobj\n"; });
+    var xref = out.length;
+    out += "xref\n0 " + (objs.length + 1) + "\n0000000000 65535 f \n" + offs.map(function (o) { return ("000000000" + o).slice(-10) + " 00000 n \n"; }).join("") +
+      "trailer\n<< /Size " + (objs.length + 1) + " /Root 1 0 R /Info 7 0 R >>\nstartxref\n" + xref + "\n%%EOF\n";
+    var bytes = new Uint8Array(out.length); for (var j = 0; j < out.length; j++) bytes[j] = out.charCodeAt(j) & 255;
+    return new Blob([bytes], { type: "application/pdf" });
+  }
   function giveDialog() {
     var code = makeCode(), d = doneMap(), n = 0; Object.keys(d).forEach(function (L) { n += d[L].length; });
+    var clean = function (x) { return String(x || "").replace(/[^A-Za-z0-9ÄÖÜäöüß]+/g, "_").replace(/^_|_$/g, ""); };
+    var fname = "Fortschritt_" + COURSE + "_" + (USER.klasse ? clean(USER.klasse) + "_" : "") + clean(USER.name) + "_" + stamp() + ".pdf";
+    var url = uploadUrl();
     var f = el("div");
-    var fname = "Fortschritt_" + COURSE + "_" + USER.name.replace(/[^A-Za-z0-9ÄÖÜäöüß]+/g, "_") + ".txt";
     f.innerHTML = "<h2>Fortschritt abgeben</h2><div class='rp-sum'><b></b><br>" + n + " Aufgabe(n) gelöst · Stand " + new Date().toLocaleString("de-DE") + "</div>" +
-      "<p>Kopiere den Code oder speichere ihn als Datei und gib ihn so ab, wie es deine Lehrkraft sagt (z. B. als Abgabe in mebis).</p>" +
-      '<textarea readonly aria-label="Fortschrittscode"></textarea><div class="rp-err" aria-live="polite" style="color:var(--green,#3b7d3a)"></div>' +
-      '<div class="rp-row"><button class="rp-btn" data-a="copy">📋 Code kopieren</button><button class="rp-btn" data-a="file">💾 Als Datei speichern</button><button class="rp-btn sec" data-a="close">Schließen</button></div>';
+      (url ? "<p><b>So geht\'s:</b> Klicke auf „Abgeben“. Deine PDF-Datei wird gespeichert und das Abgabe-Formular öffnet sich (mit dem Schulkonto anmelden). Dort bei „Datei hochladen“ die Datei aus dem Download-Ordner wählen und „Absenden“ klicken.</p>"
+           : "<p>Klicke auf „Datei speichern“ und gib die Datei so ab, wie es deine Lehrkraft sagt (z. B. in mebis).</p>") +
+      '<div class="rp-row"><button class="rp-btn" data-a="give">' + (url ? "📤 Abgeben" : "💾 Datei speichern") + '</button><button class="rp-btn sec" data-a="close">Schließen</button></div>' +
+      '<div class="rp-err" aria-live="polite" style="color:var(--green,#3b7d3a)"></div>' +
+      '<details style="margin-top:8px"><summary style="cursor:pointer;font-size:14px;color:var(--muted,#5b6672)">Code anzeigen (falls die Datei nicht klappt)</summary><textarea readonly aria-label="Fortschrittscode" style="margin-top:8px"></textarea><div class="rp-row"><button class="rp-btn sec" data-a="copy">📋 Code kopieren</button></div></details>';
     f.querySelector(".rp-sum b").textContent = USER.name + (USER.klasse ? " · " + USER.klasse : "") + " · " + TITLE;
     var ta = f.querySelector("textarea"); ta.value = code;
     var msg = f.querySelector(".rp-err");
@@ -118,15 +147,15 @@
       var a = e.target.getAttribute && e.target.getAttribute("data-a"); if (!a) return;
       if (a === "close") ov.remove();
       if (a === "copy") {
-        ta.select();
-        var ok = false; try { ok = document.execCommand("copy"); } catch (x) {}
-        if (navigator.clipboard) navigator.clipboard.writeText(code).then(function () { msg.textContent = "Kopiert ✓"; }, function () { msg.textContent = ok ? "Kopiert ✓" : "Bitte markieren und mit Strg+C kopieren."; });
-        else msg.textContent = ok ? "Kopiert ✓" : "Bitte markieren und mit Strg+C kopieren.";
+        ta.select(); var ok = false; try { ok = document.execCommand("copy"); } catch (x) {}
+        if (navigator.clipboard) navigator.clipboard.writeText(code).then(function () { msg.textContent = "Code kopiert ✓"; }, function () { msg.textContent = ok ? "Code kopiert ✓" : "Bitte markieren und mit Strg+C kopieren."; });
+        else msg.textContent = ok ? "Code kopiert ✓" : "Bitte markieren und mit Strg+C kopieren.";
       }
-      if (a === "file") {
-        var blob = new Blob([code + "\n"], { type: "text/plain" }), url = URL.createObjectURL(blob), ln = el("a", { href: url, download: fname });
-        document.body.appendChild(ln); ln.click(); ln.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
-        msg.textContent = "Datei „" + fname + "“ gespeichert ✓";
+      if (a === "give") {
+        var blob = pdfBlob(["Fortschritt " + TITLE, "Name: " + USER.name + (USER.klasse ? "   Klasse: " + USER.klasse : ""), "Stand: " + new Date().toLocaleString("de-DE"), "Gelöste Aufgaben: " + n], code), u = URL.createObjectURL(blob), ln = el("a", { href: u, download: fname });
+        document.body.appendChild(ln); ln.click(); ln.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
+        if (url) { var w = window.open(url, "_blank"); if (w) { try { w.opener = null; } catch (x) {} } msg.textContent = "Datei „" + fname + "“ gespeichert ✓ – jetzt auf der Abgabe-Seite hochladen." + (w ? "" : " (Falls sich nichts geöffnet hat: Pop-ups erlauben und nochmal klicken.)"); }
+        else msg.textContent = "Datei „" + fname + "“ gespeichert ✓";
       }
     });
   }
