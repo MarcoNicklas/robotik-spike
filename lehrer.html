@@ -65,7 +65,7 @@ td button{padding:2px 8px;font-size:12px}
 <main>
 <section class="card" aria-labelledby="h-in">
   <h2 id="h-in">Abgaben einlesen</h2>
-  <p class="hint">Verbinde einmal deinen OneDrive-Abgabeordner. Danach genügt „Aktualisieren“ – alle Dateien im Ordner werden gelesen.</p>
+  <p class="hint">Die Abgaben aus Microsoft Forms landen in deinem OneDrive unter <b>Apps › Microsoft Forms</b>. Verbinde einmal diesen Ordner – danach genügt „Aktualisieren“.</p>
   <div class="row" style="margin-top:0">
     <button class="pri" id="connect">📂 Abgabeordner verbinden</button>
     <button id="refresh" disabled>🔄 Aktualisieren</button>
@@ -75,7 +75,7 @@ td button{padding:2px 8px;font-size:12px}
   <div class="msg status" id="fsstatus">Noch kein Ordner verbunden.</div>
   <details><summary>Einzelne Codes oder Dateien von Hand einlesen</summary>
     <textarea id="codes" placeholder="Fortschrittscodes hier einfügen (ROBO1-…)"></textarea>
-    <div class="drop" id="drop">Dateien hier hineinziehen – oder <label class="btn" style="display:inline-block">Dateien wählen<input id="files" type="file" multiple accept=".txt,text/plain" hidden></label></div>
+    <div class="drop" id="drop">Abgabe-Dateien (.pdf/.txt) hier hineinziehen – oder <label class="btn" style="display:inline-block">Dateien wählen<input id="files" type="file" multiple accept=".pdf,.txt,application/pdf,text/plain" hidden></label></div>
     <div class="row"><button id="read">Einlesen</button></div>
   </details>
   <div class="msg" id="msg" aria-live="polite"></div>
@@ -259,7 +259,7 @@ function render(){
 var DIR=null, HAS_FS=!!window.showDirectoryPicker;
 function idb(mode,val){ return new Promise(function(res){ try{ var rq=indexedDB.open("rprog",1); rq.onupgradeneeded=function(){rq.result.createObjectStore("kv");}; rq.onerror=function(){res(null);};
   rq.onsuccess=function(){ var db=rq.result, tx=db.transaction("kv",mode==="get"?"readonly":"readwrite"), st=tx.objectStore("kv"); var r=mode==="get"?st.get("dir"):st.put(val,"dir"); r.onsuccess=function(){res(r.result||null);}; r.onerror=function(){res(null);}; }; }catch(e){res(null);} }); }
-async function readDir(dir,depth,out){ for await (const [name,h] of dir.entries()){ if(h.kind==="file" && /\.txt$/i.test(name)){ const f=await h.getFile(); if(f.size<50000) out.push(await f.text()); } else if(h.kind==="directory" && depth<2) await readDir(h,depth+1,out); } return out; }
+async function readDir(dir,depth,out){ for await (const [name,h] of dir.entries()){ if(h.kind==="file" && /\.(txt|pdf)$/i.test(name)){ const f=await h.getFile(); if(f.size<50000) out.push(await f.text()); } else if(h.kind==="directory" && depth<4) await readDir(h,depth+1,out); } return out; }
 async function refresh(ask){
   if(!DIR) return;
   var perm=await DIR.queryPermission({mode:"read"});
@@ -277,7 +277,7 @@ if(HAS_FS){
   $("fsstatus").textContent="Dieser Browser kann Ordner nicht dauerhaft verbinden (am besten Chrome oder Edge verwenden). Wähle den Abgabeordner jeweils neu aus.";
 }
 var timer=null; $("auto").onchange=function(){ clearInterval(timer); if(this.checked) timer=setInterval(function(){ refresh(false); },120000); };
-function readFiles(fl,src){ var arr=[].slice.call(fl).filter(function(f){return /\.txt$/i.test(f.name)&&f.size<50000;}), all="", n=arr.length; if(!n){ say("Keine .txt-Dateien gefunden.",true); return; } arr.forEach(function(f){ var fr=new FileReader(); fr.onload=function(){ all+="\n"+fr.result; if(--n===0) report(ingest(all),src); }; fr.readAsText(f); }); }
+function readFiles(fl,src){ var arr=[].slice.call(fl).filter(function(f){return /\.(txt|pdf)$/i.test(f.name)&&f.size<50000;}), all="", n=arr.length; if(!n){ say("Keine Abgabe-Dateien (.pdf/.txt) gefunden.",true); return; } arr.forEach(function(f){ var fr=new FileReader(); fr.onload=function(){ all+="\n"+fr.result; if(--n===0) report(ingest(all),src); }; fr.readAsText(f); }); }
 $("pick").onchange=function(e){ readFiles(e.target.files,"Ordner gelesen: "); e.target.value=""; };
 $("files").onchange=function(e){ readFiles(e.target.files); e.target.value=""; };
 $("read").onclick=function(){ report(ingest($("codes").value)); $("codes").value=""; };
