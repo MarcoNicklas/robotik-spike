@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lehrer-Übersicht Robotik</title>
+<style>
+:root{--bg:#f6f8f9;--card:#fff;--ink:#1c2430;--muted:#5b6672;--line:#d9e1e6;--pri:#1f6f78;--pri-soft:#e3f0f1;--amber:#b87700;--amber-soft:#fdf3e0;--red:#c0392b;--red-soft:#fbe9e7;--green:#2f6e2e;--green-soft:#dff0dd;--none:#eef1f3}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11161c;--card:#19212a;--ink:#e6ecf1;--muted:#9aa7b3;--line:#2b3641;--pri:#4fb3bd;--pri-soft:#173238;--amber:#f0b03c;--amber-soft:#3a2f17;--red:#ef7a6c;--red-soft:#3a1f1c;--green:#86d184;--green-soft:#1f3a1f;--none:#222b34}}
+:root[data-theme="dark"]{--bg:#11161c;--card:#19212a;--ink:#e6ecf1;--muted:#9aa7b3;--line:#2b3641;--pri:#4fb3bd;--pri-soft:#173238;--amber:#f0b03c;--amber-soft:#3a2f17;--red:#ef7a6c;--red-soft:#3a1f1c;--green:#86d184;--green-soft:#1f3a1f;--none:#222b34}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header{background:var(--card);border-bottom:1px solid var(--line)}
+header .in,main{max-width:1280px;margin:0 auto;padding:12px 16px}
+h1{font-size:22px;margin:0}
+.sub{color:var(--muted);font-size:14px;margin:2px 0 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:14px 0}
+h2{font-size:17px;margin:0 0 8px}
+textarea{width:100%;height:90px;font:12px/1.4 ui-monospace,Consolas,monospace;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+button,.btn,select{font:inherit;font-size:14px;border-radius:8px;padding:7px 13px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button.pri{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+button.danger{color:var(--red)}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:14px;text-align:center;color:var(--muted);margin-top:10px}
+.drop.on{border-color:var(--pri);background:var(--pri-soft)}
+.msg{font-size:14px;margin-top:8px;min-height:20px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button[aria-selected="true"]{background:var(--pri);color:#fff;border-color:var(--pri)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:6px 7px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+th{background:var(--pri-soft);position:sticky;top:0;font-weight:600}
+th.l,td.l{text-align:left}
+th small{display:block;font-weight:400;color:var(--muted);max-width:92px;white-space:normal;line-height:1.2;font-size:11px}
+td.c0{background:var(--none);color:var(--muted)}td.cp{background:var(--amber-soft);color:var(--amber);font-weight:600}td.cf{background:var(--green-soft);color:var(--green);font-weight:700}
+.bar{display:inline-block;width:70px;height:8px;border-radius:4px;background:var(--none);vertical-align:middle;margin-right:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pri)}
+.warn{color:var(--red);font-weight:700;cursor:help}
+.legend{font-size:13px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;margin:8px 0}
+.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+td button{padding:2px 8px;font-size:12px}
+details summary{cursor:pointer;color:var(--muted);font-size:14px}
+</style></head>
+<body>
+<header><div class="in"><h1>Lehrer-Übersicht Robotik</h1><p class="sub">Fortschrittscodes der Schülerinnen und Schüler einlesen – die Daten bleiben nur in diesem Browser.</p></div></header>
+<main>
+<section class="card" aria-labelledby="h-in">
+  <h2 id="h-in">1 · Codes einlesen</h2>
+  <textarea id="codes" placeholder="Fortschrittscodes hier einfügen (beliebig viele, z. B. aus mebis kopiert). Jeder Code beginnt mit ROBO1-"></textarea>
+  <div class="drop" id="drop">Abgegebene Dateien (Fortschritt_….txt) hier hineinziehen – oder <label class="btn" style="display:inline-block">Dateien wählen<input id="files" type="file" multiple accept=".txt,text/plain" hidden></label></div>
+  <div class="row"><button class="pri" id="read">Einlesen</button></div>
+  <div class="msg" id="msg" aria-live="polite"></div>
+</section>
+
+<section class="card" aria-labelledby="h-out">
+  <h2 id="h-out">2 · Übersicht</h2>
+  <div class="row" style="margin-top:0"><div class="tabs" id="tabs" role="tablist"></div>
+    <label style="margin-left:auto;font-size:14px">Klasse <select id="klasse"></select></label>
+    <label style="font-size:14px">Sortieren <select id="sort"><option value="name">Name</option><option value="pct">Fortschritt</option><option value="t">letzte Abgabe</option></select></label></div>
+  <div class="legend"><span><i style="background:var(--none)"></i>nichts gelöst</span><span><i style="background:var(--amber-soft);border:1px solid var(--amber)"></i>teilweise</span><span><i style="background:var(--green-soft);border:1px solid var(--green)"></i>alle Aufgaben der Lektion</span><span><b class="warn">⚠</b> Codes mit verschiedenen Passwörtern oder veränderter Code</span></div>
+  <div class="scroll" id="tablewrap"></div>
+  <div class="row"><button id="csv">⬇ Tabelle als CSV (Excel)</button><button id="backup">💾 Sicherung speichern</button><label class="btn">📂 Sicherung laden<input id="restore" type="file" accept=".json,application/json" hidden></label><button class="danger" id="clear">Alle Daten löschen</button></div>
+</section>
+
+<section class="card"><details><summary>So funktioniert es</summary>
+<ul style="font-size:14px">
+<li>Die Schüler melden sich auf der Lernplattform mit <b>Name, Klasse und Passwort</b> an. Ihr Fortschritt wird nur in ihrem Browser gespeichert – getrennt pro Person, auch am gemeinsamen Schul-PC.</li>
+<li>Am Ende der Stunde klicken sie <b>„📤 Fortschritt abgeben“</b> und geben den Code oder die Datei ab (z. B. als mebis-Aufgabe, per Teams oder E-Mail).</li>
+<li>Hier einfügen oder Dateien hineinziehen → die Tabelle zeigt pro Lektion „gelöst / vorhanden“. Mehrere Abgaben derselben Person werden zusammengeführt (alle je gelösten Aufgaben zählen).</li>
+<li><b>⚠</b> erscheint, wenn dieselbe Person Codes mit unterschiedlichen Passwörtern abgegeben hat (z. B. jemand gibt sich als andere Person aus) oder ein Code verändert wurde.</li>
+<li>Die Daten liegen nur in diesem Browser auf diesem Gerät. Mit „Sicherung speichern“ nimmst du sie auf ein anderes Gerät mit.</li>
+</ul></details></section>
+</main>
+<script>
+var CAT = {"SPIKE": {"title": "Basiskurs Robotik (LEGO SPIKE Prime)", "lessons": [{"k": "L01", "t": "Bauteile, Verbindungen, Materialien", "ex": []}, {"k": "L02", "t": "Statik: Kräfte, Hebel und Stabilität", "ex": []}, {"k": "L03", "t": "Mechanismen: Getriebe, Räder, Greifer", "ex": []}, {"k": "L04", "t": "Energie, Hub und Verkabelung", "ex": ["e1"]}, {"k": "L05", "t": "Sensoren und Aktoren", "ex": ["e1", "e2"]}, {"k": "L06", "t": "Grundbefehle: der Roboter lernt fahren", "ex": ["e1", "e2", "e3"]}, {"k": "L07", "t": "Wiederholungen und Meine Blöcke", "ex": ["e1", "e2", "e3"]}, {"k": "L08", "t": "Sensoren auswerten: Abstand und Kraft", "ex": ["e1", "e2", "e3"]}, {"k": "L09", "t": "Sensoren auswerten: Farben und Linien", "ex": ["e1", "e2", "e3"]}, {"k": "L10", "t": "Gyrosensor und präzises Fahren", "ex": ["e1", "e2", "e3"]}, {"k": "L11", "t": "Mit Gegenständen spielen", "ex": ["e1", "e2"]}, {"k": "L12", "t": "Den Roboter warten", "ex": ["e1"]}, {"k": "L13", "t": "Fehler im Programm finden", "ex": ["e1", "e2", "e3"]}, {"k": "L14", "t": "Geführte Mission", "ex": ["e1", "e2"]}, {"k": "L15", "t": "Missionsbereit: der Robot-Game-Lauf", "ex": ["e1"]}, {"k": "L16", "t": "Berufliche Möglichkeiten entdecken", "ex": []}]}, "PY": {"title": "Vertiefungskurs Robotik (Python & TXT 4.0)", "lessons": [{"k": "L01", "t": "Von Blockly zu Python", "ex": ["e2", "e3", "e4"]}, {"k": "L02", "t": "Rechnen mit Sensorwerten", "ex": ["e2", "e3", "e4"]}, {"k": "L03", "t": "Entscheidungen: if / elif / else", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L04", "t": "Schleifen, Zähler und Zustände", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L05", "t": "Funktionen und Zeitsteuerung", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L06", "t": "Binärcode und Listen", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L07", "t": "Texte und Wörterbücher", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L08", "t": "Fahren mit Encodern und Kalibrieren", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L09", "t": "Hindernisse erkennen – Zustandsautomaten", "ex": ["e1", "e2", "e3"]}, {"k": "L10", "t": "Kartesische Koordinaten: der Malroboter", "ex": ["e1", "e2", "e3", "e4", "e5"]}, {"k": "L11", "t": "3D-Koordinaten: der Portalroboter", "ex": ["e1", "e2", "e3", "e4", "e5"]}, {"k": "L12", "t": "Spurfolger und Regler", "ex": ["e1", "e2"]}, {"k": "L13", "t": "KI 1: Maschinelles Lernen – Farben erkennen", "ex": ["e1", "e2", "e3", "e4"]}, {"k": "L14", "t": "KI 2: Neuronen und Bilderkennung", "ex": ["e1", "e2", "e3", "e4"]}]}};
+var SALT = "robotik-wst-2026", KEY = "rprog:teacher";
+function hash(str, seed){var h1=0xdeadbeef^(seed||0),h2=0x41c6ce57^(seed||0);for(var i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);}
+function unb64u(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";return decodeURIComponent(escape(atob(s)));}
+function norm(s){return String(s||"").trim().replace(/\s+/g," ");}
+var DB = {}; try { DB = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { DB = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch(e) { say("Achtung: Dieser Browser speichert nicht dauerhaft – bitte Sicherung speichern.", true); } }
+var course = Object.keys(CAT)[0];
+function $(id){return document.getElementById(id);}
+function say(t, bad){ var m=$("msg"); m.textContent=t; m.style.color = bad ? "var(--red)" : "var(--green)"; }
+
+function ingest(text){
+  var re=/ROBO1-([A-Za-z0-9_-]+)\.([a-z0-9]+)/g, m, ok=0, bad=0, dup=0;
+  while((m=re.exec(text))){
+    var body=m[1], sum=m[2], d;
+    try { d = JSON.parse(unb64u(body)); } catch(e) { bad++; continue; }
+    if(!d || !d.c || !d.n || !CAT[d.c]) { bad++; continue; }
+    var tampered = hash(SALT+body,7) !== sum;
+    var id = d.c + "|" + (norm(d.k)+"|"+norm(d.n)).toLowerCase();
+    var r = DB[id] || (DB[id] = {c:d.c, n:norm(d.n), k:norm(d.k), t:0, fps:[], done:{}, subs:[], tampered:false});
+    if (r.subs.indexOf(sum) >= 0) { dup++; continue; }
+    r.subs.push(sum);
+    if (d.t > r.t) { r.t = d.t; r.n = norm(d.n); r.k = norm(d.k); }
+    if (d.p && r.fps.indexOf(d.p) < 0) r.fps.push(d.p);
+    if (tampered) r.tampered = true;
+    Object.keys(d.d || {}).forEach(function(L){ (r.done[L] = r.done[L] || []); d.d[L].forEach(function(x){ if(r.done[L].indexOf(x)<0) r.done[L].push(x); }); });
+    ok++; course = d.c;
+  }
+  save(); render();
+  if(!ok && !bad && !dup) say("Keine Codes gefunden. Ein Code beginnt mit ROBO1-", true);
+  else say(ok+" Code(s) eingelesen" + (dup? ", "+dup+" schon vorhanden":"") + (bad? ", "+bad+" unlesbar":""), !!bad && !ok);
+}
+
+function stats(r){
+  var tot=0, sol=0, per=CAT[r.c].lessons.map(function(l){ var have=(r.done[l.k]||[]).filter(function(x){return l.ex.indexOf(x)>=0;}).length; tot+=l.ex.length; sol+=have; return [have,l.ex.length,(r.done[l.k]||[])]; });
+  return {per:per, tot:tot, sol:sol, pct: tot? sol/tot : 0};
+}
+function rows(){
+  var kl=$("klasse").value, list=Object.keys(DB).map(function(id){return Object.assign({id:id},DB[id]);}).filter(function(r){return r.c===course && (!kl || r.k===kl);});
+  var s=$("sort").value;
+  list.sort(function(a,b){ if(s==="pct") return stats(b).pct-stats(a).pct; if(s==="t") return b.t-a.t; return (a.k+a.n).localeCompare(b.k+b.n,"de"); });
+  return list;
+}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+function render(){
+  var tabs=$("tabs"); tabs.innerHTML="";
+  Object.keys(CAT).forEach(function(c){ var n=Object.keys(DB).filter(function(id){return DB[id].c===c;}).length;
+    var b=document.createElement("button"); b.setAttribute("role","tab"); b.setAttribute("aria-selected", c===course); b.textContent=CAT[c].title+" ("+n+")";
+    b.onclick=function(){course=c; $("klasse").value=""; render();}; tabs.appendChild(b); });
+  var sel=$("klasse"), cur=sel.value, ks={}; Object.keys(DB).forEach(function(id){ if(DB[id].c===course) ks[DB[id].k||""]=1; });
+  sel.innerHTML='<option value="">alle</option>'+Object.keys(ks).sort().map(function(k){return '<option value="'+esc(k)+'">'+esc(k||"(ohne)")+'</option>';}).join("");
+  sel.value = ks.hasOwnProperty(cur) ? cur : "";
+  var L=CAT[course].lessons, list=rows();
+  if(!list.length){ $("tablewrap").innerHTML='<div class="empty">Noch keine Codes für diesen Kurs eingelesen.</div>'; return; }
+  var h='<table><thead><tr><th class="l">Name</th><th>Klasse</th><th>letzte Abgabe</th>'+L.map(function(l){return '<th title="'+esc(l.t)+'">'+l.k+'<small>'+esc(l.t)+'</small></th>';}).join("")+'<th>gesamt</th><th></th><th></th></tr></thead><tbody>';
+  list.forEach(function(r){
+    var st=stats(r), warn=(r.fps.length>1? "Codes mit "+r.fps.length+" verschiedenen Passwörtern. ":"")+(r.tampered?"Mindestens ein Code wurde verändert.":"");
+    h+='<tr><td class="l">'+esc(r.n)+'</td><td>'+esc(r.k)+'</td><td>'+new Date(r.t).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"})+'</td>';
+    st.per.forEach(function(p,i){ if(!p[1]){ h+='<td title="'+esc(L[i].t)+': keine Simulator-Aufgaben">–</td>'; return; } var cls=p[0]===0?"c0":(p[0]>=p[1]?"cf":"cp"); h+='<td class="'+cls+'" title="'+esc(L[i].t)+': '+(p[2].join(", ")||"–")+'">'+p[0]+'/'+p[1]+'</td>'; });
+    h+='<td><span class="bar"><i style="width:'+Math.round(st.pct*100)+'%"></i></span>'+st.sol+'/'+st.tot+'</td><td>'+(warn?'<span class="warn" title="'+esc(warn)+'">⚠</span>':'')+'</td><td><button data-del="'+esc(r.id)+'" aria-label="'+esc(r.n)+' entfernen">✕</button></td></tr>';
+  });
+  $("tablewrap").innerHTML=h+'</tbody></table>';
+}
+$("read").onclick=function(){ ingest($("codes").value); $("codes").value=""; };
+function readFiles(fl){ var arr=[].slice.call(fl), all="", n=arr.length; if(!n) return; arr.forEach(function(f){ var fr=new FileReader(); fr.onload=function(){ all+="\n"+fr.result; if(--n===0) ingest(all); }; fr.readAsText(f); }); }
+$("files").onchange=function(e){ readFiles(e.target.files); e.target.value=""; };
+var dr=$("drop");
+dr.addEventListener("dragover",function(e){e.preventDefault(); dr.classList.add("on");});
+dr.addEventListener("dragleave",function(){dr.classList.remove("on");});
+dr.addEventListener("drop",function(e){e.preventDefault(); dr.classList.remove("on"); readFiles(e.dataTransfer.files);});
+$("klasse").onchange=render; $("sort").onchange=render;
+$("tablewrap").addEventListener("click",function(e){ var id=e.target.getAttribute("data-del"); if(id && confirm("„"+DB[id].n+"“ aus der Übersicht entfernen?")){ delete DB[id]; save(); render(); } });
+function download(name, text, type){ var b=new Blob([text],{type:type}), u=URL.createObjectURL(b), a=document.createElement("a"); a.href=u; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(u);},2000); }
+$("csv").onclick=function(){ var L=CAT[course].lessons, q=function(s){return '"'+String(s).replace(/"/g,'""')+'"';};
+  var lines=[["Name","Klasse","letzte Abgabe"].concat(L.map(function(l){return l.k+" "+l.t;})).concat(["gelöst","gesamt","Prozent","Hinweis"]).map(q).join(";")];
+  rows().forEach(function(r){ var st=stats(r); lines.push([r.n,r.k,new Date(r.t).toLocaleString("de-DE")].concat(st.per.map(function(p){return p[1]? p[0]+"/"+p[1] : "–";})).concat([st.sol,st.tot,Math.round(st.pct*100)+" %",(r.fps.length>1||r.tampered)?"prüfen":""]).map(q).join(";")); });
+  download("Fortschritt_"+course+"_"+new Date().toISOString().slice(0,10)+".csv","﻿"+lines.join("\r\n"),"text/csv"); };
+$("backup").onclick=function(){ download("Robotik_Fortschritt_Sicherung_"+new Date().toISOString().slice(0,10)+".json", JSON.stringify(DB), "application/json"); };
+$("restore").onchange=function(e){ var f=e.target.files[0]; if(!f) return; var fr=new FileReader(); fr.onload=function(){ try{ var d=JSON.parse(fr.result); Object.keys(d).forEach(function(k){ DB[k]=d[k]; }); save(); render(); say("Sicherung geladen ("+Object.keys(d).length+" Einträge)."); }catch(x){ say("Die Datei ist keine gültige Sicherung.", true);} }; fr.readAsText(f); e.target.value=""; };
+$("clear").onclick=function(){ if(confirm("Wirklich alle eingelesenen Daten in diesem Browser löschen?")){ DB={}; save(); render(); say("Alle Daten gelöscht."); } };
+render();
+</script>
+</body></html>
