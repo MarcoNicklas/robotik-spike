@@ -47,8 +47,23 @@
     Object.keys(d).forEach(function (L) { d[L].sort(); });
     return d;
   }
+  // Versuche je Aufgabe: [Prüfungen bis zur Lösung, davon falsch, Tipps angesehen, Lösung angesehen 0/1]
+  function statsMap() {
+    var a = {}, pre = window.RProg.k(PREFIX + ":");
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k.indexOf(pre) === 0 && /:st$/.test(k)) {
+          var rest = k.slice(pre.length, -3), j = rest.lastIndexOf(":"), file = rest.slice(0, j), ex = rest.slice(j + 1), L = (file.match(/^L\d+/) || [file])[0];
+          var s = {}; try { s = JSON.parse(localStorage.getItem(k)) || {}; } catch (e) {}
+          (a[L] = a[L] || {})[ex] = [s.n || 0, s.f || 0, s.h || 0, s.s ? 1 : 0];
+        }
+      }
+    } catch (e) {}
+    return a;
+  }
   function makeCode() {
-    var payload = JSON.stringify({ v: 1, c: COURSE, n: USER.name, k: USER.klasse || "", p: USER.fp, t: Date.now(), d: doneMap() });
+    var payload = JSON.stringify({ v: 1, c: COURSE, n: USER.name, k: USER.klasse || "", p: USER.fp, t: Date.now(), d: doneMap(), a: statsMap() });
     var body = b64u(payload);
     return "ROBO1-" + body + "." + hash(SALT + body, 7);
   }
@@ -72,7 +87,11 @@
     }
     if (!best) return { ok: false, msg: wrong ? "Diese Datei gehört zu einem anderen Namen/Kurs oder das Passwort stimmt nicht." : "In dieser Datei wurde kein Fortschritt gefunden. Nimm die PDF, die beim Abgeben gespeichert wurde." };
     var pre = "u:" + uid + ":" + PREFIX + ":", n = 0;
-    Object.keys(best.s || {}).forEach(function (k) { if (ls(pre + k) === null) { ls(pre + k, best.s[k]); n++; } });
+    Object.keys(best.s || {}).forEach(function (k) {
+      var cur = ls(pre + k);
+      if (cur === null) { ls(pre + k, best.s[k]); n++; return; }
+      if (/:st$/.test(k)) { try { var A = JSON.parse(cur), B = JSON.parse(best.s[k]); ["n", "f", "h", "s"].forEach(function (x) { A[x] = Math.max(A[x] || 0, B[x] || 0); }); ls(pre + k, JSON.stringify(A)); } catch (e) {} }
+    });
     return { ok: true, n: n, t: best.t };
   }
   function readFile(file, cb) { var fr = new FileReader(); fr.onload = function () { cb(String(fr.result || "")); }; fr.onerror = function () { cb(""); }; fr.readAsText(file); }

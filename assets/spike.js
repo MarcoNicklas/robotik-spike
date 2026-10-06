@@ -671,6 +671,7 @@ function helpers(res) {
     total: function (prog) { var n = 0; (function w(L) { L.forEach(function (b) { n++; if (b.b) w(b.b); if (b.e) w(b.e); }); })(prog); return n; }
   };
 }
+function stUpd(key, fn) { if (store(key + ":done")) return; var s = {}; try { s = JSON.parse(store(key + ":st") || "{}") || {}; } catch (e) {} s.n = s.n || 0; s.f = s.f || 0; s.h = s.h || 0; fn(s); store(key + ":st", JSON.stringify(s)); }
 function buildExercise(box) {
   var id = box.getAttribute("data-ex"), d = EX[id]; if (!d) return;
   var key = "spike:" + location.pathname.split("/").pop() + ":" + id;
@@ -702,6 +703,7 @@ function buildExercise(box) {
       catch (e) { checks.push({ ok: false, m: "Prüfung nicht möglich: " + e.message }); }
       var all = checks.length && checks.every(function (c) { return c.ok; }) && !res.err;
       msgs.push('<ul class="sp-checks">' + checks.map(function (c) { return '<li class="' + (c.ok ? "ok" : "no") + '">' + esc(c.m) + '</li>'; }).join("") + (all ? '<li class="ok"><b>Super – Aufgabe gelöst!</b></li>' : "") + '</ul>');
+      stUpd(key, function (st) { st.n++; if (!st.t0) st.t0 = Date.now(); if (!all) st.f++; else st.t1 = Date.now(); });
       if (all) { store(key + ":done", "1"); mark(); }
     }
     out.innerHTML = msgs.join("") || '<span class="sp-muted">Programm ausgeführt (' + res.t.toFixed(1).replace(".", ",") + ' s).</span>';
@@ -710,8 +712,8 @@ function buildExercise(box) {
   bRun.onclick = function () { exec(false); };
   if (bChk) bChk.onclick = function () { exec(true); };
   bNs.onclick = function () { nsBox.classList.toggle("show"); if (nsBox.classList.contains("show")) nsBox.innerHTML = struktogramm(ed.prog); };
-  if (bHint) bHint.onclick = function () { hintBox.classList.add("show"); hintBox.innerHTML = d.hints.slice(0, hintIdx + 1).map(function (h, i) { return "<div>💡 <b>Tipp " + (i + 1) + ":</b> " + h + "</div>"; }).join(""); hintIdx = Math.min(hintIdx + 1, d.hints.length - 1); };
-  if (bSol) bSol.onclick = function () { if (confirm("Musterlösung laden? Dein Programm wird ersetzt.")) ed.setProgram(d.solution); };
+  if (bHint) bHint.onclick = function () { stUpd(key, function (st) { st.h++; }); hintBox.classList.add("show"); hintBox.innerHTML = d.hints.slice(0, hintIdx + 1).map(function (h, i) { return "<div>💡 <b>Tipp " + (i + 1) + ":</b> " + h + "</div>"; }).join(""); hintIdx = Math.min(hintIdx + 1, d.hints.length - 1); };
+  if (bSol) bSol.onclick = function () { if (confirm("Musterlösung laden? Dein Programm wird ersetzt.")) { stUpd(key, function (st) { st.s = 1; }); ed.setProgram(d.solution); } };
   bReset.onclick = function () { ed.setProgram(d.starter || []); };
   function mark() { var h = box.querySelector(".exh .lvl"); if (h && h.textContent.indexOf("✓") < 0) h.textContent = "✓ gelöst · " + h.textContent; }
   if (store(key + ":done")) mark();
