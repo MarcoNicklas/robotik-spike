@@ -705,6 +705,7 @@ function buildExercise(box) {
       msgs.push('<ul class="sp-checks">' + checks.map(function (c) { return '<li class="' + (c.ok ? "ok" : "no") + '">' + esc(c.m) + '</li>'; }).join("") + (all ? '<li class="ok"><b>Super – Aufgabe gelöst!</b></li>' : "") + '</ul>');
       stUpd(key, function (st) { st.n++; if (!st.t0) st.t0 = Date.now(); if (!all) st.f++; else st.t1 = Date.now(); });
       if (all) { store(key + ":done", "1"); mark(); }
+      showTries(box, key);
     }
     out.innerHTML = msgs.join("") || '<span class="sp-muted">Programm ausgeführt (' + res.t.toFixed(1).replace(".", ",") + ' s).</span>';
     stage.load(res);
@@ -717,21 +718,52 @@ function buildExercise(box) {
   bReset.onclick = function () { ed.setProgram(d.starter || []); };
   function mark() { var h = box.querySelector(".exh .lvl"); if (h && h.textContent.indexOf("✓") < 0) h.textContent = "✓ gelöst · " + h.textContent; }
   if (store(key + ":done")) mark();
+  showTries(box, key);
 }
 
 /* =====================================================================
    6) Kleine interaktive Widgets (Quiz, Rechner, Zuordnung)
    ===================================================================== */
-function buildQuiz(q) {
-  q.querySelectorAll(".qq").forEach(function (item) {
+function showTries(box, key) {   // Versuche für die Schüler sichtbar machen
+  var h = box.querySelector(".exh"); if (!h) return;
+  var t = h.querySelector(".tries"); if (!t) { t = document.createElement("span"); t.className = "tries"; h.appendChild(t); }
+  var st = {}; try { st = JSON.parse(store(key + ":st") || "{}") || {}; } catch (e) {}
+  var done = !!store(key + ":done");
+  t.textContent = st.n ? (done ? "gelöst im " + st.n + ". Versuch" : st.n + (st.n === 1 ? " Versuch" : " Versuche") + " – noch nicht gelöst") : "";
+  t.className = "tries" + (done ? " ok" : (st.n ? " open" : ""));
+}
+function buildQuiz(q) {   // Ankreuzfragen: Reihenfolge gemischt, Versuche gezählt, gelöst/ungelöst gespeichert
+  var file = location.pathname.split("/").pop() || "index.html";
+  var items = [].slice.call(q.querySelectorAll(".qq")), head = q.querySelector("b");
+  var sum = document.createElement("span"); sum.className = "qsum"; if (head) head.appendChild(sum);
+  function updHead() { var d = items.filter(function (it) { return it._done; }).length; sum.textContent = d + " von " + items.length + " gelöst"; sum.className = "qsum" + (d === items.length ? " ok" : ""); }
+  items.forEach(function (item) {
     var right = item.getAttribute("data-right"), fb = item.querySelector(".fb");
-    item.querySelectorAll("label").forEach(function (l) {
-      l.addEventListener("click", function () {
-        item.querySelectorAll("label").forEach(function (x) { x.classList.remove("right", "wrong"); });
-        if (l.getAttribute("data-k") === right) { l.classList.add("right"); fb.textContent = "Richtig! " + (item.getAttribute("data-why") || ""); }
+    var labels = [].slice.call(item.querySelectorAll("label"));
+    var inp = labels[0] && labels[0].querySelector("input"), key = "spike" + ":" + file + ":" + (inp ? inp.name : "q");
+    for (var i = labels.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = labels[i]; labels[i] = labels[j]; labels[j] = t; }
+    labels.forEach(function (l) { item.insertBefore(l, fb); });
+    var badge = document.createElement("span"); badge.className = "qst"; var qt = item.querySelector(".q"); if (qt) qt.appendChild(badge);
+    function show() {
+      var st = {}; try { st = JSON.parse(store(key + ":st") || "{}") || {}; } catch (e) {}
+      item._done = !!store(key + ":done");
+      badge.textContent = item._done ? "✓ gelöst" + (st.n ? " im " + st.n + ". Versuch" : "") : (st.n ? "○ ungelöst · " + st.n + (st.n === 1 ? " Versuch" : " Versuche") : "○ ungelöst");
+      badge.className = "qst" + (item._done ? " ok" : "");
+      updHead();
+    }
+    if (store(key + ":done")) labels.forEach(function (l) { if (l.getAttribute("data-k") === right) { l.classList.add("right"); var r = l.querySelector("input"); if (r) r.checked = true; } });
+    labels.forEach(function (l) {
+      var radio = l.querySelector("input"); if (!radio) return;
+      radio.addEventListener("change", function () {
+        labels.forEach(function (x) { x.classList.remove("right", "wrong"); });
+        var ok = l.getAttribute("data-k") === right;
+        stUpd(key, function (st) { st.n++; if (!st.t0) st.t0 = Date.now(); if (!ok) st.f++; else st.t1 = Date.now(); });
+        if (ok) { store(key + ":done", "1"); l.classList.add("right"); fb.textContent = "Richtig! " + (item.getAttribute("data-why") || ""); }
         else { l.classList.add("wrong"); fb.textContent = "Leider falsch – versuche es noch einmal."; }
+        show();
       });
     });
+    show();
   });
 }
 function buildMatch(m) {   // Zuordnungsaufgabe mit Auswahlfeldern
