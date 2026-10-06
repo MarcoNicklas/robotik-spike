@@ -169,30 +169,54 @@
   (function () { try { var sc = document.createElement("script"); sc.src = (me && me.src ? me.src.replace(/progress\.js(\?.*)?$/, "abgabe.js") : "assets/abgabe.js") + "?v=" + Math.floor(Date.now() / 3600000); sc.async = true; document.head.appendChild(sc); } catch (e) {} })();
   function uploadUrl() { var u = window.RPROG_UPLOAD && window.RPROG_UPLOAD[COURSE]; return /^https:\/\//.test(u || "") ? u : ""; }
   function stamp() { var d = new Date(), p = function (n) { return (n < 10 ? "0" : "") + n; }; return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + "_" + p(d.getHours()) + p(d.getMinutes()); }
-  // kleine PDF-Datei (Microsoft Forms erlaubt kein .txt). Der Code steht im Feld /Subject und lesbar auf der Seite.
-  function pdfBlob(lines, code, save) {
-    var latin = function (t) { return String(t).replace(/[^\x20-\x7e\xa0-\xff]/g, function (c) { return ({ "–": "-", "„": '"', "“": '"', "✓": "x" })[c] || "?"; }); };
+  // PDF-Datei (Microsoft Forms erlaubt kein .txt). Codes stehen im Info-Bereich (/Subject, /Keywords) und lesbar auf der Seite.
+  // blocks: [{h:"Überschrift"}, {t:"Text"}, {m:"Code"}, {s:"kleiner Text"}, {gap:1}]
+  function pdfDoc(blocks, code, save, extra) {
+    var latin = function (t) { return String(t).replace(/[^\x20-\x7e\xa0-\xff\n]/g, function (c) { return ({ "–": "-", "—": "-", "„": '"', "“": '"', "”": '"', "‚": "'", "‘": "'", "’": "'", "…": "...", "✓": "x", "•": "-", "→": "->", "≥": ">=", "≤": "<=", "±": "+/-", "°": "\xb0", "€": "EUR" })[c] || "?"; }); };
     var pe = function (t) { return latin(t).replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)"); };
-    var y = 790, ops = ["BT /F1 18 Tf 50 " + y + " Td (" + pe(lines[0]) + ") Tj ET"]; y -= 34;
-    lines.slice(1).forEach(function (l) { ops.push("BT /F1 12 Tf 50 " + y + " Td (" + pe(l) + ") Tj ET"); y -= 20; });
-    y -= 14; ops.push("BT /F1 10 Tf 50 " + y + " Td (Fortschrittscode:) Tj ET"); y -= 16;
-    for (var i = 0; i < code.length; i += 80) { ops.push("BT /F2 9 Tf 50 " + y + " Td (" + code.slice(i, i + 80) + ") Tj ET"); y -= 12; }
-    var stream = ops.join("\n");
-    var objs = ["<< /Type /Catalog /Pages 2 0 R >>", "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-      "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>",
-      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>", "<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>",
-      "<< /Length " + stream.length + " >>\nstream\n" + stream + "\nendstream", "<< /Title (Fortschritt Robotik) /Subject (" + code + ") /Keywords (" + (save || "") + ") /Producer (Robotik-Lernplattform) >>"];
+    var wrap = function (t, n) { var out = []; String(t).split("\n").forEach(function (para) { var line = ""; para.split(/ /).forEach(function (w) { while (w.length > n) { if (line) { out.push(line); line = ""; } out.push(w.slice(0, n)); w = w.slice(n); } if ((line + (line ? " " : "") + w).length > n) { out.push(line); line = w; } else line += (line ? " " : "") + w; }); out.push(line); }); return out; };
+    var pages = [], ops = [], y = 800;
+    function np() { if (ops.length) pages.push(ops.join("\n")); ops = []; y = 800; }
+    function line(font, size, txt, dy) { if (y - dy < 50) np(); y -= dy; ops.push("BT /" + font + " " + size + " Tf 50 " + y + " Td (" + pe(txt) + ") Tj ET"); }
+    blocks.forEach(function (b) {
+      if (b.title) line("F3", 17, b.title, 22);
+      else if (b.h) { y -= 8; line("F3", 12, b.h, 16); }
+      else if (b.t != null) wrap(b.t, 95).forEach(function (l) { line("F1", 10, l, 13); });
+      else if (b.s != null) wrap(b.s, 105).forEach(function (l) { line("F1", 8.5, l, 11); });
+      else if (b.m != null) wrap(b.m, 90).forEach(function (l) { line("F2", 8.5, l, 10.5); });
+      else if (b.gap) y -= 8 * b.gap;
+    });
+    if (code) { y -= 10; line("F1", 8, "Fortschrittscode:", 11); for (var i = 0; i < code.length; i += 100) line("F2", 6.5, code.slice(i, i + 100), 8); }
+    np();
+    var objs = ["<< /Type /Catalog /Pages 2 0 R >>", null,
+      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>", "<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>", "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>",
+      "<< /Title (Robotik) /Subject (" + (code || "") + ") /Keywords (" + (save || "") + (extra ? " " + extra : "") + ") /Producer (Robotik-Lernplattform) >>"];
+    var kids = [];
+    pages.forEach(function (st) {
+      objs.push("<< /Length " + st.length + " >>\nstream\n" + st + "\nendstream"); var cId = objs.length;
+      objs.push("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents " + cId + " 0 R >>"); kids.push(objs.length + " 0 R");
+    });
+    objs[1] = "<< /Type /Pages /Kids [" + kids.join(" ") + "] /Count " + kids.length + " >>";
     var out = "%PDF-1.4\n", offs = [];
     objs.forEach(function (o, i) { offs.push(out.length); out += (i + 1) + " 0 obj\n" + o + "\nendobj\n"; });
     var xref = out.length;
     out += "xref\n0 " + (objs.length + 1) + "\n0000000000 65535 f \n" + offs.map(function (o) { return ("000000000" + o).slice(-10) + " 00000 n \n"; }).join("") +
-      "trailer\n<< /Size " + (objs.length + 1) + " /Root 1 0 R /Info 7 0 R >>\nstartxref\n" + xref + "\n%%EOF\n";
+      "trailer\n<< /Size " + (objs.length + 1) + " /Root 1 0 R /Info 6 0 R >>\nstartxref\n" + xref + "\n%%EOF\n";
     var bytes = new Uint8Array(out.length); for (var j = 0; j < out.length; j++) bytes[j] = out.charCodeAt(j) & 255;
     return new Blob([bytes], { type: "application/pdf" });
   }
+  function pdfBlob(lines, code, save) { return pdfDoc([{ title: lines[0] }].concat(lines.slice(1).map(function (l) { return { t: l }; })), code, save); }
+  function cleanName(x) { return String(x || "").replace(/[^A-Za-z0-9ÄÖÜäöüß]+/g, "_").replace(/^_|_$/g, ""); }
+  function saveAndUpload(blob, fname, msg) {
+    var url = uploadUrl(), u = URL.createObjectURL(blob), ln = el("a", { href: u, download: fname });
+    document.body.appendChild(ln); ln.click(); ln.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
+    if (url) { var w = window.open(url, "_blank"); if (w) { try { w.opener = null; } catch (x) {} } if (msg) msg.textContent = "Datei „" + fname + "“ gespeichert ✓ – jetzt im Abgabe-Formular hochladen." + (w ? "" : " (Falls sich nichts geöffnet hat: Pop-ups erlauben und nochmal klicken.)"); }
+    else if (msg) msg.textContent = "Datei „" + fname + "“ gespeichert ✓";
+    return !!url;
+  }
   function giveDialog() {
     var code = makeCode(), d = doneMap(), n = 0; Object.keys(d).forEach(function (L) { n += d[L].length; });
-    var clean = function (x) { return String(x || "").replace(/[^A-Za-z0-9ÄÖÜäöüß]+/g, "_").replace(/^_|_$/g, ""); };
+    var clean = cleanName;
     var fname = "Fortschritt_" + COURSE + "_" + (USER.klasse ? clean(USER.klasse) + "_" : "") + clean(USER.name) + "_" + stamp() + ".pdf";
     var url = uploadUrl();
     var f = el("div");
@@ -216,10 +240,8 @@
         else msg.textContent = ok ? "Code kopiert ✓" : "Bitte markieren und mit Strg+C kopieren.";
       }
       if (a === "give") {
-        var blob = pdfBlob(["Fortschritt " + TITLE, "Name: " + USER.name + (USER.klasse ? "   Klasse: " + USER.klasse : ""), "Stand: " + new Date().toLocaleString("de-DE"), "Gelöste Aufgaben: " + n, "", "Tipp: Diese Datei aufbewahren - damit kannst du deinen Fortschritt", "an jedem Computer wieder laden (beim Anmelden)."], code, makeSave()), u = URL.createObjectURL(blob), ln = el("a", { href: u, download: fname });
-        document.body.appendChild(ln); ln.click(); ln.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
-        if (url) { var w = window.open(url, "_blank"); if (w) { try { w.opener = null; } catch (x) {} } msg.textContent = "Datei „" + fname + "“ gespeichert ✓ – jetzt auf der Abgabe-Seite hochladen." + (w ? "" : " (Falls sich nichts geöffnet hat: Pop-ups erlauben und nochmal klicken.)"); }
-        else msg.textContent = "Datei „" + fname + "“ gespeichert ✓";
+        var blob = pdfBlob(["Fortschritt " + TITLE, "Name: " + USER.name + (USER.klasse ? "   Klasse: " + USER.klasse : ""), "Stand: " + new Date().toLocaleString("de-DE"), "Gelöste Aufgaben: " + n, "", "Tipp: Diese Datei aufbewahren - damit kannst du deinen Fortschritt", "an jedem Computer wieder laden (beim Anmelden)."], code, makeSave());
+        saveAndUpload(blob, fname, msg);
       }
     });
   }
@@ -227,6 +249,7 @@
   function toast(t) { var d = el("div", { role: "status", style: "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:1001;background:var(--green,#3b7d3a);color:#fff;padding:10px 18px;border-radius:10px;font-size:15px;box-shadow:0 6px 20px rgba(0,0,0,.25)" }); d.textContent = t; document.body.appendChild(d); setTimeout(function () { d.remove(); }, 5000); }
   function header() {
     var nav = document.querySelector(".top .nav"); if (!nav) return;
+    if (!/leistungsnachweis\.html$/.test(location.pathname)) { var lnk = el("a", { href: "leistungsnachweis.html" }, "🎓 Leistungsnachweise"); nav.insertBefore(lnk, nav.firstChild); }
     var chip = el("span", { "class": "rp-chip" }); chip.appendChild(document.createTextNode("👤 " + USER.name));
     var out = el("button", { type: "button", title: "Abmelden" }, "abmelden");
     out.addEventListener("click", function () { ss("rprog:active", null); location.reload(); });
@@ -238,6 +261,8 @@
     nav.insertBefore(give, nav.firstChild); nav.insertBefore(chip, nav.firstChild);
   }
 
+  window.RProg.api = { user: USER, course: COURSE, prefix: PREFIX, title: TITLE, salt: SALT, ls: ls, hash: hash, b64u: b64u, el: el, overlay: overlay,
+    makeCode: makeCode, makeSave: makeSave, pdfDoc: pdfDoc, saveAndUpload: saveAndUpload, uploadUrl: uploadUrl, stamp: stamp, cleanName: cleanName };
   function start() {
     addCss();
     if (/lehrer\.html$/.test(location.pathname)) return;

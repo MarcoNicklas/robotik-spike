@@ -228,3 +228,21 @@ canvas.sp-mat{width:100%;height:auto;border:1px solid var(--line);border-radius:
 .quiz .qsum.ok{color:var(--green);background:var(--green-soft)}
 .quiz .qst{display:inline-block;margin-left:8px;font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:0 8px}
 .quiz .qst.ok{color:var(--green);border-color:var(--green);background:var(--green-soft)}
+
+/* ---- Leistungsnachweise ---- */
+.ln-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.ln-card.ln-lock{opacity:.85}
+.ln-req{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+.ln-bar{display:block;height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-bottom:4px}.ln-bar i{display:block;height:100%;background:var(--pri)}
+.chip.st-gesperrt{background:var(--line);color:var(--muted)}.chip.st-freigeschaltet{background:var(--amber-soft);color:var(--amber)}.chip.st-laeuft{background:var(--amber-soft);color:var(--amber);font-weight:700}.chip.st-abgegeben{background:var(--green-soft);color:var(--green);font-weight:700}
+.ln-timer{position:sticky;top:52px;z-index:15;background:var(--pri);color:#fff;font-weight:700;border-radius:10px;padding:10px 14px;margin:12px 0;font-variant-numeric:tabular-nums}
+.ln-timer.warn{background:var(--amber)}.ln-timer.over{background:var(--red)}.ln-timer.done{background:var(--green)}
+.ln-checks{padding:10px 16px 14px}.ln-checks label{display:block;margin:6px 0;cursor:pointer}
+.ln-choices label{display:block;padding:6px 10px;border:1px solid var(--line);border-radius:8px;margin:5px 0;cursor:pointer}
+.ln-lab{display:block;font-weight:600;margin:14px 0 4px}.hint-s{font-weight:400;font-size:13px;color:var(--muted)}
+.ln-in{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+textarea.ln-code{font-family:ui-monospace,Consolas,monospace;font-size:13px;background:var(--code-bg);color:var(--code-ink)}
+.ln-tab input{width:100%;min-width:70px;font:inherit;font-size:14px;padding:5px 7px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
+.btn.ln-start,.btn.ln-give{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:700;font-size:16px;padding:10px 18px}
+.ln-saved{font-size:13px;color:var(--muted);align-self:center}
+.ln-code summary{cursor:pointer;color:var(--muted);margin-top:14px}
