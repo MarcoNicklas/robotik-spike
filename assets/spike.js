@@ -62,18 +62,22 @@ var CDEF = {
   var:    { label: "Variable", f: { v: ["var"], op: ["sel", ["=", "<", ">"]], n: ["num"] }, d: { v: "zähler", op: "=", n: 3 } }
 };
 var CKINDS = ["color", "refl", "dist", "force", "yaw", "timer", "var"];
+/* Welche Sensoren/Motoren hat der Roboter? Fahrgestell 1 = nur Hub (Gyro, Timer) + Fahrmotoren C/D */
+function caps(robot) { robot = robot || {}; return { color: robot.color !== false, dist: robot.dist !== false, force: robot.force !== false, arm: !!robot.arm }; }
+function condAllowed(k, cp) { return !((k === "color" || k === "refl") && !cp.color) && !(k === "dist" && !cp.dist) && !(k === "force" && !cp.force); }
 var CKLABEL = { color: "Farbe", refl: "Licht %", dist: "Abstand", force: "Kraft", yaw: "Gierwinkel", timer: "Timer", var: "Variable" };
 
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
-function newBlock(t) {
+function newBlock(t, cp) {
   var d = BDEF[t], b = { t: t, a: clone(d.d) };
   if (d.shape === "c" || d.shape === "c2") b.b = [];
   if (d.shape === "c2") b.e = [];
+  if (cp && b.a.c && typeof b.a.c === "object" && !condAllowed(b.a.c.k, cp)) b.a.c = { k: "timer", n: 2 };
   return b;
 }
 function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
-function store(k, v) { if (window.RProg) k = window.RProg.k(k); try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
+function store(k, v) { if (window.LStore) return window.LStore.raw(k, v); if (window.RProg) k = window.RProg.k(k); try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
 
 /* =====================================================================
    2) Editor
@@ -87,17 +91,19 @@ function Editor(root, opts) {
   var ws = el("div", "sp-ws"); wrap.appendChild(ws);
   root.appendChild(wrap);
   this.pal = pal; this.ws = ws;
+  this.caps = caps(opts.robot);
   this.buildPalette(opts.palette);
   this.render();
 }
 Editor.prototype.buildPalette = function (allowed) {
   var self = this, pal = this.pal;
-  var list = allowed && allowed !== "all" ? allowed : Object.keys(BDEF);
+  var list = allowed && allowed !== "all" ? allowed : Object.keys(BDEF), cp = this.caps;
+  list = list.filter(function (t) { return !(t === "mo_run" && !cp.arm); });
   var lastCat = null;
   list.forEach(function (t) {
     var d = BDEF[t]; if (!d) return;
     if (d.cat !== lastCat) { pal.appendChild(el("div", "sp-pcat", CAT[d.cat].name)); lastCat = d.cat; }
-    var b = self.blockEl(newBlock(t), true);
+    var b = self.blockEl(newBlock(t, self.caps), true);
     b.dataset.pt = t;
     pal.appendChild(b);
   });
@@ -152,7 +158,7 @@ Editor.prototype.condEl = function (obj, key, onch) {
   var self = this, c = obj[key];
   var w = el("span", "sp-cond");
   var ks = el("select", "sp-in sp-ck");
-  CKINDS.forEach(function (k) { var op = el("option", null, CKLABEL[k]); op.value = k; if (k === c.k) op.selected = true; ks.appendChild(op); });
+  CKINDS.filter(function (k) { return condAllowed(k, self.caps) || k === c.k; }).forEach(function (k) { var op = el("option", null, CKLABEL[k]); op.value = k; if (k === c.k) op.selected = true; ks.appendChild(op); });
   w.appendChild(ks);
   var inner = el("span", "sp-cin"); w.appendChild(inner);
   function fill() {
@@ -204,7 +210,7 @@ Editor.prototype.blockEl = function (b, inPalette, list, idx) {
   });
   if (inPalette) be.addEventListener("click", function (e) {
     if (self._dragged) return;
-    var nb = newBlock(b.t), cur = self.cursor;
+    var nb = newBlock(b.t, self.caps), cur = self.cursor;
     if (cur) { cur.list.splice(cur.idx, 0, nb); cur.idx += 1; } else self.prog.push(nb);
     self.render(); onch();
   });
@@ -245,7 +251,7 @@ Editor.prototype.startDrag = function (e, src, srcEl) {
     if (!started) return;
     if (ghost) ghost.remove();
     srcEl.classList.remove("sp-dragging");
-    var blk = src.fresh ? newBlock(src.fresh) : src.b;
+    var blk = src.fresh ? newBlock(src.fresh, self.caps) : src.b;
     if (target) {
       var L = target._list, i = target._idx;
       if (!src.fresh) {
@@ -367,6 +373,7 @@ function Robot(cfg) {
   this.th0 = this.th;
   this.arm = cfg.arm || false; this.armAng = 0; this.carry = null;
   this.dist = cfg.dist !== false; this.force = cfg.force !== false; this.drift = cfg.drift || 1;
+  this.color = cfg.color !== false; this.slip = cfg.slip || 1;   // slip < 1: abgefahrene Reifen / Schlupf
 }
 
 /* Interpreter: führt das Programm in virtueller Zeit aus und protokolliert */
@@ -414,13 +421,13 @@ function simulate(prog, cfg) {
     var sp = sensorPos();
     frames.push({ t: +T.t.toFixed(3), x: +R.x.toFixed(2), y: +R.y.toFixed(2), h: +(R.th * 180 / Math.PI).toFixed(2), yaw: Math.round(yaw()),
       col: W.colorAt(sp[0], sp[1]), refl: W.reflAt(sp[0], sp[1]), dist: R.dist ? readDist() : null, force: R.force ? forcePressed() : null,
-      arm: Math.round(R.armAng), disp: display, center: center, objs: W.objs.map(function (o) { return [o.x, o.y]; }) });
+      arm: Math.round(R.armAng), mc: Math.round(degL), md: Math.round(degR), tm: +(T.t - timer0).toFixed(1), disp: display, center: center, objs: W.objs.map(function (o) { return [o.x, o.y]; }) });
   }
   function step(h) {
     // Räder
     var dl = wl * h, dr = wr * h;
     degL += Math.abs(dl); degR += Math.abs(dr);
-    var sl = dl / 360 * WHEEL_CIRC, sr = dr / 360 * WHEEL_CIRC;
+    var sl = dl / 360 * WHEEL_CIRC * R.slip, sr = dr / 360 * WHEEL_CIRC * R.slip;
     var ds = (sl + sr) / 2, dth = (sl - sr) / TRACK;  // Rechtsdrehung = th sinkt
     var nth = R.th - dth;
     var nx = R.x + ds * Math.cos(R.th - dth / 2), ny = R.y + ds * Math.sin(R.th - dth / 2);
@@ -468,8 +475,8 @@ function simulate(prog, cfg) {
   function cond(c) {
     var sp = sensorPos();
     switch (c.k) {
-      case "color": return W.colorAt(sp[0], sp[1]) === c.c;
-      case "refl": var r = W.reflAt(sp[0], sp[1]); return c.op === "<" ? r < c.n : r > c.n;
+      case "color": if (!R.color) throw { msg: "Am Port E ist kein Farbsensor angeschlossen (Fahrgestell 1 hat keine Sensoren am Hub – nur den eingebauten Gyrosensor)." }; return W.colorAt(sp[0], sp[1]) === c.c;
+      case "refl": if (!R.color) throw { msg: "Am Port E ist kein Farbsensor angeschlossen (Fahrgestell 1 hat keine Sensoren am Hub – nur den eingebauten Gyrosensor)." }; var r = W.reflAt(sp[0], sp[1]); return c.op === "<" ? r < c.n : r > c.n;
       case "dist": if (!R.dist) throw { msg: "Am Port F ist kein Abstandssensor angeschlossen." }; var d = readDist(); return c.op === "näher als" ? d < c.n : d > c.n;
       case "force": if (!R.force) throw { msg: "Am Port B ist kein Kraftsensor angeschlossen." }; var p = forcePressed(); return c.st === "gedrückt" ? p : !p;
       case "yaw": var y = yaw(); return c.op === ">" ? y > c.n : y < c.n;
@@ -595,11 +602,12 @@ Stage.prototype.show = function (t) {
   var LC = { "aus": "#3a4450", "weiß": "#fff", "rot": "#ff3b30", "grün": "#34c759", "blau": "#3fa7ff", "gelb": "#ffcc00", "orange": "#ff9500", "violett": "#b05cff" };
   if (F) {
     mx.textContent = F.disp || " "; cl.style.background = LC[F.center] || "#3a4450"; cl.style.boxShadow = F.center && F.center !== "aus" ? "0 0 10px " + LC[F.center] : "none";
-    se.innerHTML = '<span>E Farbe: <b>' + esc(F.col) + '</b></span><span>E Licht: <b>' + F.refl + ' %</b></span>' +
+    var cp = caps(this.cfg.robot);
+    se.innerHTML = (cp.color ? '<span>E Farbe: <b>' + esc(F.col) + '</b></span><span>E Licht: <b>' + F.refl + ' %</b></span>' : '<span>Motor C: <b>' + (F.mc || 0) + '°</b></span><span>Motor D: <b>' + (F.md || 0) + '°</b></span>') +
       (F.dist != null ? '<span>F Abstand: <b>' + (F.dist >= 200 ? "–" : F.dist + " cm") + '</b></span>' : "") +
       (F.force != null ? '<span>B Kraft: <b>' + (F.force ? "gedrückt" : "frei") + '</b></span>' : "") +
-      '<span>Gierwinkel: <b>' + F.yaw + '°</b></span>' + (this.cfg.robot && this.cfg.robot.arm ? '<span>A Gabel: <b>' + F.arm + '°</b></span>' : "");
-  } else { se.innerHTML = '<span>E Farbe: –</span><span>Gierwinkel: 0°</span>'; }
+      '<span>Gierwinkel: <b>' + F.yaw + '°</b></span>' + (!cp.color ? '<span>Timer: <b>' + String(F.tm != null ? F.tm : 0).replace(".", ",") + ' s</b></span>' : "") + (this.cfg.robot && this.cfg.robot.arm ? '<span>A Gabel: <b>' + F.arm + '°</b></span>' : "");
+  } else { se.innerHTML = caps(this.cfg.robot).color ? '<span>E Farbe: –</span><span>Gierwinkel: 0°</span>' : '<span>Motor C: 0°</span><span>Motor D: 0°</span><span>Gierwinkel: 0°</span>'; }
   this.draw(fi);
 };
 Stage.prototype.draw = function (fi) {
@@ -642,7 +650,7 @@ Stage.prototype.draw = function (fi) {
   g.beginPath(); g.rect(-6 * L, -5.2 * L, 14 * L, 10.4 * L); g.fill(); g.stroke();      // Rahmen
   g.fillStyle = "#f4f6f7"; g.fillRect(-4.5 * L, -3.6 * L, 8.5 * L, 7.2 * L); g.strokeStyle = "#9aa5ad"; g.strokeRect(-4.5 * L, -3.6 * L, 8.5 * L, 7.2 * L); // Hub
   g.fillStyle = "#3a4450"; g.fillRect(-2.2 * L, -1.6 * L, 3.2 * L, 3.2 * L);             // Lichtmatrix
-  g.fillStyle = "#7bc8e8"; g.beginPath(); g.arc(SENS_AHEAD * L, 0, 1.3 * L, 0, 7); g.fill(); // Farbsensor
+  if (!this.cfg.robot || this.cfg.robot.color !== false) { g.fillStyle = "#7bc8e8"; g.beginPath(); g.arc(SENS_AHEAD * L, 0, 1.3 * L, 0, 7); g.fill(); } // Farbsensor
   if (this.cfg.robot && this.cfg.robot.dist !== false) { g.fillStyle = "#cfd6db"; g.fillRect((FRONT - 1.4) * L, -3 * L, 1.4 * L, 6 * L); g.fillStyle = "#333"; g.beginPath(); g.arc((FRONT - 0.7) * L, -1.6 * L, 0.6 * L, 0, 7); g.arc((FRONT - 0.7) * L, 1.6 * L, 0.6 * L, 0, 7); g.fill(); }
   if (this.cfg.robot && this.cfg.robot.arm) { var up = (pose.arm || 0) > 40; g.fillStyle = up ? "#0090F5" : "#7cc3f5"; g.fillRect((FRONT) * L, -4 * L, 3 * L, 1.2 * L); g.fillRect((FRONT) * L, 2.8 * L, 3 * L, 1.2 * L); }
   g.fillStyle = "#D98E04"; g.beginPath(); g.moveTo(12.5 * L, 0); g.lineTo(9.8 * L, -1.6 * L); g.lineTo(9.8 * L, 1.6 * L); g.closePath(); g.fill();
@@ -672,25 +680,34 @@ function helpers(res) {
   };
 }
 function stUpd(key, fn) { if (store(key + ":done")) return; var s = {}; try { s = JSON.parse(store(key + ":st") || "{}") || {}; } catch (e) {} s.n = s.n || 0; s.f = s.f || 0; s.h = s.h || 0; fn(s); store(key + ":st", JSON.stringify(s)); }
-function buildExercise(box) {
-  var id = box.getAttribute("data-ex"), d = EX[id]; if (!d) return;
-  var key = "spike:" + location.pathname.split("/").pop() + ":" + id;
+function buildExercise(box, dIn, opts) {
+  opts = opts || {};
+  var id = box.getAttribute("data-ex"), d = dIn || EX[id]; if (!d) return;
+  var key = opts.key || ("spike:" + location.pathname.split("/").pop() + ":" + id);
+  var solAfter = opts.solAfter || 0;          // Musterlösung erst nach so vielen erfolglosen Prüfungen
   var saved = null; try { saved = JSON.parse(store(key) || "null"); } catch (e) {}
   var grid = el("div", "sp-grid"); box.appendChild(grid);
   var left = el("div", "sp-left"); grid.appendChild(left);
   var right = el("div", "sp-right"); grid.appendChild(right);
-  var ed = new Editor(left, { program: saved || d.starter || [], palette: d.palette || "all",
-    onChange: function (p) { store(key, JSON.stringify(p)); if (nsBox.classList.contains("show")) nsBox.innerHTML = struktogramm(p); } });
+  var ed = new Editor(left, { program: saved || d.starter || [], palette: d.palette || "all", robot: d.robot,
+    onChange: function (p) { store(key, JSON.stringify(p)); if (nsBox.classList.contains("show")) nsBox.innerHTML = struktogramm(p); if (opts.onChange) opts.onChange(p); } });
   var btns = el("div", "sp-btns"); left.appendChild(btns);
   function mk(lbl, cls) { var b = el("button", "sp-btn " + (cls || ""), lbl); b.type = "button"; btns.appendChild(b); return b; }
   var bRun = mk("▶ Start", "run"), bChk = d.check ? mk("✓ Prüfen", "chk") : null, bNs = mk("Struktogramm"), bHint = (d.hints || []).length ? mk("💡 Tipp") : null,
       bSol = d.solution ? mk("Lösung") : null, bReset = mk("↺");
   bReset.title = "Programm zurücksetzen";
-  var out = el("div", "sp-out"); left.appendChild(out);
+  var out = el("div", "sp-out"); out.setAttribute("aria-live", "polite"); left.appendChild(out);
   var nsBox = el("div", "sp-ns"); left.appendChild(nsBox);
   var hintBox = el("div", "sp-hintbox"); left.appendChild(hintBox);
   var stage = new Stage(right, d);
-  var hintIdx = 0;
+  var hintIdx = 0, tShown = Date.now();
+  function stObj() { var st = {}; try { st = JSON.parse(store(key + ":st") || "{}") || {}; } catch (e) {} return st; }
+  function solState() {
+    if (!bSol) return;
+    var st = stObj(), ok = !solAfter || (st.f || 0) >= solAfter || store(key + ":done");
+    bSol.disabled = !ok;
+    bSol.title = ok ? "Musterlösung laden" : "Die Musterlösung gibt es nach " + solAfter + " erfolglosen Prüfungen – probiere es zuerst selbst.";
+  }
   function exec(withCheck) {
     var res = simulate(ed.prog, d);
     var msgs = [];
@@ -701,24 +718,40 @@ function buildExercise(box) {
       var checks = [];
       try { (new Function("H", "P", "ok", "with(H){" + d.check + "}"))(helpers(res), ed.prog, function (c, good, bad) { checks.push({ ok: !!c, m: c ? good : (bad || good) }); }); }
       catch (e) { checks.push({ ok: false, m: "Prüfung nicht möglich: " + e.message }); }
-      var all = checks.length && checks.every(function (c) { return c.ok; }) && !res.err;
+      var all = !!(checks.length && checks.every(function (c) { return c.ok; }) && !res.err);
+      var wasDone = !!store(key + ":done");
       msgs.push('<ul class="sp-checks">' + checks.map(function (c) { return '<li class="' + (c.ok ? "ok" : "no") + '">' + esc(c.m) + '</li>'; }).join("") + (all ? '<li class="ok"><b>Super – Aufgabe gelöst!</b></li>' : "") + '</ul>');
       stUpd(key, function (st) { st.n++; if (!st.t0) st.t0 = Date.now(); if (!all) st.f++; else st.t1 = Date.now(); });
       if (all) { store(key + ":done", "1"); mark(); }
-      showTries(box, key);
+      if (!all && opts.hintAfterFail && d.hints && d.hints.length) {
+        var stf = stObj(); var hi = Math.min(d.hints.length, Math.max(0, (stf.f || 0) - 1));
+        if (hi > 0) { hintBox.classList.add("show"); hintBox.innerHTML = d.hints.slice(0, hi).map(function (h, i) { return "<div>💡 <b>Tipp " + (i + 1) + ":</b> " + h + "</div>"; }).join(""); }
+      }
+      showTries(box, key); solState();
+      if (opts.onCheck) opts.onCheck({ ok: all, wasDone: wasDone, checks: checks, prog: ed.prog, latency: Date.now() - tShown, res: res });
+      tShown = Date.now();
     }
     out.innerHTML = msgs.join("") || '<span class="sp-muted">Programm ausgeführt (' + res.t.toFixed(1).replace(".", ",") + ' s).</span>';
     stage.load(res);
+    if (opts.onRun) opts.onRun(res);
   }
   bRun.onclick = function () { exec(false); };
   if (bChk) bChk.onclick = function () { exec(true); };
   bNs.onclick = function () { nsBox.classList.toggle("show"); if (nsBox.classList.contains("show")) nsBox.innerHTML = struktogramm(ed.prog); };
-  if (bHint) bHint.onclick = function () { stUpd(key, function (st) { st.h++; }); hintBox.classList.add("show"); hintBox.innerHTML = d.hints.slice(0, hintIdx + 1).map(function (h, i) { return "<div>💡 <b>Tipp " + (i + 1) + ":</b> " + h + "</div>"; }).join(""); hintIdx = Math.min(hintIdx + 1, d.hints.length - 1); };
-  if (bSol) bSol.onclick = function () { if (confirm("Musterlösung laden? Dein Programm wird ersetzt.")) { stUpd(key, function (st) { st.s = 1; }); ed.setProgram(d.solution); } };
+  if (bHint) bHint.onclick = function () { stUpd(key, function (st) { st.h++; }); hintBox.classList.add("show"); hintBox.innerHTML = d.hints.slice(0, hintIdx + 1).map(function (h, i) { return "<div>💡 <b>Tipp " + (i + 1) + ":</b> " + h + "</div>"; }).join("") + (d.ref ? '<div class="sp-ref">📘 ' + esc(d.ref) + '</div>' : ""); hintIdx = Math.min(hintIdx + 1, d.hints.length - 1); if (opts.onHint) opts.onHint(); };
+  if (bSol) bSol.onclick = function () {
+    if (bSol.disabled) return;
+    if (!bSol._armed) { bSol._armed = true; bSol.textContent = "Lösung wirklich laden? (ersetzt dein Programm)"; setTimeout(function () { bSol._armed = false; bSol.textContent = "Lösung"; }, 5000); return; }
+    bSol._armed = false; bSol.textContent = "Lösung";
+    stUpd(key, function (st) { st.s = 1; }); ed.setProgram(d.solution);
+    out.innerHTML = '<div class="sp-info">Musterlösung geladen. Schau sie dir genau an, starte sie und drücke dann <b>✓ Prüfen</b>.</div>';
+    if (opts.onSolution) opts.onSolution();
+  };
   bReset.onclick = function () { ed.setProgram(d.starter || []); };
   function mark() { var h = box.querySelector(".exh .lvl"); if (h && h.textContent.indexOf("✓") < 0) h.textContent = "✓ gelöst · " + h.textContent; }
   if (store(key + ":done")) mark();
-  showTries(box, key);
+  showTries(box, key); solState();
+  return { editor: ed, stage: stage, exec: exec };
 }
 
 /* =====================================================================
@@ -774,9 +807,10 @@ function buildMatch(m) {   // Zuordnungsaufgabe mit Auswahlfeldern
     res.textContent = r + " von " + n + " richtig" + (r === n ? " – super!" : "");
   });
 }
-window.SPIKE = { simulate: simulate, struktogramm: struktogramm, BDEF: BDEF, World: World, helpers: helpers, newBlock: newBlock };
+window.SPIKE = { simulate: simulate, struktogramm: struktogramm, BDEF: BDEF, World: World, helpers: helpers, newBlock: newBlock, mount: buildExercise, blockText: blockText };
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".ex[data-ex]").forEach(buildExercise);
+  if (window.LESSON) return;   // neue Lektionsseiten bauen ihre Aufgaben selbst (lesson.js)
+  document.querySelectorAll(".ex[data-ex]").forEach(function (b) { buildExercise(b); });
   document.querySelectorAll(".quiz").forEach(buildQuiz);
   document.querySelectorAll(".match").forEach(buildMatch);
   document.querySelectorAll("[data-widget]").forEach(function (w) { var f = window.WIDGETS && window.WIDGETS[w.getAttribute("data-widget")]; if (f) f(w); });
