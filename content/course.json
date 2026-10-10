@@ -1,0 +1,40 @@
+{
+ "title": "Basiskurs Robotik",
+ "subtitle": "LEGO Education SPIKE Prime · Fahrgestell 1",
+ "course_code": "SPIKE",
+ "school": "Wirtschaftsschule",
+ "skript": "material/Skript_Robotik_SPIKE.pdf",
+ "pass": 0.7,
+ "base_url": "https://marconicklas.github.io/robotik-spike/",
+ "hardware": "Fahrgestell 1: Hub, zwei Motoren an Port C (links) und Port D (rechts), Räder, Stützrad – keine angebauten Sensoren (Gyrosensor im Hub).",
+ "archive": {
+  "folder": "erweitert",
+  "note": "Inhalte zum erweiterten Fahrgestell (Farbsensor E, Abstandssensor F, Kraftsensor B, Anbau-Motor A) – vorerst nicht Teil der Lernfolge.",
+  "pages": [
+   {"file": "L05_Sensoren_und_Aktoren.html", "title": "alte Lektion 5 – Aufgaben mit Farb- und Abstandssensor"},
+   {"file": "L08_Abstand_und_Kraft.html", "title": "Sensoren auswerten: Abstand und Kraft"},
+   {"file": "L09_Farbe_und_Linien.html", "title": "Sensoren auswerten: Farben und Linien"},
+   {"file": "L11_Mit_Gegenstaenden_spielen.html", "title": "Mit Gegenständen spielen (Hubgabel an Motor A)"},
+   {"file": "L12_Roboter_warten.html", "title": "alte Lektion 12 – Schwelle des Farbsensors neu bestimmen"},
+   {"file": "L13_Fehler_im_Programm.html", "title": "alte Lektion 13 – Fehlersuche mit Abstands- und Farbsensor"},
+   {"file": "L14_Gefuehrte_Mission.html", "title": "Geführte Mission mit Hubgabel"},
+   {"file": "L15_Wettbewerb.html", "title": "Robot-Game-Lauf mit Gabel und Sensoren"}
+  ]
+ },
+ "redirects": {
+  "L08_Abstand_und_Kraft.html": "L08_Warten_und_Verzweigen.html",
+  "L09_Farbe_und_Linien.html": "L09_Gyro_und_praezises_Fahren.html",
+  "L10_Gyro_und_praezises_Fahren.html": "L09_Gyro_und_praezises_Fahren.html",
+  "L11_Mit_Gegenstaenden_spielen.html": "L12_Missionen_planen.html",
+  "L12_Roboter_warten.html": "L10_Roboter_warten.html",
+  "L13_Fehler_im_Programm.html": "L11_Fehler_im_Programm.html",
+  "L14_Gefuehrte_Mission.html": "L12_Missionen_planen.html",
+  "L15_Wettbewerb.html": "L13_Robot_Game.html",
+  "L16_Berufe_entdecken.html": "L14_Berufe_entdecken.html"
+ },
+ "ln": {
+  "1": {"req": ["L04", "L05", "L06", "L07", "L08"], "window": "nach DS 8"},
+  "2": {"req": ["L09", "L12", "L13"], "window": "nach DS 13"},
+  "3": {"req": ["L10", "L11"], "window": "nach DS 11"}
+ }
+}

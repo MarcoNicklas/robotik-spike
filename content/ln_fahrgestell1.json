@@ -1,0 +1,394 @@
+[
+ {
+  "n": 1,
+  "title": "Einparkhilfe",
+  "kind": "schriftlich",
+  "window": "nach DS 8",
+  "minutes": 60,
+  "req": [
+   "L04",
+   "L05",
+   "L06",
+   "L07",
+   "L08"
+  ],
+  "lb": "LB 3, LB 4",
+  "intro": "Programmiere mit deinem Fahrgestell 1 eine Assistenz-Funktion, wie sie in echten Autos steckt – mit den Sensoren, die im Hub und in den Motoren eingebaut sind (Gyrosensor, Rotationssensor). Danach erklärst du in einem eigenen Produkt, wie dein Sensor funktioniert, und führst den Roboter vor.",
+  "variants": [
+   {
+    "id": "A",
+    "title": "Einparkassistent mit Gyrosensor",
+    "text": "Der Roboter parkt rückwärts in eine Parklücke: Er fährt an der Lücke vorbei, dreht sich mit dem Gyrosensor genau um 90° und setzt dann rückwärts in die Lücke. Beim Rückwärtsfahren piept er als Warnsignal, am Ende zeigt die Lichtmatrix „P“.",
+    "checks": [
+     "Drehung mit dem Gyrosensor (Gierwinkel), nicht nur mit Radgrad",
+     "Roboter steht gerade (± 5°) in der Parklücke",
+     "Warnsignal (Piepton) beim Rückwärtsfahren",
+     "Anzeige „P“ auf der Lichtmatrix am Ende",
+     "Programm mit Schleife und Verzweigung (falls … dann … sonst)"
+    ]
+   },
+   {
+    "id": "B",
+    "title": "Spurhalteassistent mit Gyro-Regelung",
+    "text": "Der Roboter fährt 1 m geradeaus. Auch wenn man ihn unterwegs leicht anstößt, korrigiert er seine Richtung mit dem Gyrosensor. Lenkt er gerade nach links, leuchtet das Mittellicht blau, lenkt er nach rechts, gelb. Nach 1 m hält er und spielt einen Ton.",
+    "checks": [
+     "Gierwinkel wird ständig abgefragt (Schleife)",
+     "Korrektur mit falls … dann … sonst (Richtung stimmt)",
+     "Anzeige der Lenkrichtung mit dem Mittellicht",
+     "Stopp nach ca. 1 m",
+     "Abschluss mit Ton"
+    ]
+   },
+   {
+    "id": "C",
+    "title": "Fahrtenschreiber mit Rotationssensor",
+    "text": "Der Roboter fährt in Etappen zu je 20 cm. Eine Variable zählt die Etappen, die Lichtmatrix zeigt nach jeder Etappe die bisher gefahrene Strecke in cm. Nach 100 cm hält er an, wartet 3 Sekunden und fährt mit einem Ton zurück zum Start.",
+    "checks": [
+     "Variable zählt die Etappen",
+     "Anzeige der gefahrenen Strecke nach jeder Etappe",
+     "Stopp nach 100 cm (± 3 cm)",
+     "Programm mit Schleife und Verzweigung oder bedingter Schleife",
+     "3 Sekunden warten und zurück zum Start mit Ton"
+    ]
+   }
+  ],
+  "product": {
+   "label": "Handlungsprodukt: „So funktioniert mein Sensor“",
+   "choices": [
+    "Erklärvideo (ca. 60 Sekunden)",
+    "Comic-Anleitung (4–6 Bilder)"
+   ],
+   "text": "Erkläre in deinem Produkt: Wie misst dein Sensor? Wie reagiert dein Programm darauf? Wo kommt so ein Sensor im Alltag vor?"
+  },
+  "fields": [
+   {
+    "id": "prog",
+    "label": "Dein Programm in Stichworten (oder als Struktogramm beschrieben)",
+    "type": "area",
+    "rows": 6
+   }
+  ],
+  "rubric": [
+   [
+    "Funktion (Roboter erfüllt alle Anforderungen)",
+    10
+   ],
+   [
+    "Programm (Aufbau, Sensorabfrage, Schleife/Verzweigung)",
+    6
+   ],
+   [
+    "Handlungsprodukt (Video/Comic: richtig, verständlich, kreativ)",
+    6
+   ],
+   [
+    "Vorstellung (Vorführung, Erklärung, Rückfrage)",
+    5
+   ],
+   [
+    "Reflexion",
+    3
+   ]
+  ],
+  "reflect": true,
+  "group": false,
+  "reqs": [
+   {
+    "k": "L04",
+    "file": "L04_Energie_Hub_Verkabelung.html",
+    "title": "Energie, Hub und Verkabelung",
+    "ex": [
+     "e1"
+    ]
+   },
+   {
+    "k": "L05",
+    "file": "L05_Sensoren_und_Aktoren.html",
+    "title": "Sensoren und Aktoren",
+    "ex": [
+     "e1",
+     "e2"
+    ]
+   },
+   {
+    "k": "L06",
+    "file": "L06_Grundbefehle_und_Sequenz.html",
+    "title": "Grundbefehle: der Roboter lernt fahren",
+    "ex": [
+     "e1",
+     "e2",
+     "e3"
+    ]
+   },
+   {
+    "k": "L07",
+    "file": "L07_Schleifen_und_Meine_Bloecke.html",
+    "title": "Wiederholungen und Meine Blöcke",
+    "ex": [
+     "e1",
+     "e2",
+     "e3"
+    ]
+   },
+   {
+    "k": "L08",
+    "file": "L08_Abstand_und_Kraft.html",
+    "title": "Sensoren auswerten: Abstand und Kraft",
+    "ex": [
+     "e1",
+     "e2",
+     "e3"
+    ]
+   }
+  ],
+  "max": 30
+ },
+ {
+  "n": 2,
+  "title": "Missionsbereit",
+  "kind": "schriftlich",
+  "window": "nach DS 13",
+  "minutes": 90,
+  "req": [
+   "L09",
+   "L12",
+   "L13"
+  ],
+  "lb": "LB 2, LB 4",
+  "intro": "Wie bei der FIRST LEGO League löst dein Roboter eine Mission auf der Matte – in höchstens 2:30 Minuten. Du planst, testest und verbesserst deinen Lauf und hältst alles in deiner Missionsmappe fest.",
+  "variants": [
+   {
+    "id": "A",
+    "title": "Lieferung ins Lager",
+    "text": "Die Kiste steht 60 cm vor der Basis. Schiebe sie mit deinem Fahrgestell 1 (Front oder selbst gebaute Schiebe-Schaufel) ins Lager (rechts hinten, 150 cm von der Basis) und kehre in die Basis zurück.",
+    "checks": [
+     "Kiste wird geschoben (Bulldozer-Prinzip)",
+     "Kiste liegt am Ende im Lager",
+     "Roboter steht am Ende in der Basis",
+     "Lauf dauert höchstens 2:30 Minuten",
+     "mindestens ein eigener Block (Meine Blöcke)"
+    ]
+   },
+   {
+    "id": "B",
+    "title": "Abholung mit Ausrichten",
+    "text": "Die Kiste steht hinter der Rückwand des Lagers. Fahre zur Wand, richte dich durch kurzes Andrücken an der Wand neu aus, umfahre die Wand mit Gyro-Drehungen und schiebe die Kiste zurück in die Basis.",
+    "checks": [
+     "Ausrichten an der Wand (Andrücken mit Zeit)",
+     "Drehungen mit dem Gyrosensor (Gierwinkel)",
+     "Kiste liegt am Ende in der Basis",
+     "Lauf dauert höchstens 2:30 Minuten",
+     "mindestens ein eigener Block (Meine Blöcke)"
+    ]
+   },
+   {
+    "id": "C",
+    "title": "Doppelmission",
+    "text": "Schiebe zuerst den Ball ins Tor (geradeaus), drehe dann mit dem Gyrosensor genau 90° und schiebe die Kiste ins Lager. Zum Schluss: Signal (Licht und Ton).",
+    "checks": [
+     "Ball liegt im Tor",
+     "Drehung mit dem Gyrosensor (Gierwinkel)",
+     "Kiste ins Lager geschoben",
+     "Signal zum Schluss",
+     "Lauf dauert höchstens 2:30 Minuten"
+    ]
+   }
+  ],
+  "product": {
+   "label": "Handlungsprodukt: Missionsmappe",
+   "choices": [
+    "Portfolio – Missionsmappe (wird unten ausgefüllt)",
+    "Lerntagebuch der Testläufe (wird unten ausgefüllt)"
+   ],
+   "text": "Deine Mappe entsteht direkt auf dieser Seite und landet in der Abgabe-PDF. Ergänzend kannst du Fotos verlinken."
+  },
+  "fields": [
+   {
+    "id": "plan",
+    "label": "Wegplan: Strecken (cm), Drehungen (°), Gyro-Einsatz – Schritt für Schritt",
+    "type": "area",
+    "rows": 6
+   },
+   {
+    "id": "blocks",
+    "label": "Meine Blöcke: Name und Aufgabe jedes eigenen Blocks",
+    "type": "area",
+    "rows": 3
+   },
+   {
+    "id": "runs",
+    "label": "Testprotokoll",
+    "type": "table",
+    "cols": [
+     "Lauf",
+     "Zeit (s)",
+     "geschafft?",
+     "Beobachtung / Fehler"
+    ],
+    "rows": 3
+   },
+   {
+    "id": "better",
+    "label": "Meine Verbesserung: Was habe ich nach den Testläufen geändert – und warum?",
+    "type": "area",
+    "rows": 4
+   }
+  ],
+  "rubric": [
+   [
+    "Funktion (Mission im Wettbewerbslauf erfüllt)",
+    10
+   ],
+   [
+    "Programm (Struktur, Meine Blöcke, Gyrosensor statt nur Radgrad)",
+    6
+   ],
+   [
+    "Handlungsprodukt (Missionsmappe: Plan, Protokoll, Verbesserung)",
+    6
+   ],
+   [
+    "Vorstellung (Wettbewerbslauf und Erklärung)",
+    5
+   ],
+   [
+    "Reflexion",
+    3
+   ]
+  ],
+  "reflect": true,
+  "group": false,
+  "reqs": [
+   {
+    "k": "L09",
+    "file": "L09_Farbe_und_Linien.html",
+    "title": "Sensoren auswerten: Farben und Linien",
+    "ex": [
+     "e1",
+     "e2",
+     "e3"
+    ]
+   },
+   {
+    "k": "L10",
+    "file": "L10_Gyro_und_praezises_Fahren.html",
+    "title": "Gyrosensor und präzises Fahren",
+    "ex": [
+     "e1",
+     "e2",
+     "e3"
+    ]
+   },
+   {
+    "k": "L11",
+    "file": "L11_Mit_Gegenstaenden_spielen.html",
+    "title": "Mit Gegenständen spielen",
+    "ex": [
+     "e1",
+     "e2"
+    ]
+   }
+  ],
+  "max": 30
+ },
+ {
+  "n": 3,
+  "title": "Fehlerdetektive",
+  "kind": "mündlich",
+  "window": "nach DS 11",
+  "minutes": 30,
+  "req": [
+   "L10",
+   "L11"
+  ],
+  "lb": "LB 5",
+  "intro": "Eure Gruppe (2–3 Personen) bekommt einen Roboter, an dem drei Fehler versteckt sind: in der Mechanik, an Kabel/Port und im Programm. Findet und behebt sie – danach präsentiert ihr eure Fehlersuche. Jede Person beantwortet zusätzlich eine Einzelfrage.",
+  "variants": [
+   {
+    "id": "1",
+    "title": "Werkstattroboter 1",
+    "text": "Holt euch Roboter 1 und die Programmdatei „Fehlerdetektive 1“. Der Roboter soll 50 cm geradeaus fahren, 90° rechts drehen und nach 30 cm in der Garage halten.",
+    "checks": [
+     "alle drei Fehler gefunden",
+     "Fehlerquelle jeweils benannt (Mechanik / Ansteuerung / Logik)",
+     "Fehler behoben, Roboter erfüllt den Auftrag",
+     "Präsentation vorbereitet (wer sagt was?)"
+    ]
+   },
+   {
+    "id": "2",
+    "title": "Werkstattroboter 2",
+    "text": "Holt euch Roboter 2 und die Programmdatei „Fehlerdetektive 2“. Der Roboter soll ein Quadrat mit 30 cm Seitenlänge fahren, an jeder Ecke piepen und am Ende „fertig“ anzeigen.",
+    "checks": [
+     "alle drei Fehler gefunden",
+     "Fehlerquelle jeweils benannt (Mechanik / Ansteuerung / Logik)",
+     "Fehler behoben, Roboter erfüllt den Auftrag",
+     "Präsentation vorbereitet (wer sagt was?)"
+    ]
+   },
+   {
+    "id": "3",
+    "title": "Werkstattroboter 3",
+    "text": "Holt euch Roboter 3 und die Programmdatei „Fehlerdetektive 3“. Der Roboter soll mit dem Gyrosensor genau 180° wenden, 40 cm zurückfahren und dabei ein Paket in die Basis schieben.",
+    "checks": [
+     "alle drei Fehler gefunden",
+     "Fehlerquelle jeweils benannt (Mechanik / Ansteuerung / Logik)",
+     "Fehler behoben, Roboter erfüllt den Auftrag",
+     "Präsentation vorbereitet (wer sagt was?)"
+    ]
+   }
+  ],
+  "product": null,
+  "fields": [
+   {
+    "id": "faults",
+    "label": "Fehlerprotokoll",
+    "type": "table",
+    "cols": [
+     "Nr.",
+     "Beobachtung",
+     "Fehlerquelle",
+     "Behebung"
+    ],
+    "rows": 3
+   }
+  ],
+  "rubric": [
+   [
+    "Fehler gefunden und behoben (je Fehler bis zu 8/3 Punkte)",
+    8
+   ],
+   [
+    "Präsentation (Gruppe: verständlich, Fachbegriffe, Aufteilung)",
+    6
+   ],
+   [
+    "Einzelfrage (individuell)",
+    6
+   ]
+  ],
+  "reflect": false,
+  "group": true,
+  "reqs": [
+   {
+    "k": "L12",
+    "file": "L12_Roboter_warten.html",
+    "title": "Den Roboter warten",
+    "ex": [
+     "e1"
+    ]
+   },
+   {
+    "k": "L13",
+    "file": "L13_Fehler_im_Programm.html",
+    "title": "Fehler im Programm finden",
+    "ex": [
+     "e1",
+     "e2",
+     "e3"
+    ]
+   }
+  ],
+  "max": 20
+ }
+]
