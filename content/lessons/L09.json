@@ -1,0 +1,617 @@
+{
+ "id": "L09",
+ "num": 9,
+ "file": "L09_Gyro_und_praezises_Fahren.html",
+ "title": "Gyrosensor und präzises Fahren",
+ "sub": "Genaue Drehungen und Geradeausfahrt trotz ungleicher Motoren",
+ "lb": "LB 4 Programmierung",
+ "ds": "DS 9",
+ "lehrplan": "LB 4: werten Sensordaten aus und regeln Bewegungen",
+ "goals": [
+  "den Gyrosensor im Hub für genaue Drehungen nutzen",
+  "erklären, warum Gyro-Drehungen genauer sind als Radgrad",
+  "eine einfache Regelung für die Geradeausfahrt verstehen und programmieren"
+ ],
+ "lego": {
+  "text": "LEGO-Lektion „Trainingslager 1: Herumfahren“",
+  "href": "https://education.lego.com/de-de/lessons/prime-competition-ready/training-camp-1-driving-around/"
+ },
+ "read": {
+  "kap": "8",
+  "title": "Sensordaten auswerten – Abschnitt 8.4 Gyrosensor und Regelung",
+  "pages": "15",
+  "page": 15,
+  "sections": [
+   "8.4 Gyrosensor und Regelung",
+   "zur Wiederholung: 3.2 Räder und Weg (S. 7)"
+  ],
+  "skip": "8.2 und 8.3 überspringst du (Kraft- und Farbsensor gehören zum erweiterten Fahrgestell). Von den „Teste dich“-Fragen auf S. 16 passt Frage 3 zu dieser Lektion.",
+  "focus": [
+   "Was misst der Gyrosensor und in welche Richtung zählt er positiv?",
+   "Warum ist eine Gyro-Drehung genauer als eine Drehung mit Radgrad?",
+   "Wie lautet die Regel-Formel für die Geradeausfahrt?"
+  ]
+ },
+ "check": [
+  {
+   "id": "c1",
+   "type": "mc",
+   "q": "Was misst der Gyrosensor im Hub?",
+   "opts": [
+    "den Gierwinkel – die Drehung um die Hochachse",
+    "die Geschwindigkeit in cm/s",
+    "den Abstand zur Wand",
+    "die Helligkeit des Bodens"
+   ],
+   "a": 0,
+   "hint": [
+    "Erster Satz von 8.4."
+   ],
+   "ref": "S. 15 · 8.4",
+   "tag": "Gyro-misst"
+  },
+  {
+   "id": "c2",
+   "type": "mc",
+   "q": "In welche Richtung zählt der Gierwinkel positiv?",
+   "opts": [
+    "im Uhrzeigersinn (Rechtsdrehung)",
+    "gegen den Uhrzeigersinn (Linksdrehung)",
+    "vorwärts",
+    "nach oben"
+   ],
+   "a": 0,
+   "hint": [
+    "Steht in Klammern im ersten Satz von 8.4."
+   ],
+   "ref": "S. 15 · 8.4",
+   "tag": "Gyro-Richtung"
+  },
+  {
+   "id": "c3",
+   "type": "mc",
+   "q": "Warum ist Drehen mit dem Gyro genauer als mit Radgrad?",
+   "opts": [
+    "Weil Schlupf (durchrutschende Räder) keine Rolle spielt.",
+    "Weil der Gyro schneller dreht.",
+    "Weil Radgrad nur bis 90 zählen.",
+    "Weil der Gyro den Akku schont."
+   ],
+   "a": 0,
+   "hint": [
+    "Lies den zweiten Satz von 8.4."
+   ],
+   "ref": "S. 15 · 8.4",
+   "tag": "Gyro-genauer"
+  },
+  {
+   "id": "c4",
+   "type": "order",
+   "q": "Bringe die Schritte einer genauen 90°-Rechtsdrehung in die richtige Reihenfolge.",
+   "items": [
+    "setze Gierwinkel auf 0",
+    "starte Bewegung mit Lenkung 100",
+    "warte bis Gierwinkel > 88",
+    "stoppe Bewegung"
+   ],
+   "hint": [
+    "Zuerst braucht der Roboter einen Bezugswert.",
+    "Erst drehen, dann warten, dann stoppen."
+   ],
+   "ref": "S. 15 · 8.4",
+   "tag": "Gyro-Drehung-Ablauf"
+  },
+  {
+   "id": "c5",
+   "type": "cloze",
+   "q": "Ergänze die Regel-Formel aus dem Skript.",
+   "text": "Für die Geradeausfahrt regelt der Roboter ständig nach: Lenkung = ([[0]] − [[1]]) · k.",
+   "gaps": [
+    {
+     "opts": [
+      "Sollwinkel",
+      "Istwinkel",
+      "Timer"
+     ],
+     "a": 0
+    },
+    {
+     "opts": [
+      "Istwinkel",
+      "Sollwinkel",
+      "Radgrad"
+     ],
+     "a": 0
+    }
+   ],
+   "hint": [
+    "Letzter Satz von 8.4."
+   ],
+   "ref": "S. 15 · 8.4",
+   "tag": "Regelformel"
+  },
+  {
+   "id": "c6",
+   "type": "num",
+   "q": "Der Roboter soll geradeaus fahren (Sollwinkel 0°). Der Gierwinkel ist −4°, k = 2. Welchen Lenkwert berechnet die Regelung?",
+   "a": 8,
+   "hint": [
+    "Lenkung = (Soll − Ist) · k",
+    "(0 − (−4)) · 2"
+   ],
+   "ref": "S. 15 · 8.4",
+   "sol": "(0 − (−4)) · 2 = 8 → leicht nach rechts lenken",
+   "tag": "Regelung-Lenkwert",
+   "tol": 0
+  },
+  {
+   "id": "c7",
+   "type": "mc",
+   "q": "Der Roboter driftet nach links (Gierwinkel −4°). In welche Richtung muss er lenken?",
+   "opts": [
+    "nach rechts (Lenkung positiv)",
+    "nach links (Lenkung negativ)",
+    "gar nicht",
+    "rückwärts"
+   ],
+   "a": 0,
+   "hint": [
+    "Ein negativer Gierwinkel heißt: nach links gedreht.",
+    "Teste dich Frage 3 auf S. 16 – Lösung im Anhang."
+   ],
+   "ref": "S. 15 · 8.4",
+   "tag": "Driftkorrektur"
+  },
+  {
+   "id": "c8",
+   "type": "tf",
+   "q": "Beurteile die Aussagen.",
+   "rows": [
+    [
+     "„setze Gierwinkel auf 0“ legt die aktuelle Richtung als Bezug fest.",
+     true
+    ],
+    [
+     "Der Gyrosensor wird an Port E angeschlossen.",
+     false
+    ],
+    [
+     "Bei einer Rechtsdrehung wird der Gierwinkel kleiner.",
+     false
+    ]
+   ],
+   "hint": [
+    "Wo sitzt der Gyrosensor? (8.4, 4.2)",
+    "Positiv = im Uhrzeigersinn."
+   ],
+   "ref": "S. 15 · 8.4",
+   "tag": "Gyro-RF"
+  }
+ ],
+ "deep": [
+  {
+   "id": "v1",
+   "type": "sim",
+   "q": "Im Regel-Simulator fährt ein Roboter mit ungleich starken Motoren 6 Sekunden geradeaus. Mit k stellst du ein, wie stark er nachlenkt.",
+   "widget": "pcontrol",
+   "cfg": {
+    "dr": 4,
+    "k": 0
+   },
+   "predict": {
+    "id": "v1p",
+    "type": "mc",
+    "q": "Was passiert, wenn k sehr groß ist?",
+    "opts": [
+     "Er fährt perfekt geradeaus.",
+     "Er schlingert hin und her.",
+     "Er bleibt stehen."
+    ],
+    "a": 1,
+    "hint": [],
+    "ref": "",
+    "cmp": true
+   },
+   "goal": {
+    "text": "Bei 4 % Motorabweichung: Probiere k = 0, k = 6 und Werte dazwischen. Finde ein k, mit dem der Roboter ohne Schlingern ins Ziel fährt (Abweichung höchstens 3,5 cm, höchstens 2 Schlenker).",
+    "cond": "s.dr===4 && s.ok && s.k>0",
+    "rec": "'k = ' + String(s.k).replace('.', ',') + ': Abweichung ' + String(s.dev).replace('.', ',') + ' cm'"
+   },
+   "explain": {
+    "id": "v1x",
+    "type": "mc",
+    "q": "Warum fährt der Roboter ohne Regelung (k = 0) eine Kurve?",
+    "opts": [
+     "Die Motoren sind nie exakt gleich schnell – kleine Unterschiede summieren sich.",
+     "Weil der Gyrosensor ihn ablenkt.",
+     "Weil k = 0 Linkskurve bedeutet.",
+     "Weil der Akku leer ist."
+    ],
+    "a": 0,
+    "hint": [
+     "Schau auf die Einstellung „Abweichung der Motoren“."
+    ],
+    "ref": "S. 15 · 8.4",
+    "tag": "Drift-Ursache"
+   },
+   "tag": "Regelung",
+   "ref": "S. 15 · 8.4",
+   "paper": {
+    "obs": [
+     "k",
+     "Abweichung in cm",
+     "Schlenker"
+    ],
+    "rows": [
+     "0",
+     "1",
+     "6",
+     "mein bestes k"
+    ]
+   }
+  },
+  {
+   "id": "v2",
+   "type": "spike",
+   "q": "Setze den Gierwinkel auf 0, starte eine Drehung (Lenkung 100), warte bis Gierwinkel > 88 und stoppe. Geschwindigkeit 20 %.",
+   "title": "Exakt 90° mit dem Gyro",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      70,
+      40,
+      110,
+      75
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 90,
+     "y": 57,
+     "drift": 0.98
+    },
+    "starter": [
+     {
+      "t": "mv_speed",
+      "a": {
+       "n": 20
+      }
+     }
+    ],
+    "palette": [
+     "mv_speed",
+     "se_yaw0",
+     "mv_startst",
+     "mv_stop",
+     "ct_until",
+     "mv_steer",
+     "so_beep"
+    ],
+    "solution": [
+     {
+      "t": "mv_speed",
+      "a": {
+       "n": 20
+      }
+     },
+     {
+      "t": "se_yaw0",
+      "a": {}
+     },
+     {
+      "t": "mv_startst",
+      "a": {
+       "s": 100
+      }
+     },
+     {
+      "t": "ct_until",
+      "a": {
+       "c": {
+        "k": "yaw",
+        "op": ">",
+        "n": 88
+       }
+      }
+     },
+     {
+      "t": "mv_stop",
+      "a": {}
+     }
+    ],
+    "check": "ok(yawNear(90, 3), 'Drehung ' + Math.round(R.final.yaw) + '° – sehr genau', 'Gierwinkel: ' + Math.round(R.final.yaw) + '° (Ziel 90°)');ok(uses(P,'ct_until'), 'sensorgesteuert', 'Nutze „warte bis Gierwinkel …“');",
+    "hints": [
+     "Reihenfolge: setze Gierwinkel auf 0 → starte Bewegung mit Lenkung 100 → warte bis … → stoppe.",
+     "88 statt 90, weil der Roboter nach dem Stopp noch etwas nachdreht."
+    ]
+   },
+   "tag": "Gyro-90",
+   "ref": "S. 15 · 8.4",
+   "lvl": "Basis"
+  },
+  {
+   "id": "v3",
+   "type": "spike",
+   "q": "Der rechte Motor ist etwas schwächer – ohne Regelung zieht der Roboter nach rechts. Fahre <b>4 Sekunden</b> geradeaus und lande im blauen Streifen. Teste zuerst das Startprogramm, baue dann die Regelung ein: <b>wiederhole bis Timer > 4</b>: falls Gierwinkel > 0, dann starte Bewegung mit Lenkung −20, sonst mit Lenkung 20.",
+   "title": "Geradeaus mit Gyro-Regelung",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        85,
+        53,
+        115,
+        61
+       ],
+       "c": "blau",
+       "name": "Ziel"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57,
+     "drift": 0.97
+    },
+    "limit": 20,
+    "starter": [
+     {
+      "t": "mv_start",
+      "a": {
+       "dir": "vorwärts"
+      }
+     },
+     {
+      "t": "ct_wait",
+      "a": {
+       "n": 4
+      }
+     },
+     {
+      "t": "mv_stop",
+      "a": {}
+     }
+    ],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep",
+     "se_yaw0",
+     "se_timer0",
+     "ct_until",
+     "ct_runtil",
+     "ct_if",
+     "ct_ifelse"
+    ],
+    "solution": [
+     {
+      "t": "se_yaw0",
+      "a": {}
+     },
+     {
+      "t": "se_timer0",
+      "a": {}
+     },
+     {
+      "t": "ct_runtil",
+      "a": {
+       "c": {
+        "k": "timer",
+        "n": 4
+       }
+      },
+      "b": [
+       {
+        "t": "ct_ifelse",
+        "a": {
+         "c": {
+          "k": "yaw",
+          "op": ">",
+          "n": 0
+         }
+        },
+        "b": [
+         {
+          "t": "mv_startst",
+          "a": {
+           "s": -20
+          }
+         }
+        ],
+        "e": [
+         {
+          "t": "mv_startst",
+          "a": {
+           "s": 20
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "t": "mv_stop",
+      "a": {}
+     }
+    ],
+    "check": "ok(inRect([85,53,115,61]), 'im blauen Streifen gelandet', 'Ziel verfehlt (y = ' + last.y.toFixed(1) + ' cm, Streifen: 53 … 61)');ok(uses(P,'ct_ifelse') || uses(P,'ct_if'), 'Regelung mit Verzweigung', 'Baue die Regelung mit „falls … dann … sonst“ ein');",
+    "hints": [
+     "Starte mit „setze Gierwinkel auf 0“ und „setze Timer zurück“.",
+     "Gierwinkel > 0 heißt: Der Roboter hat nach rechts gedreht → nach links lenken (negativ).",
+     "Die Verzweigung steht in „wiederhole bis Timer > 4“; danach „stoppe Bewegung“."
+    ]
+   },
+   "tag": "Gyro-Regelung",
+   "ref": "S. 15 · 8.4",
+   "lvl": "Profi"
+  },
+  {
+   "id": "v4",
+   "type": "spike",
+   "q": "Definiere einen Block <b>drehe_rechts_90</b> mit dem Gyro (wie in Aufgabe 2, Geschwindigkeit danach wieder 50 %). Fahre dann 60 cm, drehe_rechts_90 und fahre 30 cm ins gelbe Ziel.",
+   "title": "Mein Block: drehe_rechts_90",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        72,
+        18,
+        92,
+        36
+       ],
+       "c": "gelb",
+       "name": "Ziel"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57,
+     "drift": 0.98
+    },
+    "starter": [],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep",
+     "se_yaw0",
+     "ct_until",
+     "mb_def",
+     "mb_call"
+    ],
+    "solution": [
+     {
+      "t": "mb_def",
+      "a": {
+       "name": "drehe_rechts_90"
+      },
+      "b": [
+       {
+        "t": "mv_speed",
+        "a": {
+         "n": 20
+        }
+       },
+       {
+        "t": "se_yaw0",
+        "a": {}
+       },
+       {
+        "t": "mv_startst",
+        "a": {
+         "s": 100
+        }
+       },
+       {
+        "t": "ct_until",
+        "a": {
+         "c": {
+          "k": "yaw",
+          "op": ">",
+          "n": 88
+         }
+        }
+       },
+       {
+        "t": "mv_stop",
+        "a": {}
+       },
+       {
+        "t": "mv_speed",
+        "a": {
+         "n": 50
+        }
+       }
+      ]
+     },
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 60,
+       "unit": "cm"
+      }
+     },
+     {
+      "t": "mb_call",
+      "a": {
+       "name": "drehe_rechts_90"
+      }
+     },
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 30,
+       "unit": "cm"
+      }
+     }
+    ],
+    "check": "ok(uses(P,'mb_def') && uses(P,'mb_call'), 'eigener Block verwendet', 'Definiere und nutze „drehe_rechts_90“');ok(inRect([72,18,92,36]), 'im Ziel', 'Ziel verfehlt');",
+    "hints": [
+     "Kopiere die Lösung aus Aufgabe 2 in „definiere drehe_rechts_90“.",
+     "Vergiss nicht, die Geschwindigkeit danach wieder auf 50 % zu setzen."
+    ]
+   },
+   "tag": "drehe-rechts-90",
+   "ref": "S. 15 · 8.4 und S. 14",
+   "lvl": "Transfer"
+  }
+ ],
+ "close": {
+  "merke": [
+   "Gierwinkel = Drehung um die Hochachse, im Uhrzeigersinn positiv.",
+   "Gyro-Drehung: Gierwinkel auf 0 → drehen → warte bis … → stoppen (Schlupf spielt keine Rolle).",
+   "Regelung: Lenkung = (Soll − Ist) · k – zu kleines k korrigiert zu wenig, zu großes k schlingert."
+  ],
+  "praxis": "Lass Fahrgestell 1 einmal mit Radgrad und einmal mit dem Gyro um 90° drehen – auf glattem und auf rauem Boden. Welche Drehung ist genauer?"
+ }
+}

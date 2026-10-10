@@ -1,0 +1,456 @@
+{
+ "id": "L10",
+ "num": 10,
+ "file": "L10_Roboter_warten.html",
+ "title": "Den Roboter warten",
+ "sub": "Störungen erkennen, Ursachen finden, reparieren und kalibrieren",
+ "lb": "LB 5 Wartung",
+ "ds": "DS 10",
+ "lehrplan": "LB 5: erkennen Störungen, wählen Reparaturen aus und warten den Roboter",
+ "goals": [
+  "Störungen erkennen und einordnen",
+  "passende Maßnahmen und Reparaturen auswählen",
+  "einen Roboter kalibrieren, der Zielgrößen nicht erreicht"
+ ],
+ "read": {
+  "kap": "10",
+  "title": "Den Roboter warten und Fehler beheben – 10.1 und 10.2",
+  "pages": "18",
+  "page": 18,
+  "sections": [
+   "10.1 Störungen (Tabelle)",
+   "10.2 Reparaturen (Tabelle)",
+   "orange Kasten „Mit LEGO SPIKE Prime“ (Wartungsplan)"
+  ],
+  "skip": "Abschnitt 10.3 (Programmfehler) folgt in der nächsten Lektion.",
+  "focus": [
+   "Welche Arten von Störungen gibt es – mit welchem Beispiel und welcher Maßnahme?",
+   "Welche Reparaturarten gibt es?",
+   "Was gehört zum Wartungsplan vor jedem Lauf?"
+  ]
+ },
+ "check": [
+  {
+   "id": "c1",
+   "type": "match",
+   "q": "Ordne jeder Störung ein Beispiel zu.",
+   "rows": [
+    [
+     "Funktionsstörung",
+     "Roboter fährt Kurve statt geradeaus"
+    ],
+    [
+     "Ausfall",
+     "Motor reagiert nicht"
+    ],
+    [
+     "Verschleiß",
+     "Reifen rutschen, Verbinder ausgeleiert"
+    ],
+    [
+     "Abweichung von Zielgrößen",
+     "fährt 46 statt 50 cm"
+    ],
+    [
+     "geplante Obsoleszenz",
+     "Akku nach Jahren schwach, nicht tauschbar"
+    ]
+   ],
+   "hint": [
+    "Tabelle 10.1, Spalte „Beispiel“."
+   ],
+   "ref": "S. 18 · 10.1",
+   "tag": "Stoerung-Beispiel"
+  },
+  {
+   "id": "c2",
+   "type": "match",
+   "q": "Welche Maßnahme passt?",
+   "rows": [
+    [
+     "Ausfall",
+     "Kabel und Port prüfen"
+    ],
+    [
+     "Verschleiß",
+     "Teile austauschen"
+    ],
+    [
+     "Abweichung von Zielgrößen",
+     "kalibrieren, Akku laden"
+    ],
+    [
+     "Funktionsstörung",
+     "Räder prüfen, Gyro-Regelung"
+    ]
+   ],
+   "hint": [
+    "Tabelle 10.1, Spalte „Maßnahme“."
+   ],
+   "ref": "S. 18 · 10.1",
+   "tag": "Stoerung-Massnahme"
+  },
+  {
+   "id": "c3",
+   "type": "mc",
+   "q": "Ein Motor dreht sich nicht. Was prüfst du zuerst?",
+   "opts": [
+    "Kabel und Port",
+    "die Farbe der Räder",
+    "die Bewegungsgeschwindigkeit",
+    "das Struktogramm"
+   ],
+   "a": 0,
+   "hint": [
+    "Welche Störung ist das? Schau dann in die Spalte „Maßnahme“."
+   ],
+   "ref": "S. 18 · 10.1",
+   "tag": "Motor-Ausfall"
+  },
+  {
+   "id": "c4",
+   "type": "mc",
+   "q": "Was bedeutet „geplante Obsoleszenz“?",
+   "opts": [
+    "Die Lebensdauer eines Produkts wird absichtlich begrenzt.",
+    "Ein Produkt wird regelmäßig gewartet.",
+    "Ein Fehler wird geplant behoben.",
+    "Ein Roboter wird für einen Wettbewerb geplant."
+   ],
+   "a": 0,
+   "hint": [
+    "Schau dir das Beispiel in der letzten Zeile der Tabelle 10.1 an."
+   ],
+   "ref": "S. 18 · 10.1",
+   "tag": "Obsoleszenz"
+  },
+  {
+   "id": "c5",
+   "type": "match",
+   "q": "Ordne die Reparaturart zu.",
+   "rows": [
+    [
+     "Austausch",
+     "neuer Reifen, neues Kabel"
+    ],
+    [
+     "Kleben",
+     "selbst gedruckter Halter"
+    ],
+    [
+     "Löten",
+     "Kabelbruch bei eigener Elektronik"
+    ],
+    [
+     "Instandsetzen",
+     "Achse richten, Getriebe säubern"
+    ]
+   ],
+   "hint": [
+    "Tabelle 10.2."
+   ],
+   "ref": "S. 18 · 10.2",
+   "tag": "Reparaturarten"
+  },
+  {
+   "id": "c6",
+   "type": "multi",
+   "q": "Was gehört laut Skript zum Wartungsplan vor jedem Lauf? Wähle alle passenden.",
+   "opts": [
+    "Akku",
+    "Kabel",
+    "Reifen",
+    "Testlauf 50 cm",
+    "Programm neu schreiben",
+    "Hub zerlegen"
+   ],
+   "a": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "hint": [
+    "Orange Kasten auf S. 18."
+   ],
+   "ref": "S. 18 · Wartungsplan",
+   "tag": "Wartungsplan"
+  },
+  {
+   "id": "c7",
+   "type": "tf",
+   "q": "Beurteile die Aussagen.",
+   "rows": [
+    [
+     "Abgefahrene Reifen sind ein Verschleiß.",
+     true
+    ],
+    [
+     "Bei einem Ausfall reagiert ein Bauteil gar nicht mehr.",
+     true
+    ],
+    [
+     "Ein schwacher Akku kann dazu führen, dass Zielgrößen nicht erreicht werden.",
+     true
+    ],
+    [
+     "Instandsetzen bedeutet, das Teil wegzuwerfen.",
+     false
+    ]
+   ],
+   "hint": [
+    "Lies die Beispiele zu „Instandsetzen“ in 10.2."
+   ],
+   "ref": "S. 18 · 10.1/10.2",
+   "tag": "Wartung-RF"
+  }
+ ],
+ "deep": [
+  {
+   "id": "v1",
+   "type": "sim",
+   "q": "Im Verschleiß-Simulator sind die Reifen abgefahren: Der tatsächliche Raddurchmesser ist kleiner als 56 mm, der Hub rechnet aber weiter mit 56 mm.",
+   "widget": "wear",
+   "cfg": {
+    "d": 56,
+    "s": 50
+   },
+   "predict": {
+    "id": "v1p",
+    "type": "mc",
+    "q": "Der Roboter soll 50 cm fahren, die Reifen sind abgefahren. Was passiert?",
+    "opts": [
+     "Er fährt zu weit.",
+     "Er fährt zu kurz.",
+     "Er fährt genau 50 cm."
+    ],
+    "a": 1,
+    "hint": [],
+    "ref": "",
+    "cmp": true
+   },
+   "goal": {
+    "text": "Lass das Programm auf 50 cm stehen. Stelle den Raddurchmesser so ein, dass der Roboter nur 46 cm weit kommt (wie im Beispiel im Skript).",
+    "cond": "s.s===50 && Math.abs(s.real-46)<0.3",
+    "rec": "'Bei Ø ' + String(s.d).replace('.', ',') + ' mm fährt er ' + String(s.real).replace('.', ',') + ' cm.'"
+   },
+   "explain": {
+    "id": "v1x",
+    "type": "num",
+    "q": "Kalibrieren: Welchen Wert programmierst du, damit der Roboter trotzdem 50 cm fährt? (eine Nachkommastelle)",
+    "a": 54.3,
+    "hint": [
+     "Der Roboter schafft nur 46 : 50 = 92 % der Strecke.",
+     "50 : 0,92 = …"
+    ],
+    "ref": "S. 18 · 10.1",
+    "sol": "50 cm : 0,92 ≈ 54,3 cm",
+    "tag": "Kalibrieren-Wert",
+    "unit": "cm",
+    "tol": 0.15
+   },
+   "tag": "Verschleiss",
+   "ref": "S. 18 · 10.1",
+   "paper": {
+    "obs": [
+     "Raddurchmesser in mm",
+     "gefahrene Strecke in cm"
+    ],
+    "rows": 3
+   }
+  },
+  {
+   "id": "v2",
+   "type": "spike",
+   "q": "Die Reifen dieses Roboters sind abgefahren: Er fährt nur <b>92 %</b> der programmierten Strecke. Kalibriere das Programm, sodass er genau bis zur roten Ziellinie bei 50 cm fährt.",
+   "title": "Kalibrieren",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        69.3,
+        30,
+        70.7,
+        85
+       ],
+       "c": "rot",
+       "name": "50 cm"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57,
+     "slip": 0.92
+    },
+    "starter": [
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 50,
+       "unit": "cm"
+      }
+     }
+    ],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep"
+    ],
+    "solution": [
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 54.3,
+       "unit": "cm"
+      }
+     }
+    ],
+    "check": "ok(Math.abs(last.x - 70) < 0.8, 'genau an der Ziellinie (' + (last.x - 20).toFixed(1) + ' cm)', 'Gefahren: ' + (last.x - 20).toFixed(1) + ' cm – Ziel: 50 cm');",
+    "hints": [
+     "Starte das Startprogramm und lies ab, wie weit der Roboter wirklich kommt.",
+     "Programmierte Strecke = 50 cm : 0,92"
+    ]
+   },
+   "tag": "Kalibrieren-Strecke",
+   "ref": "S. 18 · 10.1",
+   "lvl": "Basis"
+  },
+  {
+   "id": "v3",
+   "type": "spike",
+   "q": "Funktionsstörung: Der rechte Motor ist schwergängig – der Roboter zieht nach rechts. Er soll <b>60 cm geradeaus</b> in das grüne Ziel fahren. Gleiche mit „bewege mit Lenkung … für 60 cm“ aus – oder nutze die Gyro-Regelung aus Lektion 9.",
+   "title": "Schwergängiger Motor",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        74,
+        54,
+        86,
+        60
+       ],
+       "c": "grün",
+       "name": "Ziel"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57,
+     "drift": 0.94
+    },
+    "limit": 20,
+    "starter": [
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 60,
+       "unit": "cm"
+      }
+     }
+    ],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep",
+     "se_yaw0",
+     "se_timer0",
+     "ct_until",
+     "ct_runtil",
+     "ct_if",
+     "ct_ifelse"
+    ],
+    "solution": [
+     {
+      "t": "mv_steer",
+      "a": {
+       "s": -3,
+       "n": 60,
+       "unit": "cm"
+      }
+     }
+    ],
+    "check": "ok(inRect([74,54,86,60]), 'gerade ins Ziel gefahren', 'Ziel verfehlt (x = ' + last.x.toFixed(0) + ', y = ' + last.y.toFixed(1) + ')');",
+    "hints": [
+     "Der Roboter zieht nach rechts – also musst du leicht nach links lenken (negative Lenkung).",
+     "Probiere kleine Werte: −1, −2, −3 …"
+    ]
+   },
+   "tag": "Drift-ausgleichen",
+   "ref": "S. 18 · 10.1",
+   "lvl": "Transfer"
+  },
+  {
+   "id": "v4",
+   "type": "order",
+   "q": "Ein Roboter hält vor dem Ziel an. Bringe die Wartungsschritte in eine sinnvolle Reihenfolge: zuerst das, was am schnellsten zu prüfen ist.",
+   "items": [
+    "Akku-Ladestand prüfen",
+    "Kabel und Ports prüfen",
+    "Reifen auf Verschleiß prüfen",
+    "Testlauf über 50 cm machen und messen",
+    "falls nötig kalibrieren"
+   ],
+   "hint": [
+    "Erst prüfen, dann testen, dann korrigieren.",
+    "Der Wartungsplan auf S. 18 beginnt mit dem Akku."
+   ],
+   "ref": "S. 18 · Wartungsplan",
+   "tag": "Wartung-Reihenfolge"
+  }
+ ],
+ "close": {
+  "merke": [
+   "Störungen: Funktionsstörung, Ausfall, Verschleiß, Abweichung von Zielgrößen, Umgebungsbedingungen, geplante Obsoleszenz.",
+   "Reparieren: austauschen, kleben, löten, instand setzen.",
+   "Kalibrieren: programmierte Strecke = Sollstrecke : tatsächlicher Anteil."
+  ],
+  "praxis": "Wartungsplan für Fahrgestell 1 vor jedem Lauf: Akku · Kabel an C und D · Reifen · Stützrad · Testlauf 50 cm (messen!)."
+ }
+}

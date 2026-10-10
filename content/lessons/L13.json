@@ -1,0 +1,381 @@
+{
+ "id": "L13",
+ "num": 13,
+ "file": "L13_Robot_Game.html",
+ "title": "Missionsbereit: der Robot-Game-Lauf",
+ "sub": "Strategie, Punkte, Zeitlimit – wie bei der FIRST LEGO League",
+ "lb": "Wettbewerbsvorbereitung",
+ "ds": "DS 13",
+ "lehrplan": "LB 4: planen, programmieren und optimieren einen Wettbewerbslauf",
+ "goals": [
+  "Missionen nach Punkten pro Sekunde bewerten",
+  "eine Strategie für einen Lauf mit Zeitlimit entwickeln",
+  "Teamrollen im Wettbewerb kennen"
+ ],
+ "lego": {
+  "text": "LEGO-Lektion „Missionsbereit“",
+  "href": "https://education.lego.com/de-de/lessons/prime-competition-ready/mission-ready/"
+ },
+ "read": {
+  "kap": "9",
+  "title": "Mit Gegenständen spielen und Missionen lösen – 9.3 Robot Game",
+  "pages": "17",
+  "page": 17,
+  "sections": [
+   "9.3 Robot Game",
+   "orange Kasten „Mit LEGO SPIKE Prime“ auf S. 17",
+   "„Teste dich“ Frage 1 und 2 auf S. 17 (Lösungen im Anhang S. 21)"
+  ],
+  "focus": [
+   "Wie lange dauert ein Robot-Game-Lauf?",
+   "Welche Strategie-Regeln nennt das Skript?",
+   "Welche Teamrollen gibt es?"
+  ]
+ },
+ "check": [
+  {
+   "id": "c1",
+   "type": "num",
+   "q": "Wie viele Sekunden dauert ein Robot-Game-Lauf bei der FIRST LEGO League Challenge?",
+   "a": 150,
+   "hint": [
+    "2 Minuten 30 Sekunden in Sekunden umrechnen."
+   ],
+   "ref": "S. 17 · 9.3",
+   "sol": "2 · 60 + 30 = 150 s",
+   "tag": "Laufzeit-FLL",
+   "unit": "s",
+   "tol": 0
+  },
+  {
+   "id": "c2",
+   "type": "num",
+   "q": "Die Kiste bringt 30 Punkte in 20 s. Wie viele Punkte pro Sekunde sind das?",
+   "a": 1.5,
+   "hint": [
+    "Punkte : Zeit"
+   ],
+   "ref": "S. 17 · 9.3",
+   "sol": "30 : 20 = 1,5 Punkte/s",
+   "tag": "Punkte-pro-Sekunde",
+   "unit": "Punkte/s",
+   "tol": 0.01
+  },
+  {
+   "id": "c3",
+   "type": "mc",
+   "q": "Kiste: 30 Punkte in 20 s. Ball: 20 Punkte in 8 s. Was erledigst du zuerst?",
+   "opts": [
+    "den Ball – er bringt 2,5 Punkte pro Sekunde",
+    "die Kiste – sie bringt mehr Punkte",
+    "egal",
+    "keins von beiden"
+   ],
+   "a": 0,
+   "hint": [
+    "Vergleiche Punkte pro Sekunde.",
+    "Teste dich Frage 1, Lösung im Anhang."
+   ],
+   "ref": "S. 17 · 9.3",
+   "tag": "Strategie-Ball-zuerst"
+  },
+  {
+   "id": "c4",
+   "type": "multi",
+   "q": "Welche Strategie-Regeln nennt das Skript? Wähle alle passenden.",
+   "opts": [
+    "sichere Punkte zuerst",
+    "Missionen auf dem Weg kombinieren",
+    "Punkte pro Sekunde vergleichen",
+    "nach jeder Mission neu ausrichten",
+    "immer die schwierigste Mission zuerst",
+    "möglichst schnell fahren, ohne zu testen"
+   ],
+   "a": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "hint": [
+    "Der Satz beginnt mit „Strategie:“."
+   ],
+   "ref": "S. 17 · 9.3",
+   "tag": "Strategie-Regeln"
+  },
+  {
+   "id": "c5",
+   "type": "multi",
+   "q": "Welche Teamrollen nennt das Skript? Wähle alle passenden.",
+   "opts": [
+    "Konstrukteur/in",
+    "Programmierer/in",
+    "Stratege/Strategin",
+    "Teamkapitän/in",
+    "Schiedsrichter/in",
+    "Zuschauer/in"
+   ],
+   "a": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "hint": [
+    "Letzter Satz von 9.3."
+   ],
+   "ref": "S. 17 · 9.3",
+   "tag": "Teamrollen"
+  },
+  {
+   "id": "c6",
+   "type": "mc",
+   "q": "Warum richtet man den Roboter nach einer Mission (z. B. an einer Wand) neu aus?",
+   "opts": [
+    "Fehler wie Schlupf und Drift addieren sich – Ausrichten setzt die Position zurück.",
+    "Damit der Akku geladen wird.",
+    "Weil die Regeln es vorschreiben.",
+    "Damit der Roboter schneller fährt."
+   ],
+   "a": 0,
+   "hint": [
+    "Teste dich Frage 2 – Lösung im Anhang S. 21."
+   ],
+   "ref": "S. 17 · 9.3 / S. 21",
+   "tag": "Ausrichten-Grund"
+  }
+ ],
+ "deep": [
+  {
+   "id": "v1",
+   "type": "sim",
+   "q": "Im Strategie-Planer wählst du Missionen für einen Lauf mit 40 Sekunden Zeitlimit.",
+   "widget": "strategy",
+   "cfg": {},
+   "predict": {
+    "id": "v1p",
+    "type": "mc",
+    "q": "Mit welcher Mission würdest du starten?",
+    "opts": [
+     "Kiste ins Lager schieben (30 P., 20 s)",
+     "Ball ins Tor schieben (20 P., 8 s)",
+     "Brücke überqueren (25 P., 24 s)"
+    ],
+    "a": 1,
+    "hint": [],
+    "ref": "",
+    "cmp": true
+   },
+   "goal": {
+    "text": "Plane einen Lauf mit mindestens 60 Punkten in höchstens 40 Sekunden.",
+    "cond": "s.ok && s.p>=60",
+    "rec": "'Plan: ' + s.p + ' Punkte in ' + s.t + ' s'"
+   },
+   "explain": {
+    "id": "v1x",
+    "type": "mc",
+    "q": "Warum ist die Brücke trotz 25 Punkten keine gute Wahl?",
+    "opts": [
+     "Sie bringt nur etwa 1 Punkt pro Sekunde und kostet viel Zeit.",
+     "Weil 25 Punkte zu wenig sind.",
+     "Weil Brücken verboten sind.",
+     "Weil sie am Ende kommen muss."
+    ],
+    "a": 0,
+    "hint": [
+     "Rechne Punkte pro Sekunde aus."
+    ],
+    "ref": "S. 17 · 9.3",
+    "tag": "Strategie-Bruecke"
+   },
+   "tag": "Strategieplaner",
+   "ref": "S. 17 · 9.3",
+   "paper": {
+    "obs": [
+     "gewählte Missionen",
+     "Punkte",
+     "Zeit in s"
+    ],
+    "rows": 3
+   }
+  },
+  {
+   "id": "v2",
+   "type": "spike",
+   "q": "Erreiche mindestens <b>50 Punkte</b> in 60 Sekunden: Ball ins rote Tor schieben (+20), Paket ins blaue Lager schieben (+30), am Ende in der Basis parken (+10 Bonus). Plane den Weg zuerst auf Papier (Raster 10 cm).",
+   "title": "Robot Game",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        5,
+        40,
+        40,
+        75
+       ],
+       "c": "grün",
+       "name": "Basis"
+      },
+      {
+       "r": [
+        100,
+        49,
+        118,
+        65
+       ],
+       "c": "rot",
+       "name": "Tor (20)"
+      },
+      {
+       "r": [
+        150,
+        84,
+        182,
+        106
+       ],
+       "c": "blau",
+       "name": "Lager (30)"
+      }
+     ],
+     "objs": [
+      {
+       "name": "Ball",
+       "x": 60,
+       "y": 57,
+       "s": 6,
+       "c": "#e3242b"
+      },
+      {
+       "name": "Paket",
+       "x": 92,
+       "y": 95,
+       "s": 8,
+       "c": "#d98e04"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57
+    },
+    "limit": 60,
+    "starter": [],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep",
+     "ct_repeat",
+     "mb_def",
+     "mb_call",
+     "se_yaw0",
+     "ct_until"
+    ],
+    "solution": [
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 75.5,
+       "unit": "cm"
+      }
+     },
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "rückwärts",
+       "n": 20,
+       "unit": "cm"
+      }
+     },
+     {
+      "t": "mv_steer",
+      "a": {
+       "s": -100,
+       "n": 180,
+       "unit": "Grad"
+      }
+     },
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 38,
+       "unit": "cm"
+      }
+     },
+     {
+      "t": "mv_steer",
+      "a": {
+       "s": 100,
+       "n": 180,
+       "unit": "Grad"
+      }
+     },
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 76,
+       "unit": "cm"
+      }
+     }
+    ],
+    "check": "var b = obj('Ball'), p = obj('Paket'), pts = 0; var inB = b && b.x >= 100 && b.x <= 118 && b.y >= 49 && b.y <= 65; var inP = p && p.x >= 150 && p.x <= 182 && p.y >= 84 && p.y <= 106; var park = inRect([5,40,40,75]);if (inB) pts += 20; if (inP) pts += 30; if (park) pts += 10;ok(inB, 'Ball im Tor (+20)', 'Ball nicht im Tor');ok(inP, 'Paket im Lager (+30)', 'Paket nicht im Lager');ok(pts >= 50, 'Punkte: ' + pts + (park ? ' (mit Parken)' : ''), 'Punkte: ' + pts + ' – nötig: 50');ok(R.t <= 60, 'innerhalb von 60 s', 'Zeit überschritten');",
+    "hints": [
+     "Mission 1: Der Ball liegt genau vor dir. Ballmitte ins Tor (x ≈ 108) → Roboter-Mitte ≈ 108 − 9,5 − 3.",
+     "Danach zurücksetzen, nach links drehen, auf Höhe des Pakets (y = 95) fahren, nach rechts drehen und schieben.",
+     "Paketmitte ins Lager (x ≈ 165) → Roboter-Mitte ≈ 165 − 13,5."
+    ]
+   },
+   "tag": "Robot-Game",
+   "ref": "S. 17 · 9.2/9.3",
+   "lvl": "Profi"
+  },
+  {
+   "id": "v3",
+   "type": "order",
+   "q": "Bringe die Abläufe eurer Teamarbeit für einen Wettbewerbslauf in eine sinnvolle Reihenfolge.",
+   "items": [
+    "Stratege/Strategin wählt Missionen nach Punkten pro Sekunde",
+    "Konstrukteur/in passt den Roboter an (z. B. Schiebe-Schaufel)",
+    "Programmierer/in schreibt die Etappen als Meine Blöcke",
+    "das Team testet jede Etappe und protokolliert Abweichungen",
+    "Teamkapitän/in startet den Lauf und achtet auf die Zeit"
+   ],
+   "hint": [
+    "Zuerst wird entschieden, WAS gemacht wird – dann gebaut, programmiert, getestet, gestartet."
+   ],
+   "ref": "S. 17 · 9.2/9.3",
+   "tag": "Teamablauf"
+  }
+ ],
+ "close": {
+  "merke": [
+   "Robot Game: 2:30 Minuten – sichere Punkte zuerst, Punkte pro Sekunde vergleichen.",
+   "Missionen auf dem Weg kombinieren, nach jeder Mission neu ausrichten.",
+   "Teamrollen: Konstrukteur/in, Programmierer/in, Stratege/Strategin, Teamkapitän/in."
+  ],
+  "praxis": "Testlauf mit Fahrgestell 1 auf dem Tisch: Stoppt die Zeit, notiert Punkte und Abweichungen und verbessert eine Etappe."
+ }
+}

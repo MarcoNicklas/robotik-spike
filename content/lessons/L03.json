@@ -1,0 +1,423 @@
+{
+ "id": "L03",
+ "num": 3,
+ "file": "L03_Mechanismen_und_Getriebe.html",
+ "title": "Mechanismen: Getriebe und Räder",
+ "sub": "Übersetzungen berechnen und Strecken in Radgrad umrechnen",
+ "lb": "LB 2 Mechanik",
+ "ds": "DS 3",
+ "lehrplan": "LB 2: setzen Mechanismen ein und passen das Grundgestell an Aufgaben an",
+ "goals": [
+  "Mechanismen und ihre Aufgaben kennen",
+  "Übersetzungen und Drehzahlen berechnen",
+  "Fahrstrecken in Radumdrehungen und Radgrad umrechnen"
+ ],
+ "read": {
+  "kap": "3",
+  "title": "Mechanismen: Getriebe, Räder, Greifer",
+  "pages": "7–8",
+  "page": 7,
+  "sections": [
+   "3.1 Zahnradgetriebe (Formeln und Tabelle)",
+   "3.2 Räder und Weg"
+  ],
+  "skip": "Den orangen Kasten auf S. 7 (Anbau mit großem Motor an Port A) überspringst du – er gehört zum erweiterten Fahrgestell.",
+  "focus": [
+   "Wie berechnet man die Übersetzung i und die Abtriebsdrehzahl n₂?",
+   "Was ist eine Untersetzung, was eine Übersetzung ins Schnelle?",
+   "Wie viele Radgrad braucht man für 1 cm und für eine 90°-Drehung?"
+  ]
+ },
+ "check": [
+  {
+   "id": "c1",
+   "type": "num",
+   "q": "Antriebsrad z₁ = 12 Zähne, Abtriebsrad z₂ = 36 Zähne. Berechne die Übersetzung i.",
+   "a": 3,
+   "hint": [
+    "i = z₂ : z₁ (Abtrieb durch Antrieb)."
+   ],
+   "ref": "S. 7 · 3.1",
+   "sol": "i = 36 : 12 = 3",
+   "tag": "Uebersetzung-i",
+   "tol": 0.01
+  },
+  {
+   "id": "c2",
+   "type": "num",
+   "q": "Gleiches Getriebe, der Motor dreht mit n₁ = 150 U/min. Wie schnell dreht der Abtrieb?",
+   "a": 50,
+   "hint": [
+    "n₂ = n₁ : i",
+    "150 : 3"
+   ],
+   "ref": "S. 7 · 3.1",
+   "sol": "n₂ = 150 : 3 = 50 U/min",
+   "tag": "Abtriebsdrehzahl",
+   "unit": "U/min",
+   "tol": 0.5
+  },
+  {
+   "id": "c3",
+   "type": "mc",
+   "q": "Was bedeutet i > 1?",
+   "opts": [
+    "Der Abtrieb dreht langsamer, aber kräftiger (Untersetzung).",
+    "Der Abtrieb dreht schneller und schwächer.",
+    "Antrieb und Abtrieb drehen gleich schnell.",
+    "Die Drehrichtung bleibt gleich."
+   ],
+   "a": 0,
+   "hint": [
+    "Lies den zweiten Satz in 3.1."
+   ],
+   "ref": "S. 7 · 3.1",
+   "tag": "Untersetzung"
+  },
+  {
+   "id": "c4",
+   "type": "match",
+   "q": "Ordne jedem Mechanismus seine Wirkung zu.",
+   "rows": [
+    [
+     "Zahnradpaar",
+     "Drehzahl/Kraft ändern, Richtung umkehren"
+    ],
+    [
+     "Kegelräder",
+     "Drehachse um 90° umlenken"
+    ],
+    [
+     "Schnecke + Zahnrad",
+     "sehr große Untersetzung, selbsthemmend"
+    ],
+    [
+     "Zahnstange",
+     "Drehung → geradlinige Bewegung"
+    ],
+    [
+     "Hebel, Gelenkviereck",
+     "Bewegung umlenken/verstärken"
+    ]
+   ],
+   "hint": [
+    "Die Tabelle in 3.1 hat die Spalte „Wirkung“."
+   ],
+   "ref": "S. 7 · 3.1",
+   "tag": "Mechanismen-Wirkung"
+  },
+  {
+   "id": "c5",
+   "type": "mc",
+   "q": "Welcher Mechanismus hält eine Last, auch wenn der Motor stromlos ist?",
+   "opts": [
+    "Schnecke + Zahnrad",
+    "Kegelräder",
+    "Zahnstange",
+    "Zahnradpaar"
+   ],
+   "a": 0,
+   "hint": [
+    "Achte auf das Wort „selbsthemmend“ in der Tabelle."
+   ],
+   "ref": "S. 7 · 3.1",
+   "tag": "selbsthemmend"
+  },
+  {
+   "id": "c6",
+   "type": "num",
+   "q": "Wie viele Radgrad braucht der Roboter für 35,2 cm?",
+   "a": 720,
+   "hint": [
+    "Ein Radumfang ≈ 17,6 cm = 1 Umdrehung = 360 Radgrad.",
+    "35,2 : 17,6 = 2 Umdrehungen"
+   ],
+   "ref": "S. 7 · 3.2",
+   "sol": "35,2 : 17,6 = 2 Umdrehungen = 720 Radgrad",
+   "tag": "Radgrad-Strecke",
+   "unit": "Radgrad",
+   "tol": 5
+  },
+  {
+   "id": "c7",
+   "type": "num",
+   "q": "Wie viele Radgrad braucht eine Drehung des Roboters um 90° auf der Stelle (Lenkung ±100)?",
+   "a": 180,
+   "hint": [
+    "Die Zahl steht am Ende von 3.2."
+   ],
+   "ref": "S. 7 · 3.2",
+   "sol": "90° Roboterdrehung = 8,8 cm Rad-Weg = 180 Radgrad",
+   "tag": "Radgrad-Drehung",
+   "unit": "Radgrad",
+   "tol": 1
+  },
+  {
+   "id": "c8",
+   "type": "tf",
+   "q": "Beurteile die Aussagen.",
+   "rows": [
+    [
+     "Zwei Zahnräder kehren die Drehrichtung um.",
+     true
+    ],
+    [
+     "Der Umfang des SPIKE-Rads beträgt etwa 5,6 cm.",
+     false
+    ],
+    [
+     "1 cm Fahrstrecke entspricht etwa 20,5 Radgrad.",
+     true
+    ],
+    [
+     "Bei i < 1 dreht der Abtrieb schneller, aber mit weniger Kraft.",
+     true
+    ]
+   ],
+   "hint": [
+    "Durchmesser und Umfang sind nicht dasselbe: U = π · d.",
+    "Lies 3.1 und 3.2 noch einmal genau."
+   ],
+   "ref": "S. 7 · 3.1/3.2",
+   "tag": "Getriebe-RF"
+  }
+ ],
+ "deep": [
+  {
+   "id": "v1",
+   "type": "sim",
+   "q": "Im Getriebe-Simulator stellst du zwei SPIKE-Zahnräder ein und beobachtest die Drehzahlen.",
+   "widget": "gear",
+   "cfg": {
+    "z1": 24,
+    "z2": 24,
+    "n1": 150
+   },
+   "predict": {
+    "id": "v1p",
+    "type": "num",
+    "q": "Antrieb 8 Zähne, Abtrieb 40 Zähne, Motor 150 U/min. Wie schnell dreht der Abtrieb? (Vermutung)",
+    "a": 30,
+    "hint": [],
+    "ref": "",
+    "cmp": true,
+    "unit": "U/min",
+    "tol": 0.5
+   },
+   "goal": {
+    "text": "Stelle 8 → 40 Zähne bei 150 U/min ein und beobachte beide Zahnräder.",
+    "cond": "s.z1===8 && s.z2===40 && s.n1===150",
+    "rec": "'i = ' + String(s.i).replace('.', ',') + ', n₂ = ' + String(s.n2).replace('.', ',') + ' U/min'"
+   },
+   "explain": {
+    "id": "v1x",
+    "type": "mc",
+    "q": "Wofür eignet sich diese Übersetzung (8 → 40) am besten?",
+    "opts": [
+     "für einen langsamen, kräftigen Arm",
+     "für ein besonders schnelles Fahrzeug",
+     "um die Drehachse um 90° umzulenken",
+     "für eine geradlinige Bewegung"
+    ],
+    "a": 0,
+    "hint": [
+     "i = 5 – ist das eine Untersetzung oder eine Übersetzung ins Schnelle?"
+    ],
+    "ref": "S. 7 · 3.1",
+    "sol": "i = 5 > 1: Untersetzung – fünfmal langsamer, aber fünfmal kräftiger.",
+    "tag": "Untersetzung-Einsatz"
+   },
+   "tag": "Getriebe-langsam",
+   "ref": "S. 7 · 3.1",
+   "paper": {
+    "obs": [
+     "z₁",
+     "z₂",
+     "i",
+     "n₂ in U/min"
+    ],
+    "rows": 3
+   }
+  },
+  {
+   "id": "v2",
+   "type": "sim",
+   "q": "Jetzt soll der Abtrieb schneller drehen als der Motor.",
+   "widget": "gear",
+   "cfg": {
+    "z1": 24,
+    "z2": 24,
+    "n1": 150
+   },
+   "predict": {
+    "id": "v2p",
+    "type": "mc",
+    "q": "Welches Zahnrad muss dafür mehr Zähne haben?",
+    "opts": [
+     "das Antriebsrad (am Motor)",
+     "das Abtriebsrad",
+     "beide gleich viele"
+    ],
+    "a": 0,
+    "hint": [],
+    "ref": "",
+    "cmp": true
+   },
+   "goal": {
+    "text": "Finde eine Kombination, bei der der Abtrieb genau doppelt so schnell dreht wie der Motor.",
+    "cond": "s.i===0.5",
+    "rec": "'Mit ' + s.z1 + ' → ' + s.z2 + ' Zähnen ist i = 0,5.'"
+   },
+   "explain": {
+    "id": "v2x",
+    "type": "mc",
+    "q": "Was „bezahlt“ man bei einer Übersetzung ins Schnelle?",
+    "opts": [
+     "Kraft: Der Abtrieb ist schwächer.",
+     "Nichts – es gibt nur Vorteile.",
+     "Die Drehrichtung bleibt immer gleich.",
+     "Der Motor verbraucht keinen Strom mehr."
+    ],
+    "a": 0,
+    "hint": [
+     "Lies den Satz zu i < 1 in 3.1."
+    ],
+    "ref": "S. 7 · 3.1",
+    "tag": "Uebersetzung-Schnelle"
+   },
+   "tag": "Getriebe-schnell",
+   "ref": "S. 7 · 3.1"
+  },
+  {
+   "id": "v3",
+   "type": "spike",
+   "q": "Fahre genau <b>35,2 cm</b> bis zur gelben Linie – aber <b>ohne die Einheit cm</b>: Verwende „bewege mit Lenkung 0 für … Grad“ und berechne die Radgrad selbst. In der Leiste über der Matte siehst du, wie weit sich die Motoren C und D gedreht haben.",
+   "title": "Strecke in Radgrad",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        54,
+        30,
+        56.4,
+        85
+       ],
+       "c": "gelb",
+       "name": "35,2 cm"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57
+    },
+    "starter": [],
+    "solution": [
+     {
+      "t": "mv_steer",
+      "a": {
+       "s": 0,
+       "n": 720,
+       "unit": "Grad"
+      }
+     }
+    ],
+    "palette": [
+     "mv_steer",
+     "mv_speed",
+     "ct_wait",
+     "li_write"
+    ],
+    "check": "ok(Math.abs(last.x - 55.2) < 1.2, 'genau an der gelben Linie', 'Gefahren bis x = ' + last.x.toFixed(1) + ' cm – Ziel: 55,2 cm');ok(P.some(function(b){return b.t==='mv_steer' && b.a.unit==='Grad';}), 'Radgrad verwendet', 'Verwende „bewege mit Lenkung 0 für … Grad“');ok(yawNear(0, 3), 'geradeaus gefahren', 'Lenkung muss 0 sein');",
+    "hints": [
+     "1 Umdrehung = 360 Radgrad ≈ 17,6 cm.",
+     "35,2 cm sind genau 2 Umdrehungen."
+    ]
+   },
+   "tag": "Radgrad-Fahrt",
+   "ref": "S. 7 · 3.2"
+  },
+  {
+   "id": "v4",
+   "type": "spike",
+   "q": "Drehe den Roboter auf der Stelle genau um <b>45° nach rechts</b> (Lenkung 100). Wie viele Radgrad brauchst du?",
+   "title": "Halbe Drehung",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      70,
+      40,
+      110,
+      75
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 90,
+     "y": 57
+    },
+    "starter": [
+     {
+      "t": "mv_steer",
+      "a": {
+       "s": 100,
+       "n": 180,
+       "unit": "Grad"
+      }
+     }
+    ],
+    "solution": [
+     {
+      "t": "mv_steer",
+      "a": {
+       "s": 100,
+       "n": 90,
+       "unit": "Grad"
+      }
+     }
+    ],
+    "palette": [
+     "mv_steer",
+     "mv_speed",
+     "ct_wait"
+    ],
+    "check": "ok(yawNear(45, 3), 'Drehung um ' + Math.round(R.final.yaw) + '° – richtig', 'Gierwinkel ' + Math.round(R.final.yaw) + '° – Ziel: 45°');ok(near(90, 57, 2), 'auf der Stelle gedreht', 'Der Roboter ist nicht auf der Stelle geblieben (Lenkung 100?)');",
+    "hints": [
+     "90° Roboterdrehung = 180 Radgrad.",
+     "45° ist die Hälfte davon."
+    ]
+   },
+   "tag": "Drehung-45",
+   "ref": "S. 7 · 3.2"
+  }
+ ],
+ "close": {
+  "merke": [
+   "i = z₂ : z₁, n₂ = n₁ : i – i > 1: langsamer und kräftiger.",
+   "Schnecke + Zahnrad ist selbsthemmend.",
+   "SPIKE-Rad: U ≈ 17,6 cm = 360 Radgrad, 1 cm ≈ 20,5 Radgrad.",
+   "90° Drehung auf der Stelle = 180 Radgrad."
+  ],
+  "praxis": "Lass Fahrgestell 1 mit „bewege vorwärts für 2 Umdrehungen“ fahren und miss die Strecke mit dem Lineal. Passt sie zu 35,2 cm?"
+ }
+}

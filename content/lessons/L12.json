@@ -1,0 +1,445 @@
+{
+ "id": "L12",
+ "num": 12,
+ "file": "L12_Missionen_planen.html",
+ "title": "Missionen planen und lösen",
+ "sub": "Verstehen, planen, programmieren, testen, verbessern – mit Fahrgestell 1",
+ "lb": "Wettbewerbsvorbereitung",
+ "ds": "DS 12",
+ "lehrplan": "LB 4: planen und programmieren Abläufe; LB 2: passen den Roboter an Aufgaben an",
+ "goals": [
+  "eine Mission planen und in Etappen zerlegen",
+  "Etappen als Meine Blöcke programmieren und einzeln testen",
+  "einen Lauf verbessern (Tempo, Ausrichten)"
+ ],
+ "lego": {
+  "text": "LEGO-Einheit „Wettbewerbsvorbereitung“",
+  "href": "https://education.lego.com/de-de/lessons/prime-competition-ready/"
+ },
+ "read": {
+  "kap": "9",
+  "title": "Mit Gegenständen spielen und Missionen lösen – 9.2 und Schieben aus 9.1",
+  "pages": "17",
+  "page": 17,
+  "sections": [
+   "9.2 Missionen planen (Tabelle)",
+   "aus 9.1 nur den letzten Satz zum Schieben (Bulldozer)"
+  ],
+  "skip": "Die Hubgabel am Motor A (Rest von 9.1) gehört zum erweiterten Fahrgestell. Mit Fahrgestell 1 löst ihr Missionen durch Schieben.",
+  "focus": [
+   "Welche fünf Schritte hat die Missionsplanung – und was tut ihr jeweils?",
+   "Warum programmiert man Etappen als Meine Blöcke?",
+   "Wie kann man einen Lauf verbessern?"
+  ],
+  "note": "Fahrgestell 1 schiebt Gegenstände mit seiner Vorderseite (Bulldozer-Prinzip) – einfacher als Heben, aber ungenauer."
+ },
+ "check": [
+  {
+   "id": "c1",
+   "type": "order",
+   "q": "Bringe die Schritte der Missionsplanung in die richtige Reihenfolge.",
+   "items": [
+    "Verstehen",
+    "Planen",
+    "Programmieren",
+    "Testen",
+    "Verbessern"
+   ],
+   "hint": [
+    "Tabelle 9.2 von oben nach unten."
+   ],
+   "ref": "S. 17 · 9.2",
+   "tag": "Missionsschritte"
+  },
+  {
+   "id": "c2",
+   "type": "match",
+   "q": "Was tut ihr in welchem Schritt?",
+   "rows": [
+    [
+     "Verstehen",
+     "Was bringt Punkte? Wo liegen Start, Objekte, Ziel?"
+    ],
+    [
+     "Planen",
+     "Weg auf die Matte zeichnen, Strecken und Winkel messen"
+    ],
+    [
+     "Programmieren",
+     "Etappen als Meine Blöcke"
+    ],
+    [
+     "Testen",
+     "jede Etappe einzeln, Abweichungen protokollieren"
+    ],
+    [
+     "Verbessern",
+     "an Linien/Wänden ausrichten, Tempo erhöhen"
+    ]
+   ],
+   "hint": [
+    "Tabelle 9.2, Spalte „Was ihr tut“."
+   ],
+   "ref": "S. 17 · 9.2",
+   "tag": "Missionsschritte-Inhalt"
+  },
+  {
+   "id": "c3",
+   "type": "mc",
+   "q": "Warum programmiert man die Etappen als Meine Blöcke (z. B. zum_paket, zum_ziel, heimfahren)?",
+   "opts": [
+    "Jede Etappe lässt sich einzeln testen und verbessern.",
+    "Weil der Roboter dann schneller fährt.",
+    "Weil man sonst keine Schleifen verwenden darf.",
+    "Weil der Hub nur 3 Blöcke speichern kann."
+   ],
+   "a": 0,
+   "hint": [
+    "Verbinde 9.2 mit den Vorteilen von Meinen Blöcken (S. 14)."
+   ],
+   "ref": "S. 17 · 9.2",
+   "tag": "Etappen-Bloecke"
+  },
+  {
+   "id": "c4",
+   "type": "mc",
+   "q": "Was sagt das Skript über das Schieben (Bulldozer) im Vergleich zum Heben?",
+   "opts": [
+    "einfacher, aber ungenauer",
+    "schwieriger, aber genauer",
+    "verboten im Wettbewerb",
+    "nur mit Kraftsensor möglich"
+   ],
+   "a": 0,
+   "hint": [
+    "Letzter Satz von 9.1."
+   ],
+   "ref": "S. 17 · 9.1",
+   "tag": "Bulldozer"
+  },
+  {
+   "id": "c5",
+   "type": "multi",
+   "q": "Welche Verbesserungen nennt das Skript für Schritt „Verbessern“? Wähle alle passenden.",
+   "opts": [
+    "Sensoren statt Zeit verwenden",
+    "an Linien/Wänden ausrichten",
+    "Tempo erhöhen (Upgrade)",
+    "längere Pausen einbauen",
+    "den Akku herausnehmen"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "hint": [
+    "Tabelle 9.2, letzte Zeile."
+   ],
+   "ref": "S. 17 · 9.2",
+   "tag": "Verbessern"
+  },
+  {
+   "id": "c6",
+   "type": "tf",
+   "q": "Beurteile die Aussagen.",
+   "rows": [
+    [
+     "Beim Testen prüft man jede Etappe einzeln.",
+     true
+    ],
+    [
+     "Abweichungen beim Testen notiert man nicht – man ändert einfach drauflos.",
+     false
+    ],
+    [
+     "Vor dem Programmieren zeichnet man den Weg auf die Matte.",
+     true
+    ]
+   ],
+   "hint": [
+    "Tabelle 9.2."
+   ],
+   "ref": "S. 17 · 9.2",
+   "tag": "Mission-RF"
+  }
+ ],
+ "deep": [
+  {
+   "id": "v1",
+   "type": "spike",
+   "q": "Schiebe das <b>Paket</b> in das blaue Ziel und fahre danach rückwärts zurück in die grüne Basis. Plane zuerst: Wo muss die Vorderkante des Roboters halten, damit das Paket im Ziel liegt? (Roboter-Mitte bis Vorderkante ≈ 9,5 cm, Paket 8 cm breit.)",
+   "title": "Paketlieferung (Bulldozer)",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        5,
+        40,
+        40,
+        75
+       ],
+       "c": "grün",
+       "name": "Basis"
+      },
+      {
+       "r": [
+        145,
+        45,
+        175,
+        70
+       ],
+       "c": "blau",
+       "name": "Ziel"
+      }
+     ],
+     "objs": [
+      {
+       "name": "Paket",
+       "x": 70,
+       "y": 57,
+       "s": 8,
+       "c": "#d98e04"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57
+    },
+    "starter": [],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep",
+     "ct_repeat",
+     "mb_def",
+     "mb_call"
+    ],
+    "solution": [
+     {
+      "t": "mb_def",
+      "a": {
+       "name": "zum_ziel"
+      },
+      "b": [
+       {
+        "t": "mv_move",
+        "a": {
+         "dir": "vorwärts",
+         "n": 126.5,
+         "unit": "cm"
+        }
+       }
+      ]
+     },
+     {
+      "t": "mb_def",
+      "a": {
+       "name": "heimfahren"
+      },
+      "b": [
+       {
+        "t": "mv_move",
+        "a": {
+         "dir": "rückwärts",
+         "n": 126.5,
+         "unit": "cm"
+        }
+       }
+      ]
+     },
+     {
+      "t": "mb_call",
+      "a": {
+       "name": "zum_ziel"
+      }
+     },
+     {
+      "t": "mb_call",
+      "a": {
+       "name": "heimfahren"
+      }
+     }
+    ],
+    "check": "var p = obj('Paket'); ok(p && p.x >= 145 && p.x <= 175 && p.y >= 45 && p.y <= 70, 'Paket liegt im Ziel', 'Das Paket liegt nicht im blauen Ziel (x = ' + (p ? p.x.toFixed(0) : '?') + ')');ok(inRect([5,40,40,75]), 'zurück in der Basis', 'Der Roboter ist nicht zurück in der Basis');",
+    "hints": [
+     "Paketmitte soll z. B. bei x = 160 liegen. Roboter-Mitte = Paketmitte − 9,5 − 4 cm.",
+     "Der Roboter startet bei x = 20 → Strecke = Ziel-x der Roboter-Mitte − 20.",
+     "Etappen als Meine Blöcke: zum_ziel, heimfahren."
+    ]
+   },
+   "tag": "Mission-Paket",
+   "ref": "S. 17 · 9.1/9.2",
+   "lvl": "Basis"
+  },
+  {
+   "id": "v2",
+   "type": "spike",
+   "q": "Gleiche Mission – aber in höchstens <b>7 Sekunden</b>. Tipp: Bewegungsgeschwindigkeit erhöhen.",
+   "title": "Zeit für ein Upgrade",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        5,
+        40,
+        40,
+        75
+       ],
+       "c": "grün",
+       "name": "Basis"
+      },
+      {
+       "r": [
+        145,
+        45,
+        175,
+        70
+       ],
+       "c": "blau",
+       "name": "Ziel"
+      }
+     ],
+     "objs": [
+      {
+       "name": "Paket",
+       "x": 70,
+       "y": 57,
+       "s": 8,
+       "c": "#d98e04"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57
+    },
+    "starter": [],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep",
+     "ct_repeat",
+     "mb_def",
+     "mb_call"
+    ],
+    "solution": [
+     {
+      "t": "mv_speed",
+      "a": {
+       "n": 80
+      }
+     },
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 126.5,
+       "unit": "cm"
+      }
+     },
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "rückwärts",
+       "n": 126.5,
+       "unit": "cm"
+      }
+     }
+    ],
+    "check": "var p = obj('Paket'); ok(p && p.x >= 145 && p.x <= 175 && p.y >= 45 && p.y <= 70, 'Paket liegt im Ziel', 'Das Paket liegt nicht im blauen Ziel');ok(inRect([5,40,40,75]), 'zurück in der Basis', 'nicht zurück in der Basis');ok(R.t <= 7, 'Zeit: ' + R.t.toFixed(1) + ' s', 'zu langsam: ' + R.t.toFixed(1).replace('.', ',') + ' s (max. 7 s)');",
+    "hints": [
+     "„setze Bewegungsgeschwindigkeit auf … %“ ganz an den Anfang.",
+     "Bei 50 % braucht der Lauf etwa 10 s – wie viel schneller musst du werden?"
+    ]
+   },
+   "tag": "Mission-Upgrade",
+   "ref": "S. 17 · 9.2",
+   "lvl": "Profi"
+  },
+  {
+   "id": "v3",
+   "type": "num",
+   "q": "Zeitplanung: Bei 50 % Geschwindigkeit fährt der Roboter etwa 24 cm pro Sekunde. Wie viele Sekunden braucht er für 120 cm hin und 120 cm zurück?",
+   "a": 10,
+   "hint": [
+    "Gesamtstrecke = 240 cm.",
+    "Zeit = Strecke : Geschwindigkeit"
+   ],
+   "ref": "S. 17 · 9.2",
+   "sol": "240 cm : 24 cm/s = 10 s",
+   "tag": "Zeitplanung",
+   "unit": "s",
+   "tol": 0.3
+  },
+  {
+   "id": "v4",
+   "type": "mc",
+   "q": "Nach der ersten Mission steht der Roboter 3 cm neben der geplanten Stelle. Was hilft laut Skript für die nächste Etappe am meisten?",
+   "opts": [
+    "an einer Wand oder Linie neu ausrichten",
+    "schneller fahren",
+    "eine längere Pause einbauen",
+    "das Programm komplett neu schreiben"
+   ],
+   "a": 0,
+   "hint": [
+    "Tabelle 9.2, Zeile „Verbessern“.",
+    "Fehler addieren sich – was setzt die Position zurück?"
+   ],
+   "ref": "S. 17 · 9.2",
+   "tag": "Ausrichten"
+  }
+ ],
+ "close": {
+  "merke": [
+   "Missionsplanung: verstehen → planen → programmieren → testen → verbessern.",
+   "Etappen als Meine Blöcke programmieren und einzeln testen.",
+   "Schieben ist einfach, aber ungenau – nach jeder Mission neu ausrichten."
+  ],
+  "praxis": "Baut für Fahrgestell 1 eine einfache Schiebe-Schaufel aus Balken (lösbar befestigt!) und testet die Paketlieferung auf dem Tisch."
+ }
+}

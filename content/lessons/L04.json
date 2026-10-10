@@ -1,0 +1,409 @@
+{
+ "id": "L04",
+ "num": 4,
+ "file": "L04_Energie_Hub_Verkabelung.html",
+ "title": "Energie, Hub und Verkabelung",
+ "sub": "Spannungsquellen, Akku, Ports und Verbindung zur App",
+ "lb": "LB 3 Elektronik",
+ "ds": "DS 4",
+ "lehrplan": "LB 3: installieren die Elektronik, vergleichen Spannungsquellen und verbinden den Mikrocontroller",
+ "goals": [
+  "Spannungsquellen vergleichen und die Akkulaufzeit berechnen",
+  "den Hub als Mikrocontroller beschreiben",
+  "die Motoren von Fahrgestell 1 richtig verkabeln und ansprechen"
+ ],
+ "read": {
+  "kap": "4",
+  "title": "Energie, Hub und Verkabelung",
+  "pages": "9–10",
+  "page": 9,
+  "sections": [
+   "4.1 Energieversorgung (mit Tabelle)",
+   "4.2 Der Hub – ein Mikrocontroller",
+   "4.3 Verkabelung und Verbindung",
+   "orange Kasten oben auf S. 10 (Standardbelegung)"
+  ],
+  "skip": "Aus der Standardbelegung auf S. 10 brauchst du für Fahrgestell 1 nur C (Motor links) und D (Motor rechts). E, F, B und A kommen erst beim erweiterten Fahrgestell dazu.",
+  "focus": [
+   "Wie rechnet man Energie und Laufzeit des Akkus aus?",
+   "Was gehört zu einem Mikrocontroller, was ist im Hub eingebaut?",
+   "Worauf musst du bei Ports und Kabeln achten? USB oder Bluetooth?"
+  ],
+  "note": "Wir bauen zunächst nur <b>Fahrgestell 1</b> (LEGO-Bauanleitung „Fahrgestell 1“ in der SPIKE App): Hub, zwei Motoren an <b>Port C (links)</b> und <b>Port D (rechts)</b>, Räder und Stützrad – <b>keine angebauten Sensoren</b>. Den Gyrosensor gibt es trotzdem: Er ist im Hub eingebaut."
+ },
+ "check": [
+  {
+   "id": "c1",
+   "type": "num",
+   "q": "Wie viele Stunden fährt der Roboter mit dem SPIKE-Akku (2100 mAh) bei einer Stromaufnahme von 1050 mA?",
+   "a": 2,
+   "hint": [
+    "Laufzeit = Kapazität : Strom",
+    "2100 mAh : 1050 mA"
+   ],
+   "ref": "S. 9 · 4.1",
+   "sol": "2100 : 1050 = 2 h",
+   "tag": "Akku-Laufzeit",
+   "unit": "h",
+   "tol": 0.05
+  },
+  {
+   "id": "c2",
+   "type": "num",
+   "q": "Wie viel Energie speichert der Akku ungefähr (7,3 V, 2,1 Ah)? Runde auf ganze Wh.",
+   "a": 15,
+   "hint": [
+    "E = U · Q"
+   ],
+   "ref": "S. 9 · 4.1",
+   "sol": "7,3 V · 2,1 Ah ≈ 15 Wh",
+   "tag": "Akku-Energie",
+   "unit": "Wh",
+   "tol": 0.6
+  },
+  {
+   "id": "c3",
+   "type": "match",
+   "q": "Ordne jeder Spannungsquelle ihren Vorteil zu.",
+   "rows": [
+    [
+     "Akku",
+     "wiederaufladbar, mobil"
+    ],
+    [
+     "Batterie",
+     "sofort einsatzbereit"
+    ],
+    [
+     "Netzteil/USB",
+     "dauerhaft Energie"
+    ],
+    [
+     "Solarzelle",
+     "unabhängig, kostenlos"
+    ]
+   ],
+   "hint": [
+    "Die Tabelle in 4.1 hat die Spalte „Vorteil“."
+   ],
+   "ref": "S. 9 · 4.1",
+   "tag": "Spannungsquellen"
+  },
+  {
+   "id": "c4",
+   "type": "multi",
+   "q": "Was gehört zu einem Mikrocontroller? Wähle alle passenden.",
+   "opts": [
+    "Prozessor",
+    "Speicher",
+    "Ein- und Ausgänge",
+    "Bildschirm",
+    "Festplatte"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "hint": [
+    "Die Definition steht im ersten Satz von 4.2."
+   ],
+   "ref": "S. 9 · 4.2",
+   "tag": "Mikrocontroller"
+  },
+  {
+   "id": "c5",
+   "type": "multi",
+   "q": "Was ist im SPIKE-Hub eingebaut? Wähle alle passenden.",
+   "opts": [
+    "5×5-Lichtmatrix",
+    "Lautsprecher",
+    "Gyro-/Beschleunigungssensor",
+    "Tasten",
+    "Abstandssensor",
+    "Farbsensor"
+   ],
+   "a": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "hint": [
+    "Lies den letzten Satz von 4.2.",
+    "Abstands- und Farbsensor sind eigene Bauteile, die man an Ports anschließt."
+   ],
+   "ref": "S. 9 · 4.2",
+   "tag": "Hub-eingebaut"
+  },
+  {
+   "id": "c6",
+   "type": "tf",
+   "q": "Beurteile die Aussagen zur Verkabelung.",
+   "rows": [
+    [
+     "Motoren dürfen nur an A und B, Sensoren nur an E und F.",
+     false
+    ],
+    [
+     "Das Programm muss den Port verwenden, an dem der Motor wirklich hängt.",
+     true
+    ],
+    [
+     "Kabel müssen so verlegt werden, dass sie nicht in Räder oder Zahnräder geraten.",
+     true
+    ],
+    [
+     "Ein Programm auf dem Hub lässt sich nur mit angeschlossenem Tablet starten.",
+     false
+    ]
+   ],
+   "hint": [
+    "Lies die Aufzählung in 4.3.",
+    "„Jeder Port ist universell …“"
+   ],
+   "ref": "S. 9 · 4.3",
+   "tag": "Verkabelung-RF"
+  },
+  {
+   "id": "c7",
+   "type": "match",
+   "q": "Was ist der Vorteil?",
+   "rows": [
+    [
+     "USB-Kabel",
+     "stabile Verbindung, lädt den Hub"
+    ],
+    [
+     "Bluetooth",
+     "kabellos, Fernsteuerung möglich"
+    ],
+    [
+     "Programmplatz auf dem Hub",
+     "Programm ohne Tablet/PC starten"
+    ]
+   ],
+   "hint": [
+    "Lies die letzten beiden Punkte in 4.3."
+   ],
+   "ref": "S. 9 · 4.3",
+   "tag": "USB-Bluetooth"
+  },
+  {
+   "id": "c8",
+   "type": "mc",
+   "q": "An welchen Ports hängen bei Fahrgestell 1 im Kurs die Fahrmotoren?",
+   "opts": [
+    "C (links) und D (rechts)",
+    "A (links) und B (rechts)",
+    "E (links) und F (rechts)",
+    "egal – der Hub erkennt das selbst"
+   ],
+   "a": 0,
+   "hint": [
+    "Schau in den orangen Kasten oben auf S. 10."
+   ],
+   "ref": "S. 10 · Standardbelegung",
+   "tag": "Ports-Fahrmotoren"
+  }
+ ],
+ "deep": [
+  {
+   "id": "v1",
+   "type": "sim",
+   "q": "Im Akku-Simulator schaltest du Verbraucher ein und aus.",
+   "widget": "battery",
+   "cfg": {
+    "cap": 2100
+   },
+   "predict": {
+    "id": "v1p",
+    "type": "mc",
+    "q": "Was passiert mit der Laufzeit, wenn sich der Strom verdoppelt?",
+    "opts": [
+     "Sie halbiert sich.",
+     "Sie verdoppelt sich.",
+     "Sie bleibt gleich."
+    ],
+    "a": 0,
+    "hint": [],
+    "ref": "",
+    "cmp": true
+   },
+   "goal": {
+    "text": "Schalte Fahrmotoren, Hub, Lichtmatrix und Lautsprecher ein. Lies Gesamtstrom und Laufzeit ab.",
+    "cond": "s.I===1050",
+    "rec": "'Strom ' + s.I + ' mA → Laufzeit ' + String(s.t).replace('.', ',') + ' h'"
+   },
+   "explain": {
+    "id": "v1x",
+    "type": "num",
+    "q": "Wie viele Minuten hält der Akku bei 1050 mA?",
+    "a": 120,
+    "hint": [
+     "Erst die Stunden berechnen, dann mal 60."
+    ],
+    "ref": "S. 9 · 4.1",
+    "sol": "2100 : 1050 = 2 h = 120 min",
+    "tag": "Akku-Minuten",
+    "unit": "min",
+    "tol": 1
+   },
+   "tag": "Akku-Simulator",
+   "ref": "S. 9 · 4.1",
+   "paper": {
+    "obs": [
+     "eingeschaltete Verbraucher",
+     "Strom in mA",
+     "Laufzeit in h"
+    ],
+    "rows": 3
+   }
+  },
+  {
+   "id": "v2",
+   "type": "sim",
+   "q": "Im Verkabelungs-Simulator steckst du die Kabel von Fahrgestell 1 um. Das Programm lautet „setze Bewegungsmotoren auf C + D“ und „bewege vorwärts für 20 cm“.",
+   "widget": "ports",
+   "cfg": {
+    "pl": "C",
+    "pr": "D"
+   },
+   "predict": {
+    "id": "v2p",
+    "type": "mc",
+    "q": "Die Kabel werden vertauscht: linker Motor an D, rechter Motor an C. Was passiert bei „bewege vorwärts“?",
+    "opts": [
+     "Der Roboter fährt normal vorwärts.",
+     "Der Roboter fährt rückwärts.",
+     "Nichts bewegt sich.",
+     "Der Roboter dreht im Kreis."
+    ],
+    "a": 1,
+    "hint": [],
+    "ref": "",
+    "cmp": true
+   },
+   "goal": {
+    "text": "Stecke die Kabel vertauscht ein (links D, rechts C) und starte das Programm. Probiere danach auch aus, was passiert, wenn ein Motor an Port E hängt.",
+    "cond": "s.pl==='D' && s.pr==='C' && s.ran",
+    "rec": "'Ergebnis: Der Roboter ' + (s.r === 'rückwärts' ? 'fährt rückwärts' : s.r) + '.'"
+   },
+   "explain": {
+    "id": "v2x",
+    "type": "mc",
+    "q": "Wie behebst du den Fehler am schnellsten?",
+    "opts": [
+     "Kabel richtig umstecken – oder im Programm die Bewegungsmotoren auf D + C setzen.",
+     "Den Akku laden.",
+     "Die Räder tauschen.",
+     "Den Hub neu starten."
+    ],
+    "a": 0,
+    "hint": [
+     "Das Programm muss zu den Ports passen, an denen die Motoren wirklich hängen."
+    ],
+    "ref": "S. 9 · 4.3",
+    "tag": "Kabel-Fehler-beheben"
+   },
+   "tag": "Verkabelung",
+   "ref": "S. 9 · 4.3",
+   "paper": {
+    "obs": [
+     "linker Motor an",
+     "rechter Motor an",
+     "Was macht der Roboter?"
+    ],
+    "rows": [
+     "C / D",
+     "D / C",
+     "C / E"
+    ]
+   }
+  },
+  {
+   "id": "v3",
+   "type": "spike",
+   "q": "Lass den Hub „Hallo“ auf die Lichtmatrix schreiben, das Mittellicht grün leuchten und einen Piepton spielen. Ziehe die Blöcke unter „Wenn Programm startet“ und drücke ▶ Start.",
+   "title": "Hallo Hub!",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 30,
+     "y": 57
+    },
+    "starter": [],
+    "palette": [
+     "li_write",
+     "li_center",
+     "so_beep",
+     "ct_wait"
+    ],
+    "solution": [
+     {
+      "t": "li_write",
+      "a": {
+       "txt": "Hallo"
+      }
+     },
+     {
+      "t": "li_center",
+      "a": {
+       "c": "grün"
+      }
+     },
+     {
+      "t": "so_beep",
+      "a": {
+       "n": 0.3
+      }
+     }
+    ],
+    "check": "ok(writes().indexOf('Hallo') >= 0, '„Hallo“ auf der Lichtmatrix', 'Schreibe „Hallo“ auf die Lichtmatrix');ok(lights().indexOf('grün') >= 0, 'Mittellicht grün', 'Setze das Mittellicht auf grün');ok(beeps() >= 1, 'Piepton gespielt', 'Es fehlt der Piepton');",
+    "hints": [
+     "Die Blöcke findest du unter „Licht“ und „Klang“.",
+     "Achte auf die genaue Schreibweise: Hallo"
+    ]
+   },
+   "tag": "Hallo-Hub",
+   "ref": "S. 9 · 4.2",
+   "lvl": "Basis"
+  },
+  {
+   "id": "v4",
+   "type": "bug",
+   "q": "Fehlersuche: Am Fahrgestell 1 hängen die Motoren an C (links) und D (rechts). Der Roboter bewegt sich nicht. Welche Zeile ist falsch?",
+   "lines": [
+    "setze Bewegungsmotoren auf A + B",
+    "setze Bewegungsgeschwindigkeit auf 50 %",
+    "bewege vorwärts für 20 cm",
+    "schreibe Fertig"
+   ],
+   "a": [
+    0
+   ],
+   "hint": [
+    "Vergleiche die Ports im Programm mit der Verkabelung."
+   ],
+   "ref": "S. 9 · 4.3",
+   "sol": "Zeile 1: Die Bewegungsmotoren müssen C + D sein – sonst spricht das Programm leere Ports an.",
+   "tag": "Port-Fehler"
+  }
+ ],
+ "close": {
+  "merke": [
+   "Laufzeit = Kapazität : Strom; Energie E = U · Q.",
+   "Der Hub ist ein Mikrocontroller: Prozessor, Speicher, Ein-/Ausgänge – mit Lichtmatrix, Lautsprecher, Tasten und Gyrosensor.",
+   "Fahrgestell 1: Motor links an C, rechts an D – das Programm muss dieselben Ports verwenden."
+  ],
+  "praxis": "Verbinde den Hub per Bluetooth mit der SPIKE App, prüfe in der App die Ports C und D und übertrage „Hallo Hub“ auf einen Programmplatz."
+ }
+}

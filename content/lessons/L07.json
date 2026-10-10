@@ -1,0 +1,558 @@
+{
+ "id": "L07",
+ "num": 7,
+ "file": "L07_Schleifen_und_Meine_Bloecke.html",
+ "title": "Wiederholungen und Meine Blöcke",
+ "sub": "Schleifen sparen Arbeit – eigene Blöcke machen Programme übersichtlich",
+ "lb": "LB 4 Programmierung",
+ "ds": "DS 7",
+ "lehrplan": "LB 4: setzen Wiederholungen und Unterprogramme ein",
+ "goals": [
+  "Zählschleife, Endlosschleife und bedingte Schleife unterscheiden",
+  "Vielecke mit Schleifen fahren",
+  "eigene Blöcke (Meine Blöcke) definieren und im Team nutzen"
+ ],
+ "read": {
+  "kap": "7",
+  "title": "Wiederholungen und Meine Blöcke",
+  "pages": "14",
+  "page": 14,
+  "sections": [
+   "den ganzen Text auf S. 14 mit den beiden Programmbeispielen"
+  ],
+  "focus": [
+   "Welche drei Arten von Schleifen gibt es?",
+   "Wie berechnet man den Drehwinkel für ein n-Eck?",
+   "Welche Vorteile haben Meine Blöcke?"
+  ]
+ },
+ "check": [
+  {
+   "id": "c1",
+   "type": "match",
+   "q": "Welche Art von Schleife ist das?",
+   "rows": [
+    [
+     "wiederhole 4-mal",
+     "Zählschleife"
+    ],
+    [
+     "wiederhole fortlaufend",
+     "Endlosschleife"
+    ],
+    [
+     "wiederhole bis …",
+     "bedingte Schleife"
+    ]
+   ],
+   "hint": [
+    "Der erste Absatz auf S. 14 nennt alle drei."
+   ],
+   "ref": "S. 14",
+   "tag": "Schleifenarten"
+  },
+  {
+   "id": "c2",
+   "type": "num",
+   "q": "Wie oft wiederholt man „fahre + drehe“ für ein Sechseck?",
+   "a": 6,
+   "hint": [
+    "Ein n-Eck braucht n Wiederholungen."
+   ],
+   "ref": "S. 14",
+   "tag": "Sechseck-Anzahl",
+   "tol": 0
+  },
+  {
+   "id": "c3",
+   "type": "num",
+   "q": "Um wie viel Grad dreht der Roboter an jeder Ecke eines Sechsecks?",
+   "a": 60,
+   "hint": [
+    "Drehwinkel = 360° : n"
+   ],
+   "ref": "S. 14",
+   "sol": "360° : 6 = 60°",
+   "tag": "Sechseck-Winkel",
+   "unit": "°",
+   "tol": 0.5
+  },
+  {
+   "id": "c4",
+   "type": "num",
+   "q": "Wie viele Radgrad sind das bei einer Drehung auf der Stelle (Lenkung 100)?",
+   "a": 120,
+   "hint": [
+    "90° Drehung = 180 Radgrad – also Drehwinkel · 2."
+   ],
+   "ref": "S. 7 · 3.2",
+   "sol": "60° · 2 = 120 Radgrad",
+   "tag": "Sechseck-Radgrad",
+   "unit": "Radgrad",
+   "tol": 1
+  },
+  {
+   "id": "c5",
+   "type": "multi",
+   "q": "Welche Vorteile von Meinen Blöcken nennt das Skript? Wähle alle passenden.",
+   "opts": [
+    "Das Programm wird kurz und lesbar.",
+    "Fehler korrigiert man an einer Stelle.",
+    "Im Team kann jede/r eine Etappe programmieren.",
+    "Der Roboter fährt schneller.",
+    "Der Akku hält länger."
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "hint": [
+    "Lies den Absatz zu „Meine Blöcke“."
+   ],
+   "ref": "S. 14",
+   "tag": "MeineBloecke-Vorteile"
+  },
+  {
+   "id": "c6",
+   "type": "bug",
+   "q": "Das Programm soll ein Quadrat mit 30 cm Seitenlänge fahren (Rechtsdrehungen). Welche Zeilen sind falsch?",
+   "lines": [
+    "wiederhole 3-mal",
+    "    bewege vorwärts für 30 cm",
+    "    bewege mit Lenkung 100 für 90 Grad"
+   ],
+   "a": [
+    0,
+    2
+   ],
+   "hint": [
+    "Wie viele Seiten hat ein Quadrat?",
+    "Eine 90°-Drehung braucht wie viele Radgrad?"
+   ],
+   "ref": "S. 14 und S. 7 · 3.2",
+   "sol": "Zeile 1: 4-mal statt 3-mal. Zeile 3: 180 Radgrad statt 90 (sonst nur 45°).",
+   "tag": "Quadrat-Fehler"
+  },
+  {
+   "id": "c7",
+   "type": "mc",
+   "q": "Was ist „ein Meiner Block“?",
+   "opts": [
+    "ein selbst definiertes Unterprogramm",
+    "ein Block, der nur auf meinem Tablet funktioniert",
+    "eine Endlosschleife",
+    "ein Sensor-Block"
+   ],
+   "a": 0,
+   "hint": [
+    "Lies den ersten Satz zu Meinen Blöcken."
+   ],
+   "ref": "S. 14",
+   "tag": "MeinBlock-Definition"
+  },
+  {
+   "id": "c8",
+   "type": "tf",
+   "q": "Beurteile die Aussagen.",
+   "rows": [
+    [
+     "Ein Quadrat ist 4-mal „fahre + drehe 90°“.",
+     true
+    ],
+    [
+     "Für ein n-Eck dreht der Roboter jeweils um n : 360°.",
+     false
+    ],
+    [
+     "Die Blöcke in einer Endlosschleife werden immer wieder ausgeführt.",
+     true
+    ]
+   ],
+   "hint": [
+    "Wie lautet die Formel für den Drehwinkel im Skript genau?"
+   ],
+   "ref": "S. 14",
+   "tag": "Schleifen-RF"
+  }
+ ],
+ "deep": [
+  {
+   "id": "v1",
+   "type": "sim",
+   "q": "Im Vieleck-Planer stellst du die Anzahl der Ecken und den Drehwinkel ein und siehst die gefahrene Figur.",
+   "widget": "polygon",
+   "cfg": {
+    "n": 4,
+    "w": 90
+   },
+   "predict": {
+    "id": "v1p",
+    "type": "num",
+    "q": "Welchen Drehwinkel brauchst du für ein Achteck? (Vermutung)",
+    "a": 45,
+    "hint": [],
+    "ref": "",
+    "cmp": true,
+    "unit": "°",
+    "tol": 0.5
+   },
+   "goal": {
+    "text": "Stelle n = 8 ein und finde den Drehwinkel, mit dem sich die Figur genau schließt.",
+    "cond": "s.n===8 && s.closed",
+    "rec": "'Achteck: Drehwinkel ' + s.w + '° = ' + s.rg + ' Radgrad'"
+   },
+   "explain": {
+    "id": "v1x",
+    "type": "num",
+    "q": "Wie viele Radgrad braucht eine Drehung beim Fünfeck?",
+    "a": 144,
+    "hint": [
+     "Erst den Drehwinkel (360° : 5), dann · 2."
+    ],
+    "ref": "S. 14",
+    "sol": "360° : 5 = 72° → 144 Radgrad",
+    "tag": "Fuenfeck-Radgrad",
+    "unit": "Radgrad",
+    "tol": 1
+   },
+   "tag": "Vieleck",
+   "ref": "S. 14",
+   "paper": {
+    "obs": [
+     "n",
+     "Drehwinkel",
+     "Radgrad",
+     "schließt sich?"
+    ],
+    "rows": 3
+   }
+  },
+  {
+   "id": "v2",
+   "type": "spike",
+   "q": "Fahre ein Quadrat mit 30 cm Seitenlänge (Rechtsdrehungen). Verwende „wiederhole“ – höchstens 3 Blöcke!",
+   "title": "Das Quadrat",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "marks": [
+      {
+       "x": 50,
+       "y": 57
+      },
+      {
+       "x": 50,
+       "y": 27
+      },
+      {
+       "x": 20,
+       "y": 27
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57
+    },
+    "starter": [
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 30,
+       "unit": "cm"
+      }
+     },
+     {
+      "t": "mv_steer",
+      "a": {
+       "s": 100,
+       "n": 180,
+       "unit": "Grad"
+      }
+     }
+    ],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep",
+     "ct_repeat",
+     "mb_def",
+     "mb_call"
+    ],
+    "solution": [
+     {
+      "t": "ct_repeat",
+      "a": {
+       "n": 4
+      },
+      "b": [
+       {
+        "t": "mv_move",
+        "a": {
+         "dir": "vorwärts",
+         "n": 30,
+         "unit": "cm"
+        }
+       },
+       {
+        "t": "mv_steer",
+        "a": {
+         "s": 100,
+         "n": 180,
+         "unit": "Grad"
+        }
+       }
+      ]
+     }
+    ],
+    "check": "ok(passed(50,57,4) && passed(50,27,4) && passed(20,27,4), 'alle Ecken erreicht', 'Nicht alle Ecken erreicht');ok(near(20,57,4), 'zurück am Start', 'nicht zurück am Start');ok(uses(P,'ct_repeat'), 'Schleife verwendet', 'Verwende „wiederhole“');ok(total(P) <= 3, 'kurzes Programm (' + total(P) + ' Blöcke)', 'Zu viele Blöcke: ' + total(P));",
+    "hints": [
+     "Ziehe die beiden Startblöcke in eine „wiederhole“-Klammer.",
+     "Ein Quadrat hat 4 Seiten."
+    ]
+   },
+   "tag": "Quadrat-Schleife",
+   "ref": "S. 14",
+   "lvl": "Basis"
+  },
+  {
+   "id": "v3",
+   "type": "spike",
+   "q": "Definiere den Block <b>Stufe</b>: 20 cm vor, 90° links (Lenkung −100 für 180 Grad), 15 cm vor, 90° rechts. Rufe „Stufe“ dreimal auf, um ins gelbe Ziel zu kommen.",
+   "title": "Die Treppe",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        72,
+        94,
+        90,
+        112
+       ],
+       "c": "gelb",
+       "name": "Ziel"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57
+    },
+    "starter": [
+     {
+      "t": "mb_def",
+      "a": {
+       "name": "Stufe"
+      },
+      "b": []
+     }
+    ],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep",
+     "ct_repeat",
+     "mb_def",
+     "mb_call"
+    ],
+    "solution": [
+     {
+      "t": "mb_def",
+      "a": {
+       "name": "Stufe"
+      },
+      "b": [
+       {
+        "t": "mv_move",
+        "a": {
+         "dir": "vorwärts",
+         "n": 20,
+         "unit": "cm"
+        }
+       },
+       {
+        "t": "mv_steer",
+        "a": {
+         "s": -100,
+         "n": 180,
+         "unit": "Grad"
+        }
+       },
+       {
+        "t": "mv_move",
+        "a": {
+         "dir": "vorwärts",
+         "n": 15,
+         "unit": "cm"
+        }
+       },
+       {
+        "t": "mv_steer",
+        "a": {
+         "s": 100,
+         "n": 180,
+         "unit": "Grad"
+        }
+       }
+      ]
+     },
+     {
+      "t": "ct_repeat",
+      "a": {
+       "n": 3
+      },
+      "b": [
+       {
+        "t": "mb_call",
+        "a": {
+         "name": "Stufe"
+        }
+       }
+      ]
+     }
+    ],
+    "check": "ok(uses(P,'mb_def') && uses(P,'mb_call'), 'eigener Block definiert und aufgerufen', 'Definiere „Stufe“ und rufe ihn auf');ok(inRect([72,94,90,112]), 'im Ziel angekommen', 'nicht im gelben Ziel');",
+    "hints": [
+     "Der Name im Aufruf muss genau so geschrieben sein wie bei „definiere“.",
+     "Den Aufruf-Block findest du unter „Meine Blöcke“ – trage dort den Namen Stufe ein."
+    ]
+   },
+   "tag": "Treppe-MeinBlock",
+   "ref": "S. 14",
+   "lvl": "Basis"
+  },
+  {
+   "id": "v4",
+   "type": "spike",
+   "q": "Fahre ein regelmäßiges Achteck (Seite 20 cm) und komme wieder am Start an. Überlege: Wie viele Radgrad braucht eine 45°-Drehung?",
+   "title": "Das Achteck",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      45,
+      85,
+      80,
+      112
+     ],
+     "marks": [
+      {
+       "x": 60,
+       "y": 100
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 60,
+     "y": 100
+    },
+    "starter": [],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep",
+     "ct_repeat",
+     "mb_def",
+     "mb_call"
+    ],
+    "solution": [
+     {
+      "t": "ct_repeat",
+      "a": {
+       "n": 8
+      },
+      "b": [
+       {
+        "t": "mv_move",
+        "a": {
+         "dir": "vorwärts",
+         "n": 20,
+         "unit": "cm"
+        }
+       },
+       {
+        "t": "mv_steer",
+        "a": {
+         "s": 100,
+         "n": 90,
+         "unit": "Grad"
+        }
+       }
+      ]
+     }
+    ],
+    "check": "ok(near(60,100,4), 'zurück am Start', 'nicht zurück am Start');ok(Math.abs(R.final.yaw) < 6 || Math.abs(R.final.yaw) > 354, 'Blickrichtung wie am Anfang', 'Blickrichtung stimmt nicht (' + Math.round(R.final.yaw) + '°)');var mn = Math.min.apply(null, F.map(function(f){return f.y;})); ok(mn < 60 && mn > 40, 'Achteck-Form', 'Die Form ist kein Achteck mit 20 cm Seite');",
+    "hints": [
+     "90° Drehung = 180 Radgrad → 45° = 90 Radgrad.",
+     "Außenwinkel eines n-Ecks = 360° : n."
+    ]
+   },
+   "tag": "Achteck",
+   "ref": "S. 14",
+   "lvl": "Transfer"
+  }
+ ],
+ "close": {
+  "merke": [
+   "Zählschleife, Endlosschleife, bedingte Schleife.",
+   "n-Eck: n Wiederholungen, Drehwinkel 360° : n (Radgrad = Drehwinkel · 2).",
+   "Meine Blöcke = Unterprogramme: kurz, lesbar, an einer Stelle korrigieren, Teamarbeit."
+  ],
+  "praxis": "Teilt im Team eine Strecke in Etappen auf: Jede/r schreibt einen eigenen Block (z. B. drehe_links_90, vor_30). Setzt die Blöcke zu einem Lauf zusammen und testet ihn mit Fahrgestell 1."
+ }
+}

@@ -1,0 +1,553 @@
+{
+ "id": "L06",
+ "num": 6,
+ "file": "L06_Grundbefehle_und_Sequenz.html",
+ "title": "Grundbefehle: der Roboter lernt fahren",
+ "sub": "Programm, Befehl, Parameter, Sequenz – Strecken und Drehungen planen",
+ "lb": "LB 4 Programmierung",
+ "ds": "DS 6",
+ "lehrplan": "LB 4: programmieren blockorientiert Bewegungsabläufe als Sequenz",
+ "goals": [
+  "Programm, Befehl, Parameter und Sequenz erklären",
+  "Fahrbefehle mit Strecken und Drehungen planen",
+  "Programme als Struktogramm darstellen"
+ ],
+ "lego": {
+  "text": "LEGO-Lektion „Trainingslager 1: Herumfahren“ (einfaches Fahrgestell ohne Sensoren)",
+  "href": "https://education.lego.com/de-de/lessons/prime-competition-ready/training-camp-1-driving-around/"
+ },
+ "read": {
+  "kap": "6",
+  "title": "Blockorientiert programmieren: Grundbefehle",
+  "pages": "12–13",
+  "page": 12,
+  "sections": [
+   "6.1 Grundbegriffe (Tabelle)",
+   "6.2 Die wichtigsten Blöcke (Tabelle)",
+   "6.3 Wege planen – mit dem Beispielprogramm oben auf S. 13"
+  ],
+  "skip": "Die Zeile „Motoren: A fahre ↺ links für 90 Grad (Gabel)“ in 6.2 gehört zum erweiterten Fahrgestell – Fahrgestell 1 hat keinen Motor an A.",
+  "focus": [
+   "Was ist ein Parameter – welche Parameter hat „bewege vorwärts für 10 cm“?",
+   "Wie dreht man auf der Stelle nach links bzw. rechts?",
+   "Wie plant man einen Weg, bevor man programmiert?"
+  ]
+ },
+ "check": [
+  {
+   "id": "c1",
+   "type": "match",
+   "q": "Ordne die Grundbegriffe zu.",
+   "rows": [
+    [
+     "Programm",
+     "Folge von Anweisungen"
+    ],
+    [
+     "Befehl (Block)",
+     "eine Anweisung"
+    ],
+    [
+     "Parameter",
+     "legt den Befehl genauer fest"
+    ],
+    [
+     "Sequenz",
+     "Befehle laufen nacheinander"
+    ]
+   ],
+   "hint": [
+    "Tabelle 6.1, Spalte „Bedeutung“."
+   ],
+   "ref": "S. 12 · 6.1",
+   "tag": "Grundbegriffe"
+  },
+  {
+   "id": "c2",
+   "type": "order",
+   "q": "Bringe die Blöcke in die Reihenfolge des Beispielprogramms im Skript (oben auf S. 13).",
+   "items": [
+    "bewege vorwärts für 98 cm",
+    "bewege mit Lenkung −100 für 180 Grad",
+    "bewege vorwärts für 68 cm",
+    "bewege mit Lenkung 100 für 180 Grad",
+    "bewege vorwärts für 40 cm"
+   ],
+   "hint": [
+    "Das Programm beginnt mit der längsten Strecke.",
+    "Zuerst kommt die Linksdrehung, dann die Rechtsdrehung."
+   ],
+   "ref": "S. 13 · 6.3",
+   "tag": "Beispielprogramm-Reihenfolge"
+  },
+  {
+   "id": "c3",
+   "type": "multi",
+   "q": "Welche drei Parameter hat der Block „bewege vorwärts für 10 cm“?",
+   "opts": [
+    "Richtung",
+    "Wert",
+    "Einheit",
+    "Port",
+    "Farbe",
+    "Lautstärke"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "hint": [
+    "Schau in die Tabelle 6.1, Zeile „Parameter“."
+   ],
+   "ref": "S. 12 · 6.1",
+   "tag": "Parameter"
+  },
+  {
+   "id": "c4",
+   "type": "mc",
+   "q": "Was ist der Unterschied zwischen „bewege für 10 cm“ und „starte Bewegung“?",
+   "opts": [
+    "„für 10 cm“ endet von selbst – „starte Bewegung“ fährt, bis „stoppe Bewegung“ kommt.",
+    "Es gibt keinen Unterschied.",
+    "„starte Bewegung“ fährt immer genau 10 cm.",
+    "„bewege für 10 cm“ fährt rückwärts."
+   ],
+   "a": 0,
+   "hint": [
+    "Tabelle 6.2: „fahren ohne festes Ende“."
+   ],
+   "ref": "S. 12 · 6.2",
+   "tag": "starte-vs-bewege"
+  },
+  {
+   "id": "c5",
+   "type": "mc",
+   "q": "Was bewirkt „bewege mit Lenkung −100 für 180 Grad“?",
+   "opts": [
+    "eine Drehung auf der Stelle um 90° nach links",
+    "eine Drehung um 180° nach rechts",
+    "180 cm geradeaus",
+    "eine leichte Linkskurve"
+   ],
+   "a": 0,
+   "hint": [
+    "Tabelle 6.2: Lenkung 100 = rechts, −100 = links.",
+    "180 Radgrad – erinnere dich an 3.2."
+   ],
+   "ref": "S. 12 · 6.2",
+   "tag": "Lenkung-minus100"
+  },
+  {
+   "id": "c6",
+   "type": "num",
+   "q": "Wie viele Radgrad braucht eine Drehung um 45° auf der Stelle?",
+   "a": 90,
+   "hint": [
+    "90° Drehung = 180 Radgrad."
+   ],
+   "ref": "S. 7 · 3.2 / S. 13",
+   "sol": "45° ist die Hälfte von 90° → 90 Radgrad",
+   "tag": "Radgrad-45",
+   "unit": "Radgrad",
+   "tol": 1
+  },
+  {
+   "id": "c7",
+   "type": "mc",
+   "q": "Wie heißt die Darstellung, die die Abfolge eines Programms als Kästen zeigt?",
+   "opts": [
+    "Struktogramm (Nassi-Shneiderman-Diagramm)",
+    "Schaltplan",
+    "Säulendiagramm",
+    "Bauanleitung"
+   ],
+   "a": 0,
+   "hint": [
+    "Lies 6.3."
+   ],
+   "ref": "S. 12 · 6.3",
+   "tag": "Struktogramm"
+  },
+  {
+   "id": "c8",
+   "type": "cloze",
+   "q": "Fülle die Lücken.",
+   "text": "Bevor man programmiert, zeichnet man den Weg auf die [[0]], misst [[1]] und Winkel und schreibt dann das Programm. Mit „setze Bewegungsgeschwindigkeit auf 50 %“ legt man das [[2]] fest.",
+   "gaps": [
+    {
+     "opts": [
+      "Matte",
+      "Tafel",
+      "Hand"
+     ],
+     "a": 0
+    },
+    {
+     "opts": [
+      "Strecken",
+      "Farben",
+      "Zeiten"
+     ],
+     "a": 0
+    },
+    {
+     "opts": [
+      "Tempo",
+      "Ziel",
+      "Port"
+     ],
+     "a": 0
+    }
+   ],
+   "hint": [
+    "Lies 6.3 und die Zeile „setze Bewegungsgeschwindigkeit“ in 6.2."
+   ],
+   "ref": "S. 12 · 6.2/6.3",
+   "tag": "Wege-planen"
+  }
+ ],
+ "deep": [
+  {
+   "id": "v1",
+   "type": "sim",
+   "q": "Im Lenkungs-Simulator siehst du, wie schnell sich linkes und rechtes Rad drehen und welche Spur der Roboter fährt.",
+   "widget": "steer",
+   "cfg": {
+    "s": 0
+   },
+   "predict": {
+    "id": "v1p",
+    "type": "mc",
+    "q": "Was passiert bei Lenkung 50?",
+    "opts": [
+     "leichte Kurve nach rechts",
+     "Drehung um das stehende rechte Rad",
+     "Drehung auf der Stelle",
+     "geradeaus"
+    ],
+    "a": 1,
+    "hint": [],
+    "ref": "",
+    "cmp": true
+   },
+   "goal": {
+    "text": "Probiere Lenkung 0, 30, 50 und 100 aus. Finde zum Schluss die Lenkung, bei der sich der Roboter auf der Stelle nach links dreht.",
+    "cond": "s.s===-100",
+    "rec": "'Lenkung −100: links ' + s.vl + ' %, rechts ' + s.vr + ' %'"
+   },
+   "explain": {
+    "id": "v1x",
+    "type": "mc",
+    "q": "Warum dreht sich der Roboter bei Lenkung −100 auf der Stelle?",
+    "opts": [
+     "Die Räder drehen gleich schnell in entgegengesetzte Richtungen.",
+     "Ein Rad steht still.",
+     "Beide Räder drehen vorwärts.",
+     "Der Motor C ist ausgeschaltet."
+    ],
+    "a": 0,
+    "hint": [
+     "Lies die Radgeschwindigkeiten im Simulator ab."
+    ],
+    "ref": "S. 12 · 6.2",
+    "tag": "Drehung-Stelle"
+   },
+   "tag": "Lenkung",
+   "ref": "S. 12 · 6.2",
+   "paper": {
+    "obs": [
+     "Lenkung",
+     "linkes Rad %",
+     "rechtes Rad %",
+     "Fahrspur"
+    ],
+    "rows": [
+     "0",
+     "30",
+     "50",
+     "100",
+     "−100"
+    ]
+   }
+  },
+  {
+   "id": "v2",
+   "type": "spike",
+   "q": "Fahre 30 cm vorwärts, warte 2 Sekunden und fahre 30 cm zurück.",
+   "title": "Vor – Pause – zurück",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "marks": [
+      {
+       "x": 50,
+       "y": 57,
+       "label": "30 cm"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57
+    },
+    "starter": [
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 30,
+       "unit": "cm"
+      }
+     }
+    ],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep"
+    ],
+    "solution": [
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 30,
+       "unit": "cm"
+      }
+     },
+     {
+      "t": "ct_wait",
+      "a": {
+       "n": 2
+      }
+     },
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "rückwärts",
+       "n": 30,
+       "unit": "cm"
+      }
+     }
+    ],
+    "check": "ok(passed(50, 57, 3), '30 cm vorwärts gefahren', 'Der Roboter kommt nicht 30 cm weit');ok(near(20, 57, 3), 'zurück am Start', 'Der Roboter ist nicht zurück am Start');ok(uses(P, 'ct_wait'), 'Pause eingebaut', 'Es fehlt die Pause (warte …)');",
+    "hints": [
+     "Die Pause findest du unter „Steuerung“: warte 1 Sekunden – ändere die Zahl.",
+     "Für den Rückweg: im Block „bewege“ die Richtung auf rückwärts stellen."
+    ]
+   },
+   "tag": "Vor-Pause-zurueck",
+   "ref": "S. 12 · 6.2",
+   "lvl": "Basis"
+  },
+  {
+   "id": "v3",
+   "type": "spike",
+   "q": "Fahre 50 cm geradeaus, drehe dich auf der Stelle um 90° nach rechts und fahre 30 cm ins blaue Ziel.",
+   "title": "Ab ins Ziel",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        62,
+        18,
+        78,
+        34
+       ],
+       "c": "blau",
+       "name": "Ziel"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57
+    },
+    "starter": [
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 50,
+       "unit": "cm"
+      }
+     }
+    ],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep"
+    ],
+    "solution": [
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 50,
+       "unit": "cm"
+      }
+     },
+     {
+      "t": "mv_steer",
+      "a": {
+       "s": 100,
+       "n": 180,
+       "unit": "Grad"
+      }
+     },
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 30,
+       "unit": "cm"
+      }
+     }
+    ],
+    "check": "ok(inRect([62,18,78,34]), 'Roboter steht im Ziel', 'Der Roboter steht nicht im blauen Ziel');",
+    "hints": [
+     "Drehen auf der Stelle: „bewege mit Lenkung 100 für 180 Grad“. Die 180 sind Radgrad, nicht Roboter-Grad!",
+     "Bei einer 90°-Drehung legt jedes Rad ¼ eines Kreises mit 11,2 cm Durchmesser zurück ≈ 8,8 cm ≈ 180 Radgrad."
+    ]
+   },
+   "tag": "Ab-ins-Ziel",
+   "ref": "S. 12 · 6.2",
+   "lvl": "Basis"
+  },
+  {
+   "id": "v4",
+   "type": "spike",
+   "q": "Plane die Strecke selbst (Raster: 10 cm) und parke den Roboter in der grünen Garage. Zeichne vorher den Weg und das Struktogramm auf Papier.",
+   "title": "Einparken in die Garage",
+   "ex": {
+    "world": {
+     "size": [
+      200,
+      115
+     ],
+     "start": [
+      5,
+      40,
+      40,
+      75
+     ],
+     "zones": [
+      {
+       "r": [
+        150,
+        70,
+        190,
+        105
+       ],
+       "c": "grün",
+       "name": "Garage"
+      }
+     ]
+    },
+    "robot": {
+     "color": false,
+     "dist": false,
+     "force": false,
+     "x": 20,
+     "y": 57
+    },
+    "starter": [],
+    "palette": [
+     "mv_move",
+     "mv_steer",
+     "mv_start",
+     "mv_startst",
+     "mv_stop",
+     "mv_speed",
+     "ct_wait",
+     "li_write",
+     "li_center",
+     "so_beep"
+    ],
+    "solution": [
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 150,
+       "unit": "cm"
+      }
+     },
+     {
+      "t": "mv_steer",
+      "a": {
+       "s": -100,
+       "n": 180,
+       "unit": "Grad"
+      }
+     },
+     {
+      "t": "mv_move",
+      "a": {
+       "dir": "vorwärts",
+       "n": 30,
+       "unit": "cm"
+      }
+     }
+    ],
+    "check": "ok(inRect([150,70,190,105]), 'eingeparkt!', 'Der Roboter steht nicht in der Garage');",
+    "hints": [
+     "Linksdrehung: Lenkung −100.",
+     "Die Garage liegt bei x = 150 … 190 cm und y = 70 … 105 cm; der Roboter startet bei (20 | 57)."
+    ]
+   },
+   "tag": "Garage",
+   "ref": "S. 12 · 6.3",
+   "lvl": "Transfer"
+  }
+ ],
+ "close": {
+  "merke": [
+   "Programm = Folge von Befehlen; Parameter legen einen Befehl genauer fest.",
+   "„bewege … für“ endet von selbst, „starte Bewegung“ braucht „stoppe Bewegung“.",
+   "Lenkung 100 = auf der Stelle rechts, −100 = links; 90° = 180 Radgrad.",
+   "Erst planen (Weg, Strecken, Winkel), dann programmieren."
+  ],
+  "praxis": "Übertrage „Ab ins Ziel“ auf Fahrgestell 1 und miss, wie weit der echte Roboter vom Ziel entfernt hält. Woran könnte die Abweichung liegen?"
+ }
+}
