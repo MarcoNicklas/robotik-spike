@@ -356,9 +356,60 @@ def build_moodle_xml():
     json.dump(plan, open(os.path.join(ROOT, "dist/mebis/kursplan.json"), "w", encoding="utf8"), ensure_ascii=False, indent=1)
 
 
+def build_ln_mebis():
+    """Leistungsnachweise als mebis-Aufgaben: Beschreibung (HTML) + Bewertungsrichtlinie, aus derselben Quelle wie die Webseite."""
+    ln = json.load(open(os.path.join(ROOT, "content/ln_fahrgestell1.json"), encoding="utf8"))
+    lnd = open(os.path.join(ROOT, "assets/ln-data.js"), encoding="utf8").read()
+    reflect_q = json.loads(lnd[lnd.index("{"):lnd.rindex("}") + 1])["reflect"]
+    byk = {L["id"]: L for L in LESSONS}
+    out = os.path.join(ROOT, "dist/mebis/leistungsnachweise")
+    os.makedirs(out, exist_ok=True)
+    plan = []
+    for x in ln:
+        h = [f'<p><b>{e(x["kind"].capitalize())} · {e(x["lb"])} · {x["minutes"]} Minuten · {x["window"]}</b>'
+             + (' · Gruppenarbeit (2–3 Personen), jede Person gibt ab' if x["group"] else ' · Einzelarbeit') + '</p>',
+             f'<p>{e(x["intro"])}</p>',
+             '<p><b>Voraussetzung:</b> Vertiefung abgeschlossen in ' + ", ".join(f'{k} {e(byk[k]["title"])}' for k in x["req"]) + '. Dann öffnet sich diese Aufgabe.</p>',
+             ('<h4>So läuft es ab</h4><ol><li>Eure Lehrkraft lost eurer Gruppe einen Werkstattroboter zu.</li>'
+              '<li>Findet und behebt die drei Fehler und füllt das Fehlerprotokoll aus.</li>'
+              '<li>Präsentiert eure Fehlersuche; jede Person beantwortet eine Einzelfrage.</li>'
+              '<li>Jede Person gibt das Fehlerprotokoll unten ab.</li></ol>' if x["group"] else
+              '<h4>So läuft es ab</h4><ol><li>Deine Lehrkraft lost dir eine Variante zu (oder ihr zieht sie im Unterricht).</li>'
+              '<li>Löse die Aufgabe mit deinem Fahrgestell 1.</li>'
+              + ('<li>Erstelle dein Handlungsprodukt.</li>' if x["product"] else '')
+              + ('<li>Schreibe deine Reflexion.</li>' if x["reflect"] else '')
+              + '<li>Gib unten ab und führe deiner Lehrkraft den Roboter vor.</li></ol>'),
+             '<h4>Varianten</h4>']
+        for v in x["variants"]:
+            h.append(f'<p><b>Variante {e(v["id"])}: {e(v["title"])}</b><br>{e(v["text"])}</p><ul>' + "".join(f'<li>☐ {e(c)}</li>' for c in v["checks"]) + '</ul>')
+        if x["product"]:
+            p = dict(x["product"])  # Web-Formulierungen an die mebis-Abgabe anpassen
+            p["choices"] = [c.replace(" (wird unten ausgefüllt)", "") for c in p["choices"]]
+            p["text"] = p["text"].replace("Deine Mappe entsteht direkt auf dieser Seite und landet in der Abgabe-PDF. Ergänzend kannst du Fotos verlinken.",
+                                          "Deine Mappe schreibst du in das Textfeld der Abgabe. Ergänzend kannst du Fotos hochladen.")
+            h.append(f'<h4>{e(p["label"])}</h4><p>Wähle: ' + " oder ".join(e(c) for c in p["choices"]) + f'.</p><p>{e(p["text"])}</p>')
+        h.append('<h4>Das gibst du ab</h4><ul><li><b>Variante</b> (Buchstabe/Nummer)</li>')
+        for f in x["fields"]:
+            h.append(f'<li><b>{e(f["label"])}</b>' + (f' – als Tabelle mit den Spalten {", ".join(e(c) for c in f["cols"])}' if f["type"] == "table" else '') + '</li>')
+        if x["product"]:
+            h.append('<li><b>Dein Handlungsprodukt</b> als Datei (Video, Bilder, PDF) oder als Link (OneDrive: „Teilen“ → „Link kopieren“)</li>')
+        h.append('<li>Optional: Fotos (z. B. von den gefundenen Fehlern)</li>' if x["group"] else '<li>Optional: Foto oder Screenshot deines Programms</li>')
+        if x["reflect"]:
+            h.append('<li><b>Reflexion:</b><ol>' + "".join(f'<li>{e(q)}</li>' for q in reflect_q) + '</ol></li>')
+        h.append('</ul><p>Schreibe die Texte direkt in das Textfeld der Abgabe; Dateien lädst du darunter hoch.</p>')
+        h.append(f'<h4>Bewertung ({x["max"]} Punkte)</h4><table border="1" cellpadding="4"><tr><th>Kriterium</th><th>Punkte</th></tr>'
+                 + "".join(f'<tr><td>{e(c)}</td><td>{p}</td></tr>' for c, p in x["rubric"]) + '</table>')
+        html_desc = "\n".join(h)
+        open(os.path.join(out, f'LN{x["n"]}_{x["title"]}.html'), "w", encoding="utf8").write(html_desc)
+        plan.append({"n": x["n"], "name": f'Leistungsnachweis {x["n"]}: {x["title"]} ({x["kind"]})', "max": x["max"], "req": x["req"],
+                     "rubric": x["rubric"], "group": x["group"], "html": html_desc})
+    json.dump(plan, open(os.path.join(out, "ln_plan.json"), "w", encoding="utf8"), ensure_ascii=False, indent=1)
+
+
 if __name__ == "__main__":
     build_web()
     if "--web" not in sys.argv:
         build_scorm()
         build_moodle_xml()
+        build_ln_mebis()
     print("Fertig:", len(LESSONS), "Lektionen")

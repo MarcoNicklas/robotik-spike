@@ -65,6 +65,10 @@ C.push(table([3300, 6338], [
 ]));
 C.push(p([b("Bewertungslogik Vertiefung: "), t("Aufgabe gelöst ohne Lösungshilfe = 1 Punkt; im 2. Versuch = ½ Punkt; mit angezeigter Lösung = 0 Punkte, gilt aber als bearbeitet. Die Lektion ist abgeschlossen, wenn alle Pflichtaufgaben bearbeitet sind.")]));
 
+C.push(h2("Leistungsnachweise in mebis"));
+C.push(p([t("Im Abschnitt „Leistungsnachweise“ stehen drei mebis-Aufgaben: LN 1 Einparkhilfe (30 P., öffnet nach Vertiefung L08), LN 3 Fehlerdetektive (20 P., nach L11), LN 2 Missionsbereit (30 P., nach L13). Jede enthält alle Varianten mit Checkliste, Handlungsprodukt, Abgabeliste, Reflexionsfragen und Punkteverteilung (Text aus dist/mebis/leistungsnachweise). Abgabe: Texteingabe plus bis zu 20 Dateien (je 100 MB), erst als Entwurf, dann „Abgeben“. Bewertet wird mit einer Bewertungsrichtlinie (Kriterien und Höchstpunkte wie auf der Webseite, mit vorbereiteten Kommentaren). Kein Abgabetermin gesetzt – bei Bedarf unter Einstellungen → Verfügbarkeit eintragen. Die Variante lost die Lehrkraft zu (auf der Webseite geschieht das automatisch).")]));
+C.push(p([b("Hinweis: "), t("Die Leistungsnachweise wurden direkt im mebis-Kurs angelegt; die Kurssicherung (.mbz) enthält sie nicht. Bei einem Neuimport die drei Aufgaben wie oben beschrieben ergänzen oder den fertigen Kurs über „Kurs wiederverwenden“ kopieren.")]));
+
 C.push(h1("5  Was sich geändert hat"));
 ["Nur noch Fahrgestell 1 (Hub, Motoren C/D, ohne Sensoren). Simulator kennt jetzt Fahrgestell 1: keine Farb-/Abstands-/Kraftsensoren, Anzeige der Motor-Drehwinkel und des Timers.",
  "14 statt 16 Lektionen. Neu: L08 „Warten und Verzweigen“ (Timer, Gyro, Variablen), L12 „Missionen planen“ (Schieben statt Gabel), L13 „Robot-Game“ mit Fahrgestell 1. Alte Adressen leiten weiter.",
