@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Lehrkraftzugang · SPIKE Prime</title>
+  <link rel="stylesheet" href="./styles.css">
+    <script defer src="./simulation.js"></script>
+    <script defer src="./aufgaben-vorlage.js"></script>
+    <script defer src="./pruefungsdaten.js"></script>
+    <script defer src="./pruefung.js"></script>
+</head>
+<body data-role="teacher">
+  <header class="site-header"><div class="site-header-inner">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Robotik · SPIKE Prime</span></div>
+    <div class="header-end"><span class="header-role">Lehrkraftzugang</span><button data-lock type="button" hidden>Ansicht schließen</button></div>
+  </div></header>
+  <main><section class="gate" data-access-gate aria-labelledby="gate-title">
+    <div class="gate-form">
+      <p class="eyebrow">Lehrkraft</p>
+      <h1 id="gate-title">Zugang für Lehrkräfte</h1>
+      <p class="lead">Öffne den Prüfungsplan mit den 16 Aufgabencodes, der Vorbereitung der Fahrmatte und dem Bewertungsraster.</p>
+      <form class="access-form" data-access-form>
+        <label for="access-code">Lehrkraft-Code</label>
+        <div class="access-actions">
+          <input id="access-code" type="password" spellcheck="false" autocapitalize="characters" autocomplete="off" required maxlength="60" placeholder="6 Gruppen à 4 Zeichen" aria-describedby="code-hint">
+          <button class="primary" type="submit">Lehrkraftansicht öffnen</button>
+        </div>
+        <p class="access-hint" id="code-hint">Du kannst den Code mit oder ohne Bindestriche eingeben.</p>
+      </form>
+      <p data-access-message class="notice" role="alert" hidden></p>
+      <noscript>Aktiviere JavaScript, um die Aufgabe zu öffnen.</noscript>
+    </div>
+    <aside class="gate-aside">
+      <div><h2>Zeitrahmen je Schüler</h2></div>
+      <div class="timing"><div><strong>10 Min.</strong><span>Programmieren</span></div><div><strong>5 Min.</strong><span>Einzelvorführung</span></div></div>
+      <p>Fahrmotoren, Hub-Anzeige und Hub-Lautsprecher. Die Prüfung findet ohne Sensoren statt.</p>
+    </aside>
+  </section>
+  <div data-access-result hidden></div>
+  <template data-teacher-template><section class="teacher-intro">
+  <div>
+    <h1>Lehrkraftansicht</h1>
+    <p class="lead">Codes ausgeben, Prüfungszeiten planen und die Vorführung bewerten.</p>
+  </div>
+  <div class="teacher-actions">
+    <a class="button" href="./index.html" target="_blank" rel="noopener">Schülerlink öffnen</a>
+    <button type="button" data-copy-link>Schülerlink kopieren</button>
+    <button class="primary" type="button" data-print>Übersicht drucken</button>
+  </div>
+  <p class="notice" data-teacher-feedback role="status" hidden></p>
+</section>
+
+<div class="teacher-grid">
+  <section class="panel" aria-labelledby="setup-title">
+    <h2 id="setup-title">Fahrmatte vorbereiten</h2>
+    <ol class="setup-list">
+      <li>Nutze die lange freie Fahrgasse zwischen dem Startfeld und dem roten Feld. Die Mitte des Startfelds ist <strong>A</strong>, die Mitte des roten Felds <strong>E</strong>.</li>
+      <li>Miss die gerade Strecke von A nach E und teile sie in vier gleich lange Abschnitte. Markiere <strong>B, C und D</strong> mit flachem Klebeband auf derselben Linie. Beschrifte alle fünf Marken.</li>
+      <li>Teile allen dieselbe gemessene Abschnittslänge mit. Prüfe vorher mit dem Prüfungsfahrzeug den Platz für die Drehung an allen fünf Marken.</li>
+      <li>Stelle das Fahrzeug bei der Vorführung mit seiner Mitte auf die Startmarke und der Vorderseite zum Ziel. Verwende für alle dasselbe Fahrgestell und dieselbe Motorbelegung.</li>
+    </ol>
+    <p class="hint">Auf der Matte zeigt sich die tatsächliche Strecke in Zentimetern. Die Simulation zeigt den Ablauf in einer schematischen Draufsicht.</p>
+  </section>
+  <section class="panel" aria-labelledby="rubric-title">
+    <h2 id="rubric-title">Bewertung · 10 Punkte</h2>
+    <ul class="rubric">
+      <li><span>Richtiges Wort zu Beginn auf der Hub-Anzeige</span><strong>2</strong></li>
+      <li><span>Gerade vorwärts von der Startmarke zur Zielmarke</span><strong>2</strong></li>
+      <li><span>Roboter hält mit seiner Mitte an der Zielmarke</span><strong>2</strong></li>
+      <li><span>Genau eine 90°-Drehung im Stand in die richtige Richtung</span><strong>2</strong></li>
+      <li><span>Kurzer Hubton nach der Drehung im Stillstand</span><strong>2</strong></li>
+    </ul>
+    <p class="hint">Je Kriterium 2 Punkte bei Erfüllung, 1 bei Teilerfüllung, 0 bei Ausbleiben. Vorschlag für volle Punkte bei Halt und Drehung: bis zu 3&nbsp;cm Abstand zur Zielmarke und bis zu 15° Winkelabweichung. Lege die für alle geltenden Toleranzen vor der Prüfung fest.</p>
+  </section>
+</div>
+
+<section class="panel schedule" aria-labelledby="schedule-title">
+  <h2 id="schedule-title">Prüfungsplan und Codes</h2>
+  <p>Gib jedem Schüler den Code zum vorgesehenen Zeitpunkt. Programmiert wird am eigenen Gerät. Die Fahrmatte ist für die Einzelvorführung reserviert.</p>
+  <div class="schedule-settings">
+    <label>Beginn (optional)<input type="time" data-start-time></label>
+    <label>Taktung<select data-schedule-mode>
+      <option value="staggered">00, 05, 15, 20 …</option>
+      <option value="continuous">Alle 5 Minuten</option>
+    </select></label>
+  </div>
+  <p class="schedule-summary" data-schedule-summary></p>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Prüfungsplan mit Aufgabencodes">
+    <table>
+      <thead><tr><th scope="col">Aufgabe</th><th scope="col">Code</th><th scope="col">Fahrt · Drehung</th><th scope="col">Wort</th><th scope="col">Code ausgeben</th><th scope="col">Vorführung</th></tr></thead>
+      <tbody data-schedule-rows></tbody>
+    </table>
+  </div>
+  <p class="hint">Mit einer Prüfstation dauert die Prüfung aller 16 Schüler 125 Minuten bei der Staffelung oben oder 90 Minuten im durchgehenden Fünfminutentakt. Im durchgehenden Takt sind zwei Gruppen à acht Schüler mit jeweils 50 Minuten möglich.</p>
+</section>
+<dialog data-preview-dialog class="preview-dialog">
+  <div class="preview-top"><button type="button" data-close-preview>Vorschau schließen</button></div>
+  <div data-preview-content></div>
+</dialog>
+</template></main>
+  <footer class="site-footer"><span>SPIKE Prime</span><span>Robotik · Leistungsnachweis</span></footer>
+</body>
+</html>
