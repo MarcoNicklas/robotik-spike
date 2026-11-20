@@ -9,7 +9,8 @@
     route: '#087768',
     reverse: '#284aab',
     start: '#065b4f',
-    target: '#9a4b13',
+    waypoint: '#9a4b13',
+    target: '#543889',
     storage: '#c9d2dc',
     storageLine: '#a6b4c3',
   };
@@ -27,6 +28,11 @@
     ['D', 1.5, 2.25],
     ['E', 1.5, 0.5],
   ];
+  const markerRoles = {
+    start: { title: 'Start', color: colors.start },
+    waypoint: { title: 'Zwischenstopp', color: colors.waypoint },
+    target: { title: 'Ende', color: colors.target },
+  };
 
   function point(x, y) {
     return [origin[0] + x * fieldSize, origin[1] + y * fieldSize];
@@ -132,34 +138,37 @@
     ctx.restore();
   }
 
+  function drawLeg(ctx, origin, destination, heading, offset, color) {
+    const [fromX, fromY] = point(...origin);
+    const [toX, toY] = point(...destination);
+    const line = [[fromX + offset, fromY], [toX + offset, toY]];
+    stroke(ctx, line, '#fff', 10);
+    stroke(ctx, line, color, 5);
+    arrow(ctx, fromX + offset, fromY + (toY - fromY) * 0.35, heading, color);
+  }
+
   function drawRoute(ctx, variant) {
-    const from = point(...variant.start);
-    const to = point(...variant.target);
     ctx.save();
     ctx.lineCap = 'round';
-    stroke(ctx, [from, to], '#fff', 14);
-    stroke(ctx, [from, to], '#70a9a1', 6);
-    const x = (from[0] + to[0]) / 2;
-    const direction = to[1] - from[1];
-    arrow(ctx, x, from[1] + direction * 0.38, variant.heading, colors.route);
-    arrow(ctx, x, from[1] + direction * 0.62, variant.heading + 180, colors.reverse);
+    drawLeg(ctx, variant.start, variant.waypoint, variant.heading, -9, colors.route);
+    drawLeg(ctx, variant.waypoint, variant.target, variant.heading + 180, 9, colors.reverse);
     ctx.restore();
   }
 
   function marker(ctx, x, y, letter, role) {
     const active = Boolean(role);
-    const color = role === 'Start' ? colors.start : colors.target;
+    const color = role?.color ?? colors.muted;
     const [px, py] = point(x, y);
     ctx.beginPath();
     ctx.arc(px, py, active ? 18 : 6, 0, Math.PI * 2);
-    ctx.fillStyle = active ? color : colors.muted;
+    ctx.fillStyle = color;
     ctx.fill();
     ctx.strokeStyle = '#fff';
     ctx.lineWidth = active ? 3 : 2;
     ctx.stroke();
-    if (active) label(ctx, role[0], px, py, { color: '#fff', size: 16 });
+    if (active) label(ctx, role.title[0], px, py, { color: '#fff', size: 16 });
 
-    const caption = active ? `${role} ${letter}` : letter;
+    const caption = active ? `${role.title} ${letter}` : letter;
     ctx.font = '700 14px system-ui, sans-serif';
     const left = px + (active ? 33 : 12);
     const width = ctx.measureText(caption).width + 16;
@@ -185,10 +194,8 @@
 
   function drawMarkers(ctx, variant) {
     for (const [letter, x, y] of marks) {
-      let role = '';
-      if (samePoint(x, y, variant.start)) role = 'Start';
-      if (samePoint(x, y, variant.target)) role = 'Zwischenstopp';
-      marker(ctx, x, y, letter, role);
+      const role = Object.keys(markerRoles).find((key) => samePoint(x, y, variant[key]));
+      marker(ctx, x, y, letter, markerRoles[role]);
     }
   }
 
@@ -221,23 +228,25 @@
   }
 
   function makePhases(variant) {
+    const { start, waypoint, target } = variant;
     const turnSide = variant.turn < 0 ? 'links' : 'rechts';
-    const distance = Math.hypot(variant.target[0] - variant.start[0], variant.target[1] - variant.start[1]);
+    const travelTime = (from, to) => 1200 * Math.hypot(to[0] - from[0], to[1] - from[1]);
     const phases = [
       { id: 'word', duration: 1200, text: `Anzeige „${variant.word}“` },
-      { id: 'drive', duration: 1200 * distance, text: `Vorwärts zu ${variant.targetLabel}` },
-      { id: 'stop', duration: 450, text: `Stopp auf ${variant.targetLabel}` },
-      { id: 'reverse', duration: 1200 * distance, text: `Rückwärts zu ${variant.startLabel}` },
-      { id: 'return-stop', duration: 450, text: `Stopp auf ${variant.startLabel}` },
-      { id: 'turn', duration: 950, text: `90° nach ${turnSide}` },
-      { id: 'tone', duration: 500, text: 'Kurzer Hubton' },
+      { id: 'drive', duration: travelTime(start, waypoint), from: start, to: waypoint, text: `Vorwärts zu ${variant.waypointLabel}` },
+      { id: 'stop', duration: 1000, from: waypoint, text: 'Zwischenhalt · 1 s' },
+      { id: 'reverse', duration: travelTime(waypoint, target), from: waypoint, to: target, text: `Rückwärts zu ${variant.targetLabel}` },
+      { id: 'end-stop', duration: 450, from: target, text: `Stopp auf ${variant.targetLabel}` },
+      { id: 'turn', duration: 950, from: target, text: `90° nach ${turnSide}` },
+      { id: 'tone', duration: 500, from: target, text: 'Kurzer Hubton' },
+      { id: 'done', duration: 0, from: target, text: `Fertig auf ${variant.targetLabel}` },
     ];
-    let start = 0;
+    let elapsed = 0;
     for (const phase of phases) {
-      phase.start = start;
-      start += phase.duration;
+      phase.start = elapsed;
+      elapsed += phase.duration;
     }
-    return [...phases, { id: 'done', start, duration: 0, text: `Fertig auf ${variant.startLabel}` }];
+    return phases;
   }
 
   globalThis.mountSimulation = function mountSimulation(root, variant) {
@@ -315,15 +324,14 @@
     function draw() {
       const phase = phases.findLast((candidate) => elapsed >= candidate.start);
       const phaseId = phase?.id ?? 'ready';
-      let distance = 0;
+      const progress = phase?.duration ? (elapsed - phase.start) / phase.duration : 0;
+      const from = phase?.from ?? variant.start;
+      const to = phase?.to ?? from;
       let turnProgress = 0;
-      if (phaseId === 'drive') distance = (elapsed - phase.start) / phase.duration;
-      if (phaseId === 'stop') distance = 1;
-      if (phaseId === 'reverse') distance = 1 - (elapsed - phase.start) / phase.duration;
-      if (phaseId === 'turn') turnProgress = (elapsed - phase.start) / phase.duration;
+      if (phaseId === 'turn') turnProgress = progress;
       if (['tone', 'done'].includes(phaseId)) turnProgress = 1;
-      const x = variant.start[0] + (variant.target[0] - variant.start[0]) * distance;
-      const y = variant.start[1] + (variant.target[1] - variant.start[1]) * distance;
+      const x = from[0] + (to[0] - from[0]) * progress;
+      const y = from[1] + (to[1] - from[1]) * progress;
       ctx.drawImage(base, 0, 0);
       drawRobot(ctx, x, y, variant.heading + variant.turn * turnProgress);
 
@@ -334,7 +342,7 @@
         if (phaseId === 'tone') {
           if (audio?.state === 'suspended' && !mute.checked) {
             audio.resume().then(() => {
-              if (previousPhase === 'tone' && elapsed === phase.start) tone();
+              if (previousPhase === 'tone') tone();
             }).catch(() => {});
           } else {
             tone();

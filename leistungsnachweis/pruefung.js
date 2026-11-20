@@ -150,15 +150,16 @@
       noticeText('Öffne diese Seite in einem aktuellen Browser über HTTPS.');
       return;
     }
-    const code = field.value.toUpperCase().replace(/[\s\-]/g, '');
-    if (code.length !== (role === 'teacher' ? 24 : 15) || !/^[A-Z2-9]+$/.test(code)) {
+    const teacher = role === 'teacher';
+    const code = teacher ? field.value.trim() : field.value.toUpperCase().replace(/[\s\-]/g, '');
+    if (!code || (!teacher && !/^[A-Z2-9]{15}$/.test(code))) {
       noticeText('Code prüfen und erneut eingeben.');
       return;
     }
     button.disabled = true;
     let payload;
     try {
-      const envelope = role === 'teacher' ? records.teacher : records.students[await selector(code)];
+      const envelope = teacher ? records.teacher : records.students[await selector(code)];
       if (!envelope || (fixedId && Number(fixedId) !== envelope.id)) throw new Error('Unbekannter Code');
       payload = await decrypt(envelope, code);
     } catch {
@@ -168,7 +169,7 @@
       return;
     }
     try {
-      if (role === 'teacher') showTeacher(payload);
+      if (teacher) showTeacher(payload);
       else showTask(result, payload);
       gate.hidden = true;
       result.hidden = false;

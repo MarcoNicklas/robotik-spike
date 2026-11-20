@@ -115,13 +115,14 @@ main:has(.task) { padding-top: clamp(1.25rem, 3vw, 2.2rem); }
   list-style: none; padding: .7rem 0 .15rem; margin: 0; font-size: .875rem;
 }
 .map-key li { display: flex; align-items: center; gap: .35rem; }
-.map-key-start, .map-key-target {
+.map-key-start, .map-key-target, .map-key-end {
   display: inline-grid; place-items: center;
   width: 1.25rem; height: 1.25rem; border: 1px solid currentColor;
   border-radius: 50%; font-size: .75rem; font-weight: 800;
 }
 .map-key-start { color: #065b4f; background: #e3f8ee; }
 .map-key-target { color: #9a4b13; background: #fff0dc; }
+.map-key-end { color: #543889; background: #f1ebfc; }
 .map-key-route, .map-key-return { color: #087768; }
 .map-key-return { color: #284aab; }
 .map-key-route::before, .map-key-return::before { content: '➝'; font-weight: 800; }
