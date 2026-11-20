@@ -151,7 +151,8 @@
       return;
     }
     const teacher = role === 'teacher';
-    const code = teacher ? field.value.trim() : field.value.toUpperCase().replace(/[\s\-]/g, '');
+    const enteredCode = field.value.trim().toUpperCase();
+    const code = teacher ? enteredCode : enteredCode.replace(/[\s\-]/g, '');
     if (!code || (!teacher && !/^[A-Z2-9]{15}$/.test(code))) {
       noticeText('Code prüfen und erneut eingeben.');
       return;
