@@ -7,6 +7,7 @@
     ink: '#15243b',
     muted: '#495d71',
     route: '#087768',
+    reverse: '#284aab',
     start: '#065b4f',
     target: '#9a4b13',
     storage: '#c9d2dc',
@@ -113,7 +114,7 @@
     });
   }
 
-  function arrow(ctx, x, y, heading) {
+  function arrow(ctx, x, y, heading, color) {
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(heading * Math.PI / 180);
@@ -122,7 +123,7 @@
     ctx.lineTo(9, 6);
     ctx.lineTo(-9, 6);
     ctx.closePath();
-    ctx.fillStyle = colors.route;
+    ctx.fillStyle = color;
     ctx.strokeStyle = '#fff';
     ctx.lineWidth = 3;
     ctx.lineJoin = 'round';
@@ -137,8 +138,11 @@
     ctx.save();
     ctx.lineCap = 'round';
     stroke(ctx, [from, to], '#fff', 14);
-    stroke(ctx, [from, to], colors.route, 7);
-    arrow(ctx, (from[0] + to[0]) / 2, (from[1] + to[1]) / 2, variant.heading);
+    stroke(ctx, [from, to], '#70a9a1', 6);
+    const x = (from[0] + to[0]) / 2;
+    const direction = to[1] - from[1];
+    arrow(ctx, x, from[1] + direction * 0.38, variant.heading, colors.route);
+    arrow(ctx, x, from[1] + direction * 0.62, variant.heading + 180, colors.reverse);
     ctx.restore();
   }
 
@@ -183,7 +187,7 @@
     for (const [letter, x, y] of marks) {
       let role = '';
       if (samePoint(x, y, variant.start)) role = 'Start';
-      if (samePoint(x, y, variant.target)) role = 'Ziel';
+      if (samePoint(x, y, variant.target)) role = 'Zwischenstopp';
       marker(ctx, x, y, letter, role);
     }
   }
@@ -220,18 +224,20 @@
     const turnSide = variant.turn < 0 ? 'links' : 'rechts';
     const distance = Math.hypot(variant.target[0] - variant.start[0], variant.target[1] - variant.start[1]);
     const phases = [
-      { id: 'word', duration: 1200, text: `Die Hub-Anzeige zeigt „${variant.word}“.` },
-      { id: 'drive', duration: 1200 * distance, text: `Der Roboter fährt geradeaus zu ${variant.targetLabel}.` },
-      { id: 'stop', duration: 450, text: 'Der Roboter hält am Ziel an.' },
-      { id: 'turn', duration: 950, text: `Der Roboter dreht am Ziel um 90° nach ${turnSide}.` },
-      { id: 'tone', duration: 500, text: 'Der Hub spielt am Ziel einen kurzen Ton.' },
+      { id: 'word', duration: 1200, text: `Anzeige „${variant.word}“` },
+      { id: 'drive', duration: 1200 * distance, text: `Vorwärts zu ${variant.targetLabel}` },
+      { id: 'stop', duration: 450, text: `Stopp auf ${variant.targetLabel}` },
+      { id: 'reverse', duration: 1200 * distance, text: `Rückwärts zu ${variant.startLabel}` },
+      { id: 'return-stop', duration: 450, text: `Stopp auf ${variant.startLabel}` },
+      { id: 'turn', duration: 950, text: `90° nach ${turnSide}` },
+      { id: 'tone', duration: 500, text: 'Kurzer Hubton' },
     ];
     let start = 0;
     for (const phase of phases) {
       phase.start = start;
       start += phase.duration;
     }
-    return [...phases, { id: 'done', start, duration: 0, text: 'Fertig. Der Roboter steht am Ziel.' }];
+    return [...phases, { id: 'done', start, duration: 0, text: `Fertig auf ${variant.startLabel}` }];
   }
 
   globalThis.mountSimulation = function mountSimulation(root, variant) {
@@ -312,7 +318,8 @@
       let distance = 0;
       let turnProgress = 0;
       if (phaseId === 'drive') distance = (elapsed - phase.start) / phase.duration;
-      if (['stop', 'turn', 'tone', 'done'].includes(phaseId)) distance = 1;
+      if (phaseId === 'stop') distance = 1;
+      if (phaseId === 'reverse') distance = 1 - (elapsed - phase.start) / phase.duration;
       if (phaseId === 'turn') turnProgress = (elapsed - phase.start) / phase.duration;
       if (['tone', 'done'].includes(phaseId)) turnProgress = 1;
       const x = variant.start[0] + (variant.target[0] - variant.start[0]) * distance;
@@ -322,7 +329,7 @@
 
       if (phaseId !== previousPhase) {
         display.textContent = phaseId === 'word' ? variant.word : '—';
-        status.textContent = phase?.text ?? 'Der Roboter steht am Start.';
+        status.textContent = phase?.text ?? 'Bereit';
         previousPhase = phaseId;
         if (phaseId === 'tone') {
           if (audio?.state === 'suspended' && !mute.checked) {

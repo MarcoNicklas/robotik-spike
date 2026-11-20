@@ -5,41 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Leistungsnachweis Robotik · SPIKE Prime</title>
-  <link rel="stylesheet" href="../styles.css">
-    <script defer src="../simulation.js"></script>
-    <script defer src="../aufgaben-vorlage.js"></script>
-    <script defer src="../pruefungsdaten.js"></script>
-    <script defer src="../pruefung.js"></script>
+  <link rel="stylesheet" href="../styles.css?v=4a159fea3182">
+    <script defer src="../simulation.js?v=4a159fea3182"></script>
+    <script defer src="../aufgaben-vorlage.js?v=4a159fea3182"></script>
+    <script defer src="../pruefungsdaten.js?v=4a159fea3182"></script>
+    <script defer src="../pruefung.js?v=4a159fea3182"></script>
 </head>
 <body data-role="student" data-variant="12">
   <header class="site-header"><div class="site-header-inner">
     <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Robotik · SPIKE Prime</span></div>
-    <div class="header-end"><span class="header-role">Schülerzugang</span><button data-lock type="button" hidden>Ansicht schließen</button></div>
+    <button data-lock type="button" hidden>Schließen</button>
   </div></header>
   <main><section class="gate" data-access-gate aria-labelledby="gate-title">
     <div class="gate-form">
-      <p class="eyebrow">Aufgabe 12</p>
-      <h1 id="gate-title">Leistungsnachweis Robotik</h1>
-      <p class="lead">Gib den Code deiner Lehrkraft ein. Damit öffnest du deine Aufgabe und die zugehörige Simulation auf der Fahrmatte.</p>
+      <h1 id="gate-title">Aufgabe 12</h1>
+      <p class="lead">10 Min. Programmieren · 5 Min. Vorführen</p>
       <form class="access-form" data-access-form>
-        <label for="access-code">Dein Aufgabencode</label>
+        <label for="access-code">Aufgabencode</label>
         <div class="access-actions">
-          <input id="access-code" type="password" spellcheck="false" autocapitalize="characters" autocomplete="off" required maxlength="60" placeholder="3 Gruppen à 5 Zeichen" aria-describedby="code-hint">
-          <button class="primary" type="submit">Aufgabe öffnen</button>
+          <input id="access-code" type="password" spellcheck="false" autocapitalize="characters" autocomplete="off" required maxlength="60">
+          <button class="primary" type="submit">Öffnen</button>
         </div>
-        <p class="access-hint" id="code-hint">Du kannst den Code mit oder ohne Bindestriche eingeben.</p>
       </form>
       <p data-access-message class="notice" role="alert" hidden></p>
-      <noscript>Aktiviere JavaScript, um die Aufgabe zu öffnen.</noscript>
+      <noscript>Zum Öffnen JavaScript aktivieren.</noscript>
     </div>
-    <aside class="gate-aside">
-      <div><h2>Dein Zeitrahmen</h2></div>
-      <div class="timing"><div><strong>10 Min.</strong><span>Programmieren</span></div><div><strong>5 Min.</strong><span>Einzelvorführung</span></div></div>
-      <p>Fahrmotoren, Hub-Anzeige und Hub-Lautsprecher. Die Prüfung findet ohne Sensoren statt.</p>
-    </aside>
   </section>
   <div data-access-result hidden></div>
   </main>
-  <footer class="site-footer"><span>SPIKE Prime</span><span>Robotik · Leistungsnachweis</span></footer>
 </body>
 </html>

@@ -134,9 +134,7 @@
         exam.textContent = time(minute + 10) + ' – ' + time(minute + 15);
       });
       const duration = minutesFor(times.length - 1) + 15;
-      summary.textContent = times.length + ' Einzelprüfungen · ' + duration +
-        ' Minuten insgesamt · je 10 Minuten Programmieren und 5 Minuten Vorführung' +
-        (start.value ? '' : ' · Zeiten ab Prüfungsbeginn');
+      summary.textContent = duration + ' Min. gesamt · je 10 Min. Programmieren + 5 Min. Vorführen';
     }
 
     start.addEventListener('change', updateTimes);
@@ -154,7 +152,7 @@
     }
     const code = field.value.toUpperCase().replace(/[\s\-]/g, '');
     if (code.length !== (role === 'teacher' ? 24 : 15) || !/^[A-Z2-9]+$/.test(code)) {
-      noticeText('Prüfe die Zeichen und die Länge deines Codes.');
+      noticeText('Code prüfen und erneut eingeben.');
       return;
     }
     button.disabled = true;
@@ -164,9 +162,7 @@
       if (!envelope || (fixedId && Number(fixedId) !== envelope.id)) throw new Error('Unbekannter Code');
       payload = await decrypt(envelope, code);
     } catch {
-      noticeText(role === 'teacher'
-        ? 'Prüfe den Lehrkraft-Code und versuche es erneut.'
-        : 'Dieser Code öffnet hier keine Aufgabe. Prüfe den Code und versuche es erneut.');
+      noticeText('Code prüfen und erneut eingeben.');
       field.select();
       button.disabled = false;
       return;
