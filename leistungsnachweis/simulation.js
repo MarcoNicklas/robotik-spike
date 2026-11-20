@@ -234,11 +234,11 @@
     const phases = [
       { id: 'word', duration: 1200, text: `Anzeige „${variant.word}“` },
       { id: 'drive', duration: travelTime(start, waypoint), from: start, to: waypoint, text: `Vorwärts zu ${variant.waypointLabel}` },
-      { id: 'stop', duration: 1000, from: waypoint, text: 'Zwischenhalt · 1 s' },
+      { id: 'stop', duration: 1000, from: waypoint, text: 'Zwischenhalt · 1 s · Hubton', sound: { frequency: variant.waypointTone ?? 660, seconds: 0.22 } },
       { id: 'reverse', duration: travelTime(waypoint, target), from: waypoint, to: target, text: `Rückwärts zu ${variant.targetLabel}` },
       { id: 'end-stop', duration: 450, from: target, text: `Stopp auf ${variant.targetLabel}` },
       { id: 'turn', duration: 950, from: target, text: `90° nach ${turnSide}` },
-      { id: 'tone', duration: 500, from: target, text: 'Kurzer Hubton' },
+      { id: 'tone', duration: 500, from: target, text: 'Kurzer Hubton', sound: { frequency: variant.tone ?? 440, seconds: 0.4 } },
       { id: 'done', duration: 0, from: target, text: `Fertig auf ${variant.targetLabel}` },
     ];
     let elapsed = 0;
@@ -282,43 +282,56 @@
     let previousPhase = 'ready';
     let audio;
     let oscillator;
+    let soundGeneration = 0;
 
     function prepareAudio() {
       const Audio = globalThis.AudioContext || globalThis.webkitAudioContext;
       if (!Audio || mute.checked) return;
       try {
         audio ??= new Audio();
-        if (audio.state === 'suspended') audio.resume().catch(() => {});
+        if (audio.state !== 'running') audio.resume().catch(() => {});
       } catch {
         // Playback remains usable when browser audio is unavailable.
       }
     }
 
     function stopTone() {
+      soundGeneration += 1;
       oscillator?.stop();
       oscillator = undefined;
     }
 
-    function tone() {
-      if (mute.checked || !audio || audio.state !== 'running') return;
-      stopTone();
+    function tone({ frequency, seconds }) {
       const node = audio.createOscillator();
       oscillator = node;
       const gain = audio.createGain();
-      node.frequency.value = Number(variant.tone) || 440;
+      node.frequency.value = frequency;
       node.connect(gain);
       gain.connect(audio.destination);
       const now = audio.currentTime;
       gain.gain.setValueAtTime(0.0001, now);
       gain.gain.exponentialRampToValueAtTime(0.16, now + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + seconds - 0.02);
       node.onended = () => {
         node.disconnect();
         gain.disconnect();
         if (oscillator === node) oscillator = undefined;
       };
       node.start(now);
-      node.stop(now + 0.4);
+      node.stop(now + seconds);
+    }
+
+    function playPhaseSound(sound) {
+      stopTone();
+      if (!sound || !audio || mute.checked) return;
+      const generation = soundGeneration;
+      function playIfCurrent() {
+        if (generation === soundGeneration && !mute.checked && scope.isConnected && audio.state === 'running') {
+          tone(sound);
+        }
+      }
+      if (audio.state === 'running') playIfCurrent();
+      else audio.resume().then(playIfCurrent).catch(() => {});
     }
 
     function draw() {
@@ -339,15 +352,7 @@
         display.textContent = phaseId === 'word' ? variant.word : '—';
         status.textContent = phase?.text ?? 'Bereit';
         previousPhase = phaseId;
-        if (phaseId === 'tone') {
-          if (audio?.state === 'suspended' && !mute.checked) {
-            audio.resume().then(() => {
-              if (previousPhase === 'tone') tone();
-            }).catch(() => {});
-          } else {
-            tone();
-          }
-        }
+        playPhaseSound(phase?.sound);
       }
       play.textContent = running ? 'Pausieren' : elapsed >= end ? 'Erneut abspielen' : 'Abspielen';
       step.disabled = elapsed >= end;
