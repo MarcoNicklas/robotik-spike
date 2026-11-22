@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Lehrkraftzugang · SPIKE Prime</title>
-  <link rel="stylesheet" href="./styles.css?v=861c5dd1bec9b8e0">
-    <script defer src="./simulation.js?v=861c5dd1bec9b8e0"></script>
-    <script defer src="./aufgaben-vorlage.js?v=861c5dd1bec9b8e0"></script>
-    <script defer src="./pruefungsdaten.js?v=861c5dd1bec9b8e0"></script>
-    <script defer src="./pruefung.js?v=861c5dd1bec9b8e0"></script>
+  <link rel="stylesheet" href="./styles.css?v=24e37a50e8f64698">
+    <script defer src="./simulation.js?v=24e37a50e8f64698"></script>
+    <script defer src="./aufgaben-vorlage.js?v=24e37a50e8f64698"></script>
+    <script defer src="./pruefungsdaten.js?v=24e37a50e8f64698"></script>
+    <script defer src="./pruefung.js?v=24e37a50e8f64698"></script>
 </head>
 <body data-role="teacher">
   <header class="site-header"><div class="site-header-inner">
@@ -48,8 +48,9 @@
     <ul class="setup-list">
       <li><strong>A</strong> ist die Mitte des Startfelds, <strong>E</strong> die Mitte des roten Felds.</li>
       <li><strong>B, C, D</strong> teilen A–E in vier gleich lange Abschnitte.</li>
-      <li>Auf der Querlinie durch C liegen <strong>L1/R1</strong> je ¼ Abschnitt von C entfernt, <strong>L2/R2</strong> je ½ Abschnitt. In der Draufsicht liegt L links und R rechts.</li>
-      <li>Platz für die Drehung und beide Zielspuren vor Ort prüfen.</li>
+      <li>Quer zu <strong>C</strong> liegen <strong>L1/R1</strong> je ¼ und <strong>L2/R2</strong> je ½ Abschnitt entfernt.</li>
+      <li>Quer zu <strong>B</strong> liegt <strong>L3</strong> ¼ Abschnitt links, quer zu <strong>D</strong> liegt <strong>R3</strong> ½ Abschnitt rechts. L und R beziehen sich auf die Draufsicht.</li>
+      <li>Platz für die Drehungen und Zielspuren vor Ort prüfen.</li>
     </ul>
   </section>
   <section class="panel" aria-labelledby="rubric-title">
@@ -57,8 +58,8 @@
     <ul class="rubric">
       <li><span>Vorwärts vom Start zu Punkt A fahren und anhalten</span><strong>2</strong></li>
       <li><span>Auf A „Load“ anzeigen und 5 s stehen bleiben</span><strong>2</strong></li>
-      <li><span>Rückwärts bis C fahren</span><strong>2</strong></li>
-      <li><span>Auf C im Stand um 90° in die richtige Richtung drehen</span><strong>2</strong></li>
+      <li><span>Rückwärts bis zur vorgegebenen Drehmarke fahren und anhalten</span><strong>2</strong></li>
+      <li><span>An der Drehmarke im Stand um 90° in die richtige Richtung drehen</span><strong>2</strong></li>
       <li><span>Ziel anfahren, „unload“ anzeigen und Signalton abspielen</span><strong>2</strong></li>
     </ul>
     <p class="hint">0 fehlt · 1 teilweise erfüllt · 2 erfüllt</p>
@@ -77,7 +78,7 @@
   <p class="schedule-summary" data-schedule-summary></p>
   <div class="table-wrap" tabindex="0" role="region" aria-label="Prüfungsplan mit Aufgabencodes">
     <table>
-      <thead><tr><th scope="col">Aufgabe</th><th scope="col">Code</th><th scope="col">Start · Drehung</th><th scope="col">Ziel</th><th scope="col">Code ausgeben</th><th scope="col">Vorführung</th></tr></thead>
+      <thead><tr><th scope="col">Aufgabe</th><th scope="col">Code</th><th scope="col">Start · Drehmarke · Richtung</th><th scope="col">Ziel</th><th scope="col">Code ausgeben</th><th scope="col">Vorführung</th></tr></thead>
       <tbody data-schedule-rows></tbody>
     </table>
   </div>

@@ -123,7 +123,7 @@
       codeCell.append(copyCode);
 
       const turnSide = variant.turn < 0 ? 'links' : 'rechts';
-      row.insertCell().textContent = variant.startLabel + ' · ' + turnSide;
+      row.insertCell().textContent = variant.startLabel + ' · ' + variant.turnLabel + ' · ' + turnSide;
       row.insertCell().textContent = variant.targetLabel;
       return { issue: row.insertCell(), exam: row.insertCell() };
     });

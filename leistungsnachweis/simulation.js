@@ -29,10 +29,12 @@
     ['E', 1.5, 0.5],
   ];
   const goals = [
-    ['L2', 0.625, 4],
-    ['L1', 1.0625, 4],
-    ['R1', 1.9375, 4],
-    ['R2', 2.375, 4],
+    ['R3', 2.375, 2.25, 'below'],
+    ['L2', 0.625, 4, 'farther'],
+    ['L1', 1.0625, 4, 'below'],
+    ['R1', 1.9375, 4, 'below'],
+    ['R2', 2.375, 4, 'farther'],
+    ['L3', 1.0625, 5.75, 'below'],
   ];
 
   function point(x, y) {
@@ -228,9 +230,8 @@
         marker(ctx, x, y, letter);
       }
     }
-    for (const [code, x, y] of goals) {
+    for (const [code, x, y, placement] of goals) {
       const active = samePoint(x, y, variant.target);
-      const placement = code.endsWith('1') ? 'below' : 'farther';
       if (active) {
         marker(ctx, x, y, 'Z', { caption: variant.targetLabel, color: colors.target, placement });
       } else {
