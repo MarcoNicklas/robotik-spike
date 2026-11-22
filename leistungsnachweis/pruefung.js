@@ -59,7 +59,81 @@
     feedback.hidden = false;
   }
 
+  function mountOverview(container, overview) {
+    if (typeof overview?.file !== 'string' || !/^fahrwege\.bin\?v=[a-f0-9]{16}$/.test(overview.file)) return;
+    if (typeof overview.key !== 'string' || typeof overview.iv !== 'string') return;
+
+    const open = container.querySelector('[data-open-overview]');
+    const dialog = container.querySelector('[data-overview-dialog]');
+    const status = dialog.querySelector('[data-overview-status]');
+    const retry = dialog.querySelector('[data-overview-retry]');
+    const image = dialog.querySelector('[data-overview-image]');
+    const original = dialog.querySelector('[data-overview-original]');
+    let request = null;
+    let imageUrl = null;
+
+    function cancelLoad() {
+      request?.abort();
+      request = null;
+    }
+
+    async function load() {
+      if (request || imageUrl) return;
+      const current = new AbortController();
+      request = current;
+      status.textContent = 'Übersicht wird geladen …';
+      if (document.activeElement === retry) status.focus();
+      retry.hidden = true;
+
+      try {
+        const response = await fetch('./' + overview.file, { signal: current.signal, redirect: 'error' });
+        if (!response.ok) throw new Error('Bilddatei konnte nicht geladen werden');
+        const key = await crypto.subtle.importKey('raw', decodeBase64(overview.key), 'AES-GCM', false, ['decrypt']);
+        const bytes = await crypto.subtle.decrypt(
+          { name: 'AES-GCM', iv: decodeBase64(overview.iv) }, key, await response.arrayBuffer()
+        );
+        if (request !== current || !dialog.open) return;
+
+        imageUrl = URL.createObjectURL(new Blob([bytes], { type: 'image/png' }));
+        image.src = imageUrl;
+        original.href = imageUrl;
+        image.hidden = false;
+        original.hidden = false;
+        if (document.activeElement === status) original.focus();
+        status.hidden = true;
+      } catch {
+        if (request !== current || !dialog.open) return;
+        status.textContent = 'Die Übersicht konnte nicht geladen werden.';
+        retry.hidden = false;
+      } finally {
+        if (request === current) request = null;
+      }
+    }
+
+    open.hidden = false;
+    open.addEventListener('click', () => {
+      dialog.showModal();
+      load();
+    });
+    retry.addEventListener('click', load);
+    dialog.querySelector('[data-close-overview]').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => {
+      if (!dialog.open) cancelLoad();
+    });
+
+    return () => {
+      cancelLoad();
+      dialog.close();
+      if (imageUrl) URL.revokeObjectURL(imageUrl);
+      imageUrl = null;
+      original.removeAttribute('href');
+      image.removeAttribute('src');
+    };
+  }
+
   function showTeacher(payload) {
+    const variants = Array.isArray(payload) ? payload : payload?.variants;
+    if (!Array.isArray(variants)) throw new Error('Ungültige Lehrkraftansicht');
     result.replaceChildren(document.querySelector('[data-teacher-template]').content.cloneNode(true));
     const rows = result.querySelector('[data-schedule-rows]');
     const start = result.querySelector('[data-start-time]');
@@ -97,7 +171,7 @@
       return total >= 1440 ? formatted + ' (+1 Tag)' : formatted;
     }
 
-    const times = payload.map(({ variant, code }) => {
+    const times = variants.map(({ variant, code }) => {
       const row = rows.insertRow();
       const name = document.createElement('th');
       name.scope = 'row';
@@ -141,7 +215,11 @@
     start.addEventListener('change', updateTimes);
     mode.addEventListener('change', updateTimes);
     updateTimes();
-    result.bodyCleanup = closePreview;
+    const closeOverview = mountOverview(result, payload?.overview);
+    result.bodyCleanup = () => {
+      closePreview();
+      closeOverview?.();
+    };
   }
 
   form.addEventListener('submit', async event => {

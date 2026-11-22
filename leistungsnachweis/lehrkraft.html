@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Lehrkraftzugang · SPIKE Prime</title>
-  <link rel="stylesheet" href="./styles.css?v=24e37a50e8f64698">
-    <script defer src="./simulation.js?v=24e37a50e8f64698"></script>
-    <script defer src="./aufgaben-vorlage.js?v=24e37a50e8f64698"></script>
-    <script defer src="./pruefungsdaten.js?v=24e37a50e8f64698"></script>
-    <script defer src="./pruefung.js?v=24e37a50e8f64698"></script>
+  <link rel="stylesheet" href="./styles.css?v=51447d6e3c928387">
+    <script defer src="./simulation.js?v=51447d6e3c928387"></script>
+    <script defer src="./aufgaben-vorlage.js?v=51447d6e3c928387"></script>
+    <script defer src="./pruefungsdaten.js?v=51447d6e3c928387"></script>
+    <script defer src="./pruefung.js?v=51447d6e3c928387"></script>
 </head>
 <body data-role="teacher">
   <header class="site-header"><div class="site-header-inner">
@@ -37,6 +37,7 @@
   <div class="teacher-actions">
     <a class="button" href="./index.html" target="_blank" rel="noopener">Schülerversion</a>
     <button type="button" data-copy-link>Schülerlink kopieren</button>
+    <button type="button" data-open-overview aria-haspopup="dialog" aria-controls="route-overview" hidden>Fahrwege ansehen</button>
     <button class="primary" type="button" data-print>Drucken</button>
   </div>
   <p class="notice" data-teacher-feedback role="status" hidden></p>
@@ -86,6 +87,20 @@
 <dialog data-preview-dialog class="preview-dialog">
   <div class="preview-top"><button type="button" data-close-preview>Vorschau schließen</button></div>
   <div data-preview-content></div>
+</dialog>
+<dialog id="route-overview" class="preview-dialog overview-dialog" aria-labelledby="route-overview-title" data-overview-dialog>
+  <header class="overview-header">
+    <h2 id="route-overview-title">Alle 16 Fahrwege</h2>
+    <div class="overview-actions">
+      <a class="button" target="_blank" rel="noopener" data-overview-original hidden>In voller Größe öffnen</a>
+      <button type="button" data-close-overview autofocus>Schließen</button>
+    </div>
+  </header>
+  <div class="overview-content">
+    <p data-overview-status role="status" tabindex="-1">Übersicht wird geladen …</p>
+    <button type="button" data-overview-retry hidden>Erneut versuchen</button>
+    <img width="2480" height="3508" alt="Alle 16 Fahrwege mit Start, Ladehalt an Punkt A, Rückfahrt zur Drehmarke und Fahrt zum Ziel." data-overview-image hidden>
+  </div>
 </dialog>
 </template></main>
 </body>

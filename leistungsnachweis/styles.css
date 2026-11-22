@@ -169,6 +169,17 @@ tbody tr:hover { background: #f5f7fd; }
 }
 .preview-dialog::backdrop { background: #101c37c9; }
 .preview-top { display: flex; justify-content: flex-end; margin-bottom: .65rem; }
+.overview-dialog { padding: 0; width: min(96vw, 77rem); }
+.overview-header {
+  position: sticky; top: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  gap: .65rem 1rem; padding: .8rem clamp(.8rem, 3vw, 1.5rem);
+  background: var(--white); border-bottom: 1px solid var(--line);
+}
+.overview-actions { display: flex; flex-wrap: wrap; gap: .45rem; }
+.overview-content { padding: clamp(.8rem, 3vw, 1.5rem); }
+.overview-content img { display: block; width: 100%; max-width: 68rem; height: auto; margin: 0 auto; }
+.overview-content button { margin-top: .7rem; }
 
 @media(max-width: 800px) {
   .task-layout, .teacher-grid { grid-template-columns: 1fr; }
