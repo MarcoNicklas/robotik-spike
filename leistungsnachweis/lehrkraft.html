@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Lehrkraftzugang · SPIKE Prime</title>
-  <link rel="stylesheet" href="./styles.css?v=3d5f6eef61d5959d">
-    <script defer src="./simulation.js?v=3d5f6eef61d5959d"></script>
-    <script defer src="./aufgaben-vorlage.js?v=3d5f6eef61d5959d"></script>
-    <script defer src="./pruefungsdaten.js?v=3d5f6eef61d5959d"></script>
-    <script defer src="./pruefung.js?v=3d5f6eef61d5959d"></script>
+  <link rel="stylesheet" href="./styles.css?v=90bc8e225ce603e3">
+    <script defer src="./simulation.js?v=90bc8e225ce603e3"></script>
+    <script defer src="./aufgaben-vorlage.js?v=90bc8e225ce603e3"></script>
+    <script defer src="./pruefungsdaten.js?v=90bc8e225ce603e3"></script>
+    <script defer src="./pruefung.js?v=90bc8e225ce603e3"></script>
 </head>
 <body data-role="teacher">
   <header class="site-header"><div class="site-header-inner">
@@ -46,19 +46,20 @@
   <section class="panel" aria-labelledby="setup-title">
     <h2 id="setup-title">Fahrmatte</h2>
     <ul class="setup-list">
-      <li><strong>A</strong> in die Mitte des Startfelds, <strong>E</strong> in die Mitte des roten Felds.</li>
+      <li><strong>A</strong> ist die Mitte des Startfelds, <strong>E</strong> die Mitte des roten Felds.</li>
       <li><strong>B, C, D</strong> teilen A–E in vier gleich lange Abschnitte.</li>
-      <li>Abschnittslänge messen und angeben. Drehfreiheit an allen Marken prüfen.</li>
+      <li>Auf der Querlinie durch C liegen <strong>L1/R1</strong> je ¼ Abschnitt von C entfernt, <strong>L2/R2</strong> je ½ Abschnitt. In der Draufsicht liegt L links und R rechts.</li>
+      <li>Platz für die Drehung und beide Zielspuren vor Ort prüfen.</li>
     </ul>
   </section>
   <section class="panel" aria-labelledby="rubric-title">
     <h2 id="rubric-title">Bewertung · 10 Punkte</h2>
     <ul class="rubric">
-      <li><span>Richtiges Hubwort am Start</span><strong>2</strong></li>
-      <li><span>Vorwärts zur Zwischenmarke, dort 1 s Halt mit kurzem Hubton</span><strong>2</strong></li>
-      <li><span>Rückwärts zur Endmarke, dort Halt</span><strong>2</strong></li>
-      <li><span>90°-Drehung an der Endmarke im Stand, richtige Richtung</span><strong>2</strong></li>
-      <li><span>Kurzer Hubton nach der Drehung</span><strong>2</strong></li>
+      <li><span>Vorwärts vom Start zu Punkt A fahren und anhalten</span><strong>2</strong></li>
+      <li><span>Auf A „Load“ anzeigen und 5 s stehen bleiben</span><strong>2</strong></li>
+      <li><span>Rückwärts bis C fahren</span><strong>2</strong></li>
+      <li><span>Auf C im Stand um 90° in die richtige Richtung drehen</span><strong>2</strong></li>
+      <li><span>Ziel anfahren, „unload“ anzeigen und Signalton abspielen</span><strong>2</strong></li>
     </ul>
     <p class="hint">0 fehlt · 1 teilweise erfüllt · 2 erfüllt</p>
   </section>
@@ -76,7 +77,7 @@
   <p class="schedule-summary" data-schedule-summary></p>
   <div class="table-wrap" tabindex="0" role="region" aria-label="Prüfungsplan mit Aufgabencodes">
     <table>
-      <thead><tr><th scope="col">Aufgabe</th><th scope="col">Code</th><th scope="col">Fahrt · Drehung</th><th scope="col">Wort</th><th scope="col">Code ausgeben</th><th scope="col">Vorführung</th></tr></thead>
+      <thead><tr><th scope="col">Aufgabe</th><th scope="col">Code</th><th scope="col">Start · Drehung</th><th scope="col">Ziel</th><th scope="col">Code ausgeben</th><th scope="col">Vorführung</th></tr></thead>
       <tbody data-schedule-rows></tbody>
     </table>
   </div>

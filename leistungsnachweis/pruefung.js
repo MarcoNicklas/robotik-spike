@@ -122,8 +122,9 @@
       copyCode.addEventListener('click', () => copyText(code, feedback, 'Code für Aufgabe ' + variant.id + ' kopiert.'));
       codeCell.append(copyCode);
 
-      row.insertCell().textContent = variant.name;
-      row.insertCell().textContent = variant.word;
+      const turnSide = variant.turn < 0 ? 'links' : 'rechts';
+      row.insertCell().textContent = variant.startLabel + ' · ' + turnSide;
+      row.insertCell().textContent = variant.targetLabel;
       return { issue: row.insertCell(), exam: row.insertCell() };
     });
 
