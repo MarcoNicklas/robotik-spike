@@ -1,4 +1,4 @@
-/* Anmeldung + Fortschrittscode für die Robotik-Lernplattformen.
+/* Fortschritt (ohne Anmeldung) + Fortschrittscode für die Robotik-Lernplattformen.
    Kein Server: alles bleibt im Browser. Der Fortschrittscode wird bei der Lehrkraft abgegeben. */
 (function () {
   "use strict";
@@ -24,7 +24,16 @@
 
   function profiles() { try { return JSON.parse(ls("rprog:profiles") || "{}"); } catch (e) { return {}; } }
   function active() { var id = ss("rprog:active"); var p = profiles(); return id && p[id] ? Object.assign({ id: id }, p[id]) : null; }
-  var USER = active();
+  // Keine Anmeldung mehr: Der Fortschritt gehört zu diesem Browser. Name und Klasse werden erst beim Abgeben abgefragt.
+  function readMe() { try { return JSON.parse(ls("rprog:me") || "null"); } catch (e) { return null; } }
+  function currentUser() {
+    var u = active(); if (u) return u;
+    var m = readMe(); if (m && m.id) return m;
+    var P = profiles(), ids = Object.keys(P);
+    if (ids.length === 1) { u = Object.assign({ id: ids[0] }, P[ids[0]]); ls("rprog:me", JSON.stringify(u)); return u; } // früheres Konto übernehmen
+    return { id: "lokal", name: "", klasse: "", fp: "" };
+  }
+  var USER = currentUser();
 
   // Namensraum für alle gespeicherten Programme und Lösungen: jede/r hat eigenen Fortschritt (auch am gemeinsamen PC)
   window.RProg = {
@@ -82,10 +91,9 @@
     while ((m = re.exec(text))) {
       var d; try { d = JSON.parse(unb64u(m[1])); } catch (e) { continue; }
       if (hash(SALT + m[1], 9) !== m[2] || !d || d.c !== COURSE) { wrong++; continue; }
-      if (d.p !== fp) { wrong++; continue; }
       if (!best || d.t > best.t) best = d;
     }
-    if (!best) return { ok: false, msg: wrong ? "Diese Datei gehört zu einem anderen Namen/Kurs oder das Passwort stimmt nicht." : "In dieser Datei wurde kein Fortschritt gefunden. Nimm die PDF, die beim Abgeben gespeichert wurde." };
+    if (!best) return { ok: false, msg: wrong ? "Diese Datei gehört zu einem anderen Kurs." : "In dieser Datei wurde kein Fortschritt gefunden. Nimm die PDF, die beim Abgeben gespeichert wurde." };
     var pre = "u:" + uid + ":" + PREFIX + ":", n = 0;
     Object.keys(best.s || {}).forEach(function (k) {
       var cur = ls(pre + k);
@@ -128,43 +136,24 @@
     document.body.appendChild(ov); return ov;
   }
 
-  function loginDialog() {
+  function askName(cb) {
     var f = el("form", { autocomplete: "off" });
-    f.innerHTML = "<h2>Anmelden</h2><p>" + TITLE + ": Melde dich an, damit dein Fortschritt dir gehört. Merke dir dein Passwort – du brauchst es jedes Mal.</p>" +
+    f.innerHTML = "<h2>Wer gibt ab?</h2><p>Name und Klasse stehen auf deiner Abgabe-Datei, damit deine Lehrkraft sie zuordnen kann.</p>" +
       '<label for="rp-n">Vor- und Nachname</label><input id="rp-n" required maxlength="60">' +
       '<label for="rp-k">Klasse</label><input id="rp-k" maxlength="20" placeholder="z. B. 10a">' +
-      '<label for="rp-p">Passwort (mind. 4 Zeichen)</label><input id="rp-p" type="password" required minlength="4" maxlength="40">' +
-      '<label for="rp-f">Fortschritt von letztem Mal laden <span style="font-weight:400">(nur an einem anderen Computer nötig)</span></label>' +
-      '<input id="rp-f" type="file" accept=".pdf,.txt,application/pdf,text/plain" style="font-size:14px;padding:7px">' +
-      '<p style="margin:4px 0 0;font-size:12px">Wähle deine letzte Abgabe-Datei (Fortschritt_….pdf). Dann sind deine gelösten Aufgaben und Programme wieder da.</p>' +
-      '<div class="rp-err" aria-live="polite"></div><div class="rp-row"><button class="rp-btn" type="submit">Anmelden</button></div>' +
-      '<p style="margin-top:12px;font-size:12px">Am gleichen Computer bleibt dein Fortschritt gespeichert – einfach wieder mit Name, Klasse und Passwort anmelden. Bewahre deine Abgabe-PDF auf (z. B. in deinem OneDrive), dann kannst du an jedem Computer weitermachen.</p>';
-    var ov = overlay(f, false);
-    var err = f.querySelector(".rp-err");
+      '<div class="rp-err" aria-live="polite"></div><div class="rp-row"><button class="rp-btn" type="submit">Weiter</button><button class="rp-btn sec" type="button" data-a="x">Abbrechen</button></div>';
+    var ov = overlay(f, true), err = f.querySelector(".rp-err");
+    f.querySelector("#rp-n").value = USER.name || ""; f.querySelector("#rp-k").value = USER.klasse || "";
+    f.querySelector("[data-a=x]").onclick = function () { ov.remove(); };
     setTimeout(function () { f.querySelector("#rp-n").focus(); }, 50);
     f.addEventListener("submit", function (e) {
       e.preventDefault();
-      var name = norm(f.querySelector("#rp-n").value), kl = norm(f.querySelector("#rp-k").value), pw = f.querySelector("#rp-p").value;
+      var name = norm(f.querySelector("#rp-n").value), kl = norm(f.querySelector("#rp-k").value);
       if (name.length < 3 || name.indexOf(" ") < 0) { err.textContent = "Bitte Vor- und Nachname eingeben."; return; }
-      if (pw.length < 4) { err.textContent = "Das Passwort braucht mindestens 4 Zeichen."; return; }
-      var id = hash(nkey(name, kl), 1), ph = hash(SALT + "|" + id + "|" + pw, 3), P = profiles();
-      if (P[id] && P[id].ph !== ph) { err.textContent = "Falsches Passwort für diesen Namen in dieser Klasse."; return; }
-      var fp = hash(nkey(name, kl) + "|" + pw, 5), file = f.querySelector("#rp-f").files[0];
-      function finish() {
-        if (!P[id]) P[id] = { name: name, klasse: kl, ph: ph, fp: fp, since: Date.now() };
-        ls("rprog:profiles", JSON.stringify(P));
-        if (ls("rprog:profiles") === null) { err.textContent = "Dieser Browser speichert nichts (privates Fenster?). Bitte normales Fenster verwenden."; return false; }
-        ss("rprog:active", id); return true;
-      }
-      if (!file) { if (finish()) { ov.remove(); location.reload(); } return; }
-      readFile(file, function (t) {
-        var r = restore(t, fp, id);
-        if (!r.ok) { err.textContent = r.msg; return; }
-        if (finish()) { ls("rprog:restored", "1"); ov.remove(); location.reload(); }
-      });
+      USER.name = name; USER.klasse = kl; USER.fp = hash(nkey(name, kl) + "|", 5);
+      ls("rprog:me", JSON.stringify(USER)); ov.remove(); if (cb) cb();
     });
   }
-
   // Abgabe-Link (OneDrive „Dateien anfordern“) steht in assets/abgabe.js und kann ohne die anderen Dateien geändert werden
   (function () { try { var sc = document.createElement("script"); sc.src = (me && me.src ? me.src.replace(/progress\.js(\?.*)?$/, "abgabe.js") : "assets/abgabe.js") + "?v=" + Math.floor(Date.now() / 3600000); sc.async = true; document.head.appendChild(sc); } catch (e) {} })();
   function uploadUrl() { var u = window.RPROG_UPLOAD && window.RPROG_UPLOAD[COURSE]; return /^https:\/\//.test(u || "") ? u : ""; }
@@ -215,6 +204,7 @@
     return !!url;
   }
   function giveDialog() {
+    if (!USER.name) { askName(giveDialog); return; }
     var code = makeCode(), d = doneMap(), n = 0; Object.keys(d).forEach(function (L) { n += d[L].length; });
     var clean = cleanName;
     var fname = "Fortschritt_" + COURSE + "_" + (USER.klasse ? clean(USER.klasse) + "_" : "") + clean(USER.name) + "_" + stamp() + ".pdf";
@@ -240,7 +230,7 @@
         else msg.textContent = ok ? "Code kopiert ✓" : "Bitte markieren und mit Strg+C kopieren.";
       }
       if (a === "give") {
-        var blob = pdfBlob(["Fortschritt " + TITLE, "Name: " + USER.name + (USER.klasse ? "   Klasse: " + USER.klasse : ""), "Stand: " + new Date().toLocaleString("de-DE"), "Gelöste Aufgaben: " + n, "", "Tipp: Diese Datei aufbewahren - damit kannst du deinen Fortschritt", "an jedem Computer wieder laden (beim Anmelden)."], code, makeSave());
+        var blob = pdfBlob(["Fortschritt " + TITLE, "Name: " + USER.name + (USER.klasse ? "   Klasse: " + USER.klasse : ""), "Stand: " + new Date().toLocaleString("de-DE"), "Gelöste Aufgaben: " + n, "", "Tipp: Diese Datei aufbewahren - damit kannst du deinen Fortschritt", "an jedem Computer wieder laden (oben: Fortschritt laden)."], code, makeSave());
         saveAndUpload(blob, fname, msg);
       }
     });
@@ -250,11 +240,11 @@
   function header() {
     var nav = document.querySelector(".top .nav"); if (!nav) return;
     if (!/leistungsnachweis\.html$/.test(location.pathname)) { var lnk = el("a", { href: "leistungsnachweis.html" }, "🎓 Leistungsnachweise"); nav.insertBefore(lnk, nav.firstChild); }
-    var chip = el("span", { "class": "rp-chip" }); chip.appendChild(document.createTextNode("👤 " + USER.name));
-    var out = el("button", { type: "button", title: "Abmelden" }, "abmelden");
-    out.addEventListener("click", function () { ss("rprog:active", null); location.reload(); });
+    var chip = el("span", { "class": "rp-chip" }); if (USER.name) chip.appendChild(document.createTextNode("👤 " + USER.name));
+    var out = el("button", { type: "button", title: "Name und Klasse für die Abgabe festlegen" }, USER.name ? "Name ändern" : "Name eintragen");
+    out.addEventListener("click", function () { askName(function () { location.reload(); }); });
     var load = el("button", { type: "button", title: "Fortschritt aus einer Abgabe-Datei laden" }, "laden");
-    load.addEventListener("click", pickAndRestore);
+    load.addEventListener("click", pickAndRestore); load.textContent = "Fortschritt laden";
     chip.appendChild(load); chip.appendChild(out);
     var give = el("button", { type: "button", "class": "rp-give" }, "📤 Fortschritt abgeben");
     give.addEventListener("click", giveDialog);
@@ -262,11 +252,11 @@
   }
 
   window.RProg.api = { user: USER, course: COURSE, prefix: PREFIX, title: TITLE, salt: SALT, ls: ls, hash: hash, b64u: b64u, el: el, overlay: overlay,
-    makeCode: makeCode, makeSave: makeSave, pdfDoc: pdfDoc, saveAndUpload: saveAndUpload, uploadUrl: uploadUrl, stamp: stamp, cleanName: cleanName };
+    askName: askName, makeCode: makeCode, makeSave: makeSave, pdfDoc: pdfDoc, saveAndUpload: saveAndUpload, uploadUrl: uploadUrl, stamp: stamp, cleanName: cleanName };
   function start() {
     addCss();
     if (/lehrer\.html$/.test(location.pathname)) return;
-    if (!USER) loginDialog(); else { header(); if (ls("rprog:restored")) { ls("rprog:restored", null); toast("✓ Dein Fortschritt von letztem Mal wurde geladen."); } }
+    header(); { if (ls("rprog:restored")) { ls("rprog:restored", null); toast("✓ Dein Fortschritt von letztem Mal wurde geladen."); } }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();

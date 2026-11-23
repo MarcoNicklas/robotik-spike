@@ -134,6 +134,7 @@
     var ov = A.overlay(box, true), msg = box.querySelector(".rp-err");
     box.addEventListener("click", function (e) {
       var a = e.target.getAttribute && e.target.getAttribute("data-a"); if (a === "no") ov.remove(); if (a !== "ok") return;
+      if (!U.name) { var btn = e.target; A.askName(function () { btn.click(); }); return; }
       st.t1 = Date.now(); save(L.n, st);
       var payload = { v: 1, c: A.course, n: U.name, k: U.klasse || "", p: U.fp, ln: L.n, var: V.id, t0: st.t0, t1: st.t1, prod: st.prod || "", link: st.link || "", g: st.g || "", f: st.f || {}, r: st.r || [], ch: st.ch || [] };
       var body = A.b64u(JSON.stringify(payload)), lnCode = "RLN1-" + body + "." + A.hash(A.salt + body, 11);
@@ -162,7 +163,6 @@
   function start() {
     A = window.RProg && window.RProg.api; if (!A || !D) return;
     U = A.user; PFX = A.prefix; LNS = (D.ln[A.course] || []);
-    if (!U) { $("#ln-app").innerHTML = '<p class="foot">Bitte zuerst anmelden.</p>'; return; }
     document.addEventListener("input", onInput); document.addEventListener("change", function (e) { if (e.target.type === "checkbox" || e.target.type === "radio") onInput(e); });
     window.addEventListener("hashchange", route); route();
   }
