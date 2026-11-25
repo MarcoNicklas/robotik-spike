@@ -1,8 +1,8 @@
 (() => {
   'use strict';
 
-  const fieldSize = 100;
-  const origin = [70, 50];
+  const matBounds = { x: 20, y: 30, width: 600, height: 850 };
+  const matGrid = { x: 32.5, y: 50.5, width: 535, height: 749 };
   const colors = {
     ink: '#15243b',
     muted: '#495d71',
@@ -13,14 +13,6 @@
     turn: '#284aab',
     target: '#543889',
   };
-  const shelves = [
-    [0, 1, 1, 2.6],
-    [2, 0, 3, 1],
-    [3, 5, 1, 2],
-    [4.25, 5, 0.75, 2],
-    [2, 4.8, 0.72, 2.2],
-  ];
-  const yellowFields = [[1.5, 4.1], [3.5, 3.1]];
   const marks = [
     ['A', 1.5, 7.5],
     ['B', 1.5, 5.75],
@@ -38,18 +30,12 @@
   ];
 
   function point(x, y) {
-    return [origin[0] + x * fieldSize, origin[1] + y * fieldSize];
-  }
-
-  function box(ctx, x, y, width, height, color, stroke) {
-    const [left, top] = point(x, y);
-    ctx.fillStyle = color;
-    ctx.fillRect(left, top, width * fieldSize, height * fieldSize);
-    if (stroke) {
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = 2;
-      ctx.strokeRect(left, top, width * fieldSize, height * fieldSize);
-    }
+    // The task data places E and A seven units apart. Their field centers are six cells apart.
+    const cellSize = matGrid.width / 5;
+    const taskUnit = 6 * cellSize / 7;
+    const redCenterX = matBounds.x + matGrid.x + 1.5 * cellSize;
+    const redCenterY = matBounds.y + matGrid.y + 0.5 * cellSize;
+    return [redCenterX + (x - 1.5) * taskUnit, redCenterY + (y - 0.5) * taskUnit];
   }
 
   function label(ctx, text, x, y, options = {}) {
@@ -70,73 +56,417 @@
     ctx.stroke();
   }
 
-  function pallet(ctx, x, y, width = 0.34, height = 0.22) {
-    box(ctx, x, y, width, height, '#b78956', '#7a6146');
-    for (let stripe = 1; stripe < 3; stripe++) {
-      box(ctx, x + width * stripe / 3, y, 0.018, height, '#e7c292');
-    }
-  }
-
-  function shelf(ctx, [x, y, width, height], index) {
-    box(ctx, x, y, width, height, '#929da5', '#68747d');
-    const [left, top] = point(x, y);
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(left, top, width * fieldSize, height * fieldSize);
-    ctx.clip();
-    for (let offset = -900; offset < 900; offset += 13) {
-      stroke(ctx, [[left + offset, top], [left + offset + 300, top + 300]], '#aeb8be', 2);
-    }
-    ctx.restore();
-
-    if (index === 4) {
-      box(ctx, x + 0.15, y + 0.7, 0.4, 0.45, '#737e87', '#495863');
-      matLabel(ctx, 'GESPERRT', left + width * 50, top + height * 50 + 30, 10, '#fff');
-      return;
-    }
-    for (let row = y + 0.12; row < y + height - 0.15; row += 0.4) {
-      for (let column = x + 0.1; column < x + width - 0.3; column += 0.44) {
-        pallet(ctx, column, row);
-      }
-    }
-  }
-
-  function matLabel(ctx, text, x, y, size, color = '#304452') {
-    label(ctx, text, x, y, { size, color, weight: 600, family: 'system-ui' });
-  }
-
   function drawMat(ctx, canvas) {
     ctx.fillStyle = '#eef2f5';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    box(ctx, -0.13, -0.13, 5.26, 8.26, '#75828a');
-    box(ctx, 0, 0, 5, 8, '#fafbf9');
-    for (let x = 0; x <= 5; x++) stroke(ctx, [point(x, 0), point(x, 8)], '#d5dee3');
-    for (let y = 0; y <= 8; y++) stroke(ctx, [point(0, y), point(5, y)], '#d5dee3');
-    shelves.forEach((bounds, index) => shelf(ctx, bounds, index));
 
-    box(ctx, 1, 0, 1, 1, '#ef7378', '#a23848');
-    box(ctx, 1.05, 0.03, 0.9, 0.18, '#8f396e');
-    matLabel(ctx, 'ABLADEN', 220, 119, 13, '#652431');
-    box(ctx, 4, 2.6, 1, 1, '#75b6dc', '#1f6f9d');
-    matLabel(ctx, 'RAMPE', 520, 360, 13, '#23526f');
-    yellowFields.forEach(([x, y], index) => {
-      box(ctx, x - 0.46, y - 0.44, 0.92, 0.88, '#fff0b3');
-      const [left, top] = point(x - 0.46, y - 0.44);
-      ctx.setLineDash([12, 8]);
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = '#d9a918';
-      ctx.strokeRect(left, top, 92, 88);
-      ctx.setLineDash([]);
-      matLabel(ctx, `FELD ${index + 1}`, left + 46, top + 15, 12, '#80631b');
-    });
-    box(ctx, 1, 7, 1, 1, '#dce8e1', '#6c9b83');
-    matLabel(ctx, 'START', 220, 832, 16, '#275c41');
-    matLabel(ctx, '↑', 220, 788, 39, '#568b72');
-    for (const [x, y] of [[0.1, 0], [0.5, 0.35], [0.1, 7.4], [4.3, 7.5]]) {
-      pallet(ctx, x, y, 0.3, 0.22);
+    const { x, y, width, height } = matBounds;
+    const floor = ctx.createLinearGradient(x, y, x + width, y + height);
+    floor.addColorStop(0, '#bcbdbd');
+    floor.addColorStop(0.48, '#a8a9a9');
+    floor.addColorStop(1, '#b7b8b8');
+    ctx.fillStyle = floor;
+    ctx.fillRect(x, y, width, height);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x, y, width, height);
+    ctx.clip();
+    // One grid square is 100 drawing units. The surrounding print extends past the grid.
+    ctx.translate(x + matGrid.x, y + matGrid.y);
+    ctx.scale(matGrid.width / 500, matGrid.height / 700);
+
+    drawMatEdge(ctx);
+    drawMatGrid(ctx);
+    drawMatBay(ctx, 100, 0, '#c73f40', '#852347', '#ae4571', false);
+    drawMatBay(ctx, 500, 200, '#234b91', '#3882a0', '#6fbdd8', true);
+    drawMatGuideLines(ctx);
+    drawMatStorage(ctx, 300, 200);
+    drawMatStorage(ctx, 100, 300);
+    drawMatConveyor(ctx);
+    drawMatShelves(ctx);
+    drawMatPanels(ctx);
+    drawMatLooseCartons(ctx);
+    drawMatRobotArm(ctx, 76, 340, 27, 320);
+    drawMatRobotArm(ctx, 284, 582, 298, 638);
+    drawMatMeasure(ctx);
+    drawMatStart(ctx);
+    ctx.restore();
+  }
+
+  function drawMatEdge(ctx) {
+    ctx.fillStyle = '#383a3b';
+    ctx.fillRect(-22, -15, 122, 13);
+    ctx.fillRect(201, -15, 316, 13);
+    ctx.fillRect(503, -15, 14, 213);
+    ctx.fillRect(503, 301, 14, 453);
+
+    ctx.strokeStyle = '#656667';
+    ctx.lineWidth = 1.6;
+    ctx.strokeRect(-22, -15, 122, 13);
+    ctx.strokeRect(201, -15, 316, 13);
+    ctx.strokeRect(503, -2, 14, 200);
+    ctx.strokeRect(503, 301, 14, 453);
+
+    ctx.fillStyle = '#f0f0ed';
+    ctx.fillRect(27, -2, 48, 4);
+    ctx.fillRect(498, 124, 4, 48);
+    ctx.strokeStyle = '#454648';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(27, -2, 48, 4);
+    ctx.strokeRect(498, 124, 4, 48);
+  }
+
+  function drawMatGrid(ctx) {
+    ctx.beginPath();
+    for (let column = 0; column <= 5; column += 1) {
+      ctx.moveTo(column * 100, 0);
+      ctx.lineTo(column * 100, 700);
     }
-    matLabel(ctx, 'FAHRMATTE · DRAUFSICHT', 320, 20, 17);
-    matLabel(ctx, 'Aufteilung nach Fotovorlage · nicht maßstabsgetreu', 320, 888, 13, '#60717d');
+    for (let row = 0; row <= 7; row += 1) {
+      ctx.moveTo(0, row * 100);
+      ctx.lineTo(500, row * 100);
+    }
+    ctx.strokeStyle = '#f4f4f1';
+    ctx.lineWidth = 1.15;
+    ctx.stroke();
+  }
+
+  function drawMatBay(ctx, x, y, bayColor, truckColor, truckHighlight, facesLeft) {
+    ctx.save();
+    ctx.translate(x + (facesLeft ? 0 : 50), y + (facesLeft ? 50 : 0));
+    if (facesLeft) ctx.rotate(Math.PI / 2);
+
+    ctx.fillStyle = bayColor;
+    ctx.fillRect(-48, 2, 96, 96);
+
+    ctx.fillStyle = '#202325';
+    ctx.fillRect(-42, -44, 9, 40);
+    ctx.fillRect(33, -44, 9, 40);
+    ctx.fillStyle = '#5a5a58';
+    ctx.fillRect(-38, -33, 76, 73);
+
+    const loadingDeck = ctx.createLinearGradient(0, 7, 0, 41);
+    loadingDeck.addColorStop(0, '#7b7b79');
+    loadingDeck.addColorStop(0.7, '#989996');
+    loadingDeck.addColorStop(1, '#b3b5b2');
+    ctx.fillStyle = loadingDeck;
+    ctx.fillRect(-37, 11, 74, 29);
+    ctx.fillStyle = '#646663';
+    ctx.fillRect(-33, 34, 5, 4);
+    ctx.fillRect(28, 34, 5, 4);
+
+    const truckRoof = ctx.createLinearGradient(0, -47, 0, 12);
+    truckRoof.addColorStop(0, truckHighlight);
+    truckRoof.addColorStop(1, truckColor);
+    ctx.fillStyle = truckRoof;
+    ctx.fillRect(-38, -49, 76, 61);
+    ctx.strokeStyle = truckColor;
+    ctx.lineWidth = 2.5;
+    ctx.strokeRect(-35, -46, 70, 55);
+    ctx.restore();
+  }
+
+  function drawMatStorage(ctx, x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.beginPath();
+    const corners = [[7, 7, 21, 21], [93, 7, -21, 21], [93, 93, -21, -21], [7, 93, 21, -21]];
+    for (const [cornerX, cornerY, dx, dy] of corners) {
+      ctx.moveTo(cornerX, cornerY + dy);
+      ctx.lineTo(cornerX, cornerY);
+      ctx.lineTo(cornerX + dx, cornerY);
+    }
+    for (const [x1, y1, x2, y2] of [[38, 7, 62, 7], [93, 38, 93, 62], [38, 93, 62, 93], [7, 38, 7, 62]]) {
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+    }
+    ctx.strokeStyle = '#f5c43c';
+    ctx.lineWidth = 7;
+    ctx.stroke();
+    ctx.fillStyle = '#f7ca43';
+    ctx.translate(20, 15);
+    ctx.rotate(Math.PI / 2);
+    ctx.font = '700 9px system-ui, sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
+    ctx.fillText('Lagerplatz', 0, 0);
+    ctx.restore();
+  }
+
+  function drawMatGuideLines(ctx) {
+    ctx.beginPath();
+    ctx.moveTo(59, 340);
+    ctx.lineTo(281, 340);
+    ctx.lineTo(281, 577);
+    ctx.moveTo(224, 340);
+    ctx.lineTo(224, 750);
+    ctx.lineWidth = 11;
+    ctx.strokeStyle = '#969795';
+    ctx.stroke();
+    ctx.lineWidth = 9;
+    ctx.strokeStyle = '#edeeeb';
+    ctx.stroke();
+  }
+
+  function drawMatConveyor(ctx) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(24, 300);
+    ctx.lineTo(24, 630);
+    ctx.lineTo(47, 653);
+    ctx.lineTo(386, 653);
+    ctx.lineTo(402, 669);
+    ctx.lineTo(402, 756);
+    ctx.lineJoin = 'bevel';
+    ctx.lineWidth = 50;
+    ctx.strokeStyle = '#303034';
+    ctx.stroke();
+    ctx.lineWidth = 42;
+    ctx.strokeStyle = '#d3d3d0';
+    ctx.stroke();
+
+    for (const [x, y] of [[0, 302], [47, 302], [0, 624], [47, 624], [51, 678], [202, 629], [202, 678], [375, 628], [378, 679], [428, 679]]) {
+      ctx.fillStyle = '#4b4540';
+      ctx.fillRect(x - 3.5, y - 2.5, 7, 5);
+      ctx.fillStyle = '#e7b945';
+      ctx.fillRect(x - 2.5, y - 1.5, 5, 3);
+    }
+
+    const cartons = [
+      [23, 361, 13, 14, 90], [23, 383, 13, 14, 90],
+      [21, 446, 30, 22, 90], [22, 489, 31, 22, 90],
+      [22, 556, 22, 17, 90], [20, 582, 14, 14, 90], [21, 609, 20, 20, 90],
+      [22, 642, 15, 15, 57], [46, 653, 25, 14], [72, 653, 18, 21],
+      [211, 650, 17, 21], [242, 652, 18, 20], [347, 648, 19, 20],
+      [393, 655, 20, 20, -45], [406, 684, 20, 19, 90], [405, 734, 21, 20, 90]
+    ];
+    drawMatCartons(ctx, cartons);
+    ctx.restore();
+  }
+
+  function drawMatShelves(ctx) {
+    drawMatRack(ctx, 201, 1, 98, 48, true, [
+      [10, 16, 14, 19, 90], [33, 14, 21, 18, 90], [54, 26, 12, 40, 90],
+      [70, 12, 12, 19, 90], [70, 35, 12, 19, 90], [86, 15, 13, 21, 90]
+    ]);
+    drawMatRack(ctx, 301, 1, 98, 48, true, [
+      [10, 14, 14, 17, 90], [29, 13, 20, 19, 90], [29, 36, 21, 19, 90],
+      [68, 11, 13, 16, 90], [68, 24, 13, 11, 90],
+      [86, 13, 13, 19, 90], [86, 36, 13, 18, 90]
+    ]);
+    drawMatRack(ctx, 1, 101, 98, 98, false, [
+      [38, 28, 19, 15], [38, 46, 20, 17], [13, 69, 20, 12], [36, 69, 24, 12],
+      [36, 86, 22, 11], [63, 12, 17, 19], [85, 12, 22, 19],
+      [63, 35, 13, 17], [77, 35, 13, 17], [66, 57, 23, 17], [88, 57, 15, 16],
+      [64, 81, 18, 21], [85, 81, 22, 19]
+    ]);
+    drawMatRack(ctx, 1, 201, 98, 98, false, [
+      [10, 11, 21, 13], [27, 11, 10, 13], [40, 11, 14, 13],
+      [23, 54, 43, 14], [40, 68, 10, 10], [36, 86, 22, 12],
+      [63, 13, 19, 19], [59, 36, 17, 17], [78, 36, 18, 17],
+      [92, 36, 10, 17], [63, 83, 18, 21], [84, 83, 22, 21]
+    ]);
+    drawMatRack(ctx, 301, 401, 98, 98, false, [
+      [13, 12, 23, 18], [36, 12, 17, 18], [24, 36, 13, 21], [38, 36, 12, 21],
+      [34, 60, 23, 23], [13, 84, 22, 20], [35, 84, 18, 20],
+      [62, 10, 19, 13], [83, 10, 20, 13], [57, 27, 9, 12], [73, 46, 43, 12],
+      [63, 65, 20, 20], [61, 87, 17, 13], [82, 87, 23, 13]
+    ]);
+    drawMatRack(ctx, 301, 501, 98, 98, false, [
+      [34, 38, 23, 19], [11, 60, 15, 19], [26, 60, 13, 19], [40, 60, 13, 19],
+      [15, 84, 24, 20], [37, 84, 17, 20], [62, 10, 19, 13],
+      [56, 27, 11, 12], [68, 27, 14, 12], [63, 48, 22, 20], [84, 48, 20, 20],
+      [60, 70, 19, 13], [78, 70, 11, 13], [90, 70, 12, 13]
+    ]);
+    drawMatRack(ctx, 450, 401, 49, 98, false, [
+      [10, 11, 18, 13], [24, 11, 9, 13], [37, 11, 14, 13],
+      [22, 70, 15, 13], [36, 70, 11, 13], [8, 88, 15, 13], [28, 88, 23, 13]
+    ]);
+  }
+
+  function drawMatRack(ctx, x, y, width, height, horizontal, cartons) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = '#313234';
+    ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = '#9a9a98';
+    if (horizontal) {
+      for (let position = 4; position < height; position += 4) {
+        ctx.fillRect(1, position, width - 2, 1.5);
+      }
+    } else {
+      for (let position = 4; position < width; position += 4) {
+        ctx.fillRect(position, 1, 1.5, height - 2);
+      }
+    }
+
+    ctx.strokeStyle = '#d1d1cd';
+    ctx.lineWidth = 1.3;
+    ctx.strokeRect(0, 0, width, height);
+    ctx.strokeRect(3, 3, width - 6, height - 6);
+    if (!horizontal && width > 50) ctx.strokeRect(48, 1, 3, height - 2);
+    drawMatCartons(ctx, cartons);
+    ctx.restore();
+  }
+
+  function drawMatCartons(ctx, cartons) {
+    for (const [x, y, width, height, angle = 0] of cartons) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle * Math.PI / 180);
+      ctx.fillStyle = '#5d432d';
+      ctx.fillRect(-width / 2 + 0.7, -height / 2 + 0.8, width, height);
+      ctx.fillStyle = '#9d6b41';
+      ctx.fillRect(-width / 2, -height / 2, width, height);
+      ctx.fillStyle = '#a97a4f';
+      ctx.fillRect(-width / 2, -height / 2, width, height * 0.48);
+      ctx.fillStyle = '#efd29f';
+      ctx.fillRect(-width / 2, -height * 0.08, width, Math.max(1.4, height * 0.16));
+      ctx.restore();
+    }
+  }
+
+  function drawMatPanels(ctx) {
+    for (const [x, y, width, height] of [[36, 35, 27, 27], [240, 435, 26, 27], [439, 7, 57, 89]]) {
+      ctx.fillStyle = '#9a9c9b';
+      ctx.fillRect(x, y, width, height);
+      ctx.strokeStyle = '#505254';
+      ctx.lineWidth = 2.2;
+      ctx.strokeRect(x, y, width, height);
+      ctx.fillStyle = '#55575a';
+      ctx.fillRect(x + width / 2 - 5, y + 4, 10, 1);
+      ctx.fillRect(x + width / 2 - 5, y + height - 5, 10, 1);
+    }
+
+    ctx.save();
+    ctx.translate(470, 51);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = '#f8f8f5';
+    ctx.fillRect(-23, -8, 46, 14);
+    ctx.fillStyle = '#66696b';
+    ctx.font = '9px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Christiani', 0, -1);
+    ctx.restore();
+  }
+
+  function drawMatLooseCartons(ctx) {
+    drawMatCartons(ctx, [
+      [21, 27, 19, 14], [36, 19, 17, 16, 90], [39, 36, 21, 13], [26, 37, 14, 13, 58],
+      [12, 51, 17, 14], [36, 52, 15, 13, 54], [64, 62, 16, 13], [12, 66, 18, 19, 90],
+      [417, 40, 26, 19], [422, 61, 16, 13], [441, 62, 16, 14, 22],
+      [402, 72, 22, 20, 13], [426, 81, 20, 19],
+      [158, 323, 15, 13, -30], [179, 324, 18, 13, -29], [166, 333, 15, 10, 17],
+      [451, 382, 23, 18, -38], [471, 373, 13, 14, 90], [471, 390, 15, 13, 30],
+      [263, 515, 20, 19, 90], [254, 538, 22, 19, 17]
+    ]);
+  }
+
+  function drawMatRobotArm(ctx, x, y, clawX, clawY) {
+    ctx.fillStyle = '#e8e8e2';
+    ctx.fillRect(x - 17, y - 17, 34, 34);
+    ctx.strokeStyle = '#686965';
+    ctx.lineWidth = 0.9;
+    ctx.strokeRect(x - 17, y - 17, 34, 34);
+    ctx.beginPath();
+    ctx.arc(x, y, 15, 0, 2 * Math.PI);
+    ctx.fillStyle = '#2d2c2c';
+    ctx.fill();
+    ctx.strokeStyle = '#eab53c';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(Math.atan2(clawY - y, clawX - x));
+    const armLength = Math.hypot(clawY - y, clawX - x);
+    ctx.fillStyle = '#edbd42';
+    ctx.fillRect(-11, -7, 15, 14);
+    ctx.fillStyle = '#8b6b25';
+    ctx.fillRect(-7, -6, armLength - 6, 12);
+    ctx.fillStyle = '#f6c643';
+    ctx.fillRect(-7, -5, armLength - 13, 10);
+    ctx.fillRect(armLength - 19, -6, 15, 12);
+    ctx.strokeStyle = '#e3b34a';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(armLength - 13, -8, 14, 16);
+    ctx.restore();
+
+    drawMatCartons(ctx, [[clawX, clawY, 17, 17, -18]]);
+  }
+
+  function drawMatMeasure(ctx) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(450, 500, 50, 200);
+    ctx.clip();
+    ctx.fillStyle = '#151616';
+    ctx.fillRect(450, 500, 50, 200);
+    ctx.strokeStyle = '#efbc30';
+    ctx.lineWidth = 13;
+    for (let y = 480; y < 700; y += 34) {
+      ctx.beginPath();
+      ctx.moveTo(445, y);
+      ctx.lineTo(505, y + 63);
+      ctx.stroke();
+    }
+
+    ctx.strokeStyle = '#fffdf5';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(471, 502);
+    ctx.lineTo(471, 698);
+    for (let step = 0; step <= 6; step += 1) {
+      const y = 502 + step * 196 / 6;
+      const halfTick = step % 3 === 0 ? 15 : 9;
+      ctx.moveTo(471 - halfTick, y);
+      ctx.lineTo(471 + halfTick, y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = '#fffdf5';
+    ctx.font = '700 9px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (const [y, text] of [[506, '0'], [600, '15 cm'], [691, '30']]) {
+      ctx.save();
+      ctx.translate(490, y);
+      ctx.rotate(Math.PI / 2);
+      ctx.fillText(text, 0, 0);
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
+  function drawMatStart(ctx) {
+    ctx.fillStyle = '#77787a';
+    ctx.fillRect(101, 601, 98, 98);
+
+    ctx.beginPath();
+    ctx.moveTo(150, 603);
+    ctx.lineTo(184, 638);
+    ctx.lineTo(184, 663);
+    ctx.lineTo(160, 641);
+    ctx.lineTo(160, 698);
+    ctx.lineTo(140, 698);
+    ctx.lineTo(140, 641);
+    ctx.lineTo(116, 663);
+    ctx.lineTo(116, 638);
+    ctx.closePath();
+    ctx.fillStyle = '#fffefa';
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(150, 666);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = '#d2a32e';
+    ctx.font = '900 15px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('START', 0, 0, 58);
+    ctx.restore();
   }
 
   function arrow(ctx, x, y, heading, color) {
